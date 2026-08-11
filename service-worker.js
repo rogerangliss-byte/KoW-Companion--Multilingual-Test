@@ -1,4 +1,4 @@
-const CACHE='kow-v4.3.36-multilingual-test-french-bleed-fix';
+const CACHE='kow-v4.3.36-multilingual-test-dorothea-label-fix';
 const ASSETS=['lang/it.js','lang/de.js','lang/fr.js','lang/en.js',
   './',
   './index.html',

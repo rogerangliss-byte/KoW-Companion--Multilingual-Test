@@ -1056,13 +1056,19 @@ async function loadOfficers(){
 }
 function saveOfficers(){localStorage.setItem('kow_officers_v4',JSON.stringify(officers))}
 function currentOfficer(){const s=$('officerSelect');if(s&&s.value==='')return null;return officers[+s?.value]||officers[0]||{name:'Officer',season:'',orv:0,srv:0,readinessEligible:true}}
-function officerPortraitCandidates(name){
+function officerPortraitCandidates(name,season){
  const slug=String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+ const seasonSlug=String(season||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+ const seasonal=seasonSlug && seasonSlug!=='original' ? [
+  'officer-portraits/'+seasonSlug+'-'+slug+'.jpg',
+  'officer-portraits/officer-'+seasonSlug+'-'+slug+'.jpg'
+ ] : [];
  return [
-  'officer-portraits/officer-'+slug+'.jpg',
+  ...seasonal,
   'officer-portraits/'+slug+'.jpg',
-  'officer-'+slug+'.jpg',
-  slug+'.jpg'
+  'officer-portraits/officer-'+slug+'.jpg',
+  slug+'.jpg',
+  'officer-'+slug+'.jpg'
  ];
 }
 function officerRole(o){ return String(o?.role||'').trim()||'Unspecified'; }
@@ -1132,7 +1138,7 @@ function setPortraitWithFallback(img,placeholder,candidates,index=0){
 }
 function updateOfficerExperience(){
  const o=currentOfficer();if(!o)return;
- const role=officerRole(o),candidates=officerPortraitCandidates(o.name);
+ const role=officerRole(o),candidates=officerPortraitCandidates(o.name,o.season);
  if($('officerSeasonValue'))$('officerSeasonValue').textContent=o.season||'—';
  if($('officerRarityValue'))$('officerRarityValue').textContent=officerRarity(o);
  if($('officerRoleValue'))$('officerRoleValue').textContent=role;
@@ -2738,6 +2744,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode);
     nodes.forEach(n=>translateTextNode(n,l));
     translateAttributes(root,l);
+  }
+
+  function translateElement(el){
+    if(!el)return;
+    walk(el,lang);
   }
 
   function renderHelp(l){
