@@ -1056,19 +1056,13 @@ async function loadOfficers(){
 }
 function saveOfficers(){localStorage.setItem('kow_officers_v4',JSON.stringify(officers))}
 function currentOfficer(){const s=$('officerSelect');if(s&&s.value==='')return null;return officers[+s?.value]||officers[0]||{name:'Officer',season:'',orv:0,srv:0,readinessEligible:true}}
-function officerPortraitCandidates(name,season){
+function officerPortraitCandidates(name){
  const slug=String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
- const seasonSlug=String(season||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
- const seasonal=seasonSlug && seasonSlug!=='original' ? [
-  'officer-portraits/'+seasonSlug+'-'+slug+'.jpg',
-  'officer-portraits/officer-'+seasonSlug+'-'+slug+'.jpg'
- ] : [];
  return [
-  ...seasonal,
-  'officer-portraits/'+slug+'.jpg',
   'officer-portraits/officer-'+slug+'.jpg',
-  slug+'.jpg',
-  'officer-'+slug+'.jpg'
+  'officer-portraits/'+slug+'.jpg',
+  'officer-'+slug+'.jpg',
+  slug+'.jpg'
  ];
 }
 function officerRole(o){ return String(o?.role||'').trim()||'Unspecified'; }
@@ -1134,11 +1128,11 @@ function setPortraitWithFallback(img,placeholder,candidates,index=0){
   if(placeholder)placeholder.style.display='none';
  };
  img.onerror=()=>setPortraitWithFallback(img,placeholder,candidates,index+1);
- img.src=candidates[index]+'?v=4213';
+ img.src=candidates[index]+'?v=436portrait2';
 }
 function updateOfficerExperience(){
  const o=currentOfficer();if(!o)return;
- const role=officerRole(o),candidates=officerPortraitCandidates(o.name,o.season);
+ const role=officerRole(o),candidates=officerPortraitCandidates(o.name);
  if($('officerSeasonValue'))$('officerSeasonValue').textContent=o.season||'—';
  if($('officerRarityValue'))$('officerRarityValue').textContent=officerRarity(o);
  if($('officerRoleValue'))$('officerRoleValue').textContent=role;
@@ -1157,13 +1151,13 @@ function updateOfficerExperience(){
    const next=Number(current)+1;
    if(next<candidates.length){
     dash.setAttribute('data-portrait-index',String(next));
-    dash.src=candidates[next]+'?v=4213';
+    dash.src=candidates[next]+'?v=436portrait2';
    }else{
     dash.style.display='none';
    }
   };
   dash.setAttribute('data-portrait-index','0');
-  dash.src=candidates[0]+'?v=4213';
+  dash.src=candidates[0]+'?v=436portrait2';
  }
 }
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
