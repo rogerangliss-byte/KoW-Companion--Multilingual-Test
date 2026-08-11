@@ -2670,6 +2670,39 @@ document.addEventListener('DOMContentLoaded',()=>{
     m=base.match(/^Saved\s+(.+)$/);
     if(m) return l==='fr'?`Enregistré ${m[1]}`:l==='de'?`Gespeichert ${m[1]}`:`Salvato ${m[1]}`;
 
+    // French QA: generated Officer summary / planner / release strings.
+    if(l==='fr'){
+      m=base.match(/^Officer Badges remaining:\s*([\d,]+)$/);
+      if(m) return `Badges d’Officier restants : ${m[1]}`;
+      m=base.match(/^Officer Stars remaining:\s*([\d,]+)$/);
+      if(m) return `Étoiles d’Officier restantes : ${m[1]}`;
+      m=base.match(/^Officer XP remaining:\s*([\d,]+)$/);
+      if(m) return `XP d’Officier restante : ${m[1]}`;
+      m=base.match(/^Shared Legendary badge resources detected:\s*([\d,]+)$/);
+      if(m) return `Ressources partagées de Badges légendaires détectées : ${m[1]}`;
+      m=base.match(/^Available toward badge requirement:\s*([\d,]+)$/);
+      if(m) return `Disponibles pour le besoin en Badges : ${m[1]}`;
+      m=base.match(/^Remaining badge shortfall:\s*([\d,]+)$/);
+      if(m) return `Manque de Badges restant : ${m[1]}`;
+      m=base.match(/^Current month:\s*(.+)$/);
+      if(m) return `Mois actuel : ${m[1]}`;
+      m=base.match(/^Next scheduled release:\s*(.+)$/);
+      if(m) return `Prochaine sortie prévue : ${m[1]}`;
+      m=base.match(/^Planning estimate using\s+(.+)$/);
+      if(m) return `Estimation de planification utilisant ${m[1]}`;
+      if(base.startsWith('Strands unlock with the Officer’s Current Star Level:')){
+        return base
+          .replace('Strands unlock with the Officer’s Current Star Level:','Les branches se débloquent selon le niveau d’étoiles actuel de l’Officier :')
+          .replace('unlocked at','débloquées à')
+          .replace(/Strand/g,'Branche')
+          .replace('and 3★+ = all four branches.','et à 3★+ = les quatre branches.')
+          .replace('Level 1 is free when a strand becomes available.','Le niveau 1 est gratuit lorsqu’une branche devient disponible.')
+          .replace('Legendary Promotion sequence:','Séquence de promotion Légendaire :')
+          .replace('Epic Promotion sequence:','Séquence de promotion Épique :')
+          .replace('Elite Promotion sequence:','Séquence de promotion Élite :');
+      }
+    }
+
     return base;
   }
 
@@ -2735,7 +2768,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   // v4.3.36 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
+
+  function frenchQaRefresh(){
+    if(getLang()!=='fr') return;
+    ['officerSummary','optimizerResult','plannerResult','releaseForecast','releaseCalendar','dashboardStatus','skillsInfo'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) translateElement(el);
+    });
+  }
+
   function scheduleLanguageRefresh(){
+    setTimeout(frenchQaRefresh,80);
+    setTimeout(frenchQaRefresh,300);
     clearTimeout(translateTimer);
     translateTimer=setTimeout(function(){
       if(!busy) applyLanguage(lang);
