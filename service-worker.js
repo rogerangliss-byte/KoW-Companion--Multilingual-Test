@@ -1,5 +1,5 @@
-const CACHE='kow-v4.3.36-multilingual-test-french-portrait-live-sync';
-const ASSETS=['lang/it.js','lang/de.js','lang/fr.js','lang/en.js',
+const CACHE='kow-v4.3.36-multilingual-test-english-live-base';
+const ASSETS=[
   './',
   './index.html',
   './manifest.json',
