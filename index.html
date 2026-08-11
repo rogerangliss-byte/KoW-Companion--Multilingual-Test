@@ -2659,6 +2659,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     m=base.match(/^Remaining badge shortfall:\s*([\d,]+)$/);
     if(m) return l==='fr'?`Manque de Badges restant : ${m[1]}`:l==='de'?`Verbleibendes Abzeichendefizit: ${m[1]}`:`Carenza Badge rimanente: ${m[1]}`;
     if(base==='Preview only — resources are not spent.') return l==='fr'?'Aperçu uniquement — les ressources ne sont pas dépensées.':l==='de'?'Nur Vorschau — Ressourcen werden nicht ausgegeben.':'Solo anteprima — le risorse non vengono spese.';
+    if(base==='Legendary Stars: uses Legendary Star I / II / III. Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.') return l==='fr'?'Étoiles légendaires : utilise Étoile légendaire I / II / III. Les Bons de préparation d’Étoile (SRV) sont disponibles uniquement pour les Officiers saisonniers Légendaires éligibles.':l==='de'?'Legendäre Sterne: verwendet Legendärer Stern I / II / III. Sternbereitschaftsgutscheine (SRV) sind nur für berechtigte legendäre Saison-Offiziere verfügbar.':'Stelle leggendarie: usa Stella leggendaria I / II / III. I Buoni preparazione Stella (SRV) sono disponibili solo per gli Ufficiali stagionali Leggendari idonei.';
     m=base.match(/^(.+?) can be maxed with the resources currently entered in the app\.$/);
     if(m) return l==='fr'?`${m[1]} peut être maximisé avec les ressources actuellement saisies dans l’application.`:l==='de'?`${m[1]} kann mit den aktuell in der App eingegebenen Ressourcen maximiert werden.`:`${m[1]} può essere massimizzato con le risorse attualmente inserite nell’app.`;
     m=base.match(/^Priority: XP — ([\d,]+) more XP is required\.$/);
@@ -2688,6 +2689,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(m) return `Mois actuel : ${m[1]}`;
       m=base.match(/^Next scheduled release:\s*(.+)$/);
       if(m) return `Prochaine sortie prévue : ${m[1]}`;
+      m=base.match(/^Planning estimate using (.+?)% growth per Officer release from the latest known ([\d,]+) ORV \/ ([\d,]+) SRV release\. For ([\d,]+) badges and ([\d,]+) Star value \(([\d,]+) Exclusive Stars\), plan for approximately ([\d,]+) ORV and ([\d,]+) SRV\. Forecast only — replace with confirmed costs when released\.$/);
+      if(m) return `Estimation de planification avec une hausse de ${m[1]} % par sortie d’Officier à partir de la dernière sortie connue à ${m[2]} ORV / ${m[3]} SRV. Pour ${m[4]} badges et une valeur d’Étoiles de ${m[5]} (${m[6]} Étoiles exclusives), prévoyez environ ${m[7]} ORV et ${m[8]} SRV. Prévision uniquement — remplacez ces valeurs par les coûts confirmés lors de leur publication.`;
       m=base.match(/^Planning estimate using\s+(.+)$/);
       if(m) return `Estimation de planification utilisant ${m[1]}`;
       if(base.startsWith('Strands unlock with the Officer’s Current Star Level:')){
@@ -2738,6 +2741,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode);
     nodes.forEach(n=>translateTextNode(n,l));
     translateAttributes(root,l);
+  }
+
+  function translateElement(el){
+    if(!el)return;
+    walk(el,lang);
   }
 
   function renderHelp(l){
