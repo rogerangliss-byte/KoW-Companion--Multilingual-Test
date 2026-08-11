@@ -818,7 +818,7 @@ html.ios-safari{
         <button id="refreshLatest" class="primary">Refresh Latest Version</button>
       </div>
       <h3>About</h3>
-      <p class="notice"><b>KoW Companion <span id="aboutVersion"></span> LIVE</b><br>Created by FireStorm (371)</p>
+      <p class="notice"><b>KoW Companion <span id="aboutVersion"></span> TEST</b><br>Created by FireStorm (371)</p>
       <h3>Version Integrity</h3>
       <div id="versionIntegrity" class="notice">Checking build version consistency…</div>
 
@@ -1316,6 +1316,18 @@ function renderPlanner(o,cs,starsUsed,legendaryHeld,srvHeld,badgesUsed,badgesHel
 }
 
 function validateDb(list=officers){const e=[],seen=new Set();list.forEach((o,i)=>{const k=(o.name||'').trim().toLowerCase(),orig=String(o.season||'').toLowerCase()==='original';if(!k)e.push(`Row ${i+1}: name required`);if(k&&seen.has(k))e.push(`Row ${i+1}: duplicate name`);if(k)seen.add(k);if(!Number.isInteger(+o.orv)||(orig?+o.orv<0:+o.orv<=0))e.push(`Row ${i+1}: invalid ORV`);if(!Number.isInteger(+o.srv)||(orig?+o.srv<0:+o.srv<=0))e.push(`Row ${i+1}: invalid SRV`)});return e}
+function dbDisplayNote(v){
+ const l=(localStorage.getItem('kow_language')||'en').toLowerCase();
+ if(l!=='fr')return v;
+ const map={'Tank Destroyer':'Chasseur de chars','Tank':'Char','Infantry':'Infanterie','Rally':'Ralliement','Garrison':'Garnison','Gatherer':'Collecteur'};
+ return String(v||'').split(',').map(x=>map[x.trim()]||x.trim()).join(', ');
+}
+function dbRawNote(v){
+ const l=(localStorage.getItem('kow_language')||'en').toLowerCase();
+ if(l!=='fr')return v;
+ const map={'Chasseur de chars':'Tank Destroyer','Char':'Tank','Infanterie':'Infantry','Ralliement':'Rally','Garnison':'Garrison','Collecteur':'Gatherer'};
+ return String(v||'').split(',').map(x=>map[x.trim()]||x.trim()).join(', ');
+}
 function renderDb(){
  const search=$('dbSearch');const filter=$('dbSeason');const tbody=$('dbRows');if(!search||!filter||!tbody)return;
  const q=String(search.value||'').trim().toLowerCase();
@@ -1325,8 +1337,8 @@ function renderDb(){
  filter.value=seasons.includes(requested)?requested:'';
  const season=filter.value;
  const rows=officers.map((o,i)=>({...normalizeOfficer(o),_i:i})).filter(o=>(!q||o.name.toLowerCase().includes(q))&&(!season||o.season===season));
- tbody.innerHTML=rows.map(o=>`<tr data-i="${o._i}"><td><input data-f="name" value="${esc(o.name)}"></td><td><input data-f="season" value="${esc(o.season)}"></td><td><input data-f="orv" type="number" min="1" step="1" value="${o.orv}"></td><td><input data-f="srv" type="number" min="1" step="1" value="${o.srv}"></td><td><input data-f="notes" value="${esc(o.notes)}"></td><td class="actions"><button data-copy>Copy</button><button data-del>Delete</button></td></tr>`).join('');
- tbody.querySelectorAll('input').forEach(x=>x.oninput=e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;officers[i][f]=(f==='orv'||f==='srv')?Number(e.target.value):e.target.value;$('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`});
+ tbody.innerHTML=rows.map(o=>`<tr data-i="${o._i}"><td><input data-f="name" value="${esc(o.name)}"></td><td><input data-f="season" value="${esc(o.season)}"></td><td><input data-f="orv" type="number" min="1" step="1" value="${o.orv}"></td><td><input data-f="srv" type="number" min="1" step="1" value="${o.srv}"></td><td><input data-f="notes" value="${esc(dbDisplayNote(o.notes))}"></td><td class="actions"><button data-copy>${(localStorage.getItem('kow_language')||'en')==='fr'?'Copier':'Copy'}</button><button data-del>${(localStorage.getItem('kow_language')||'en')==='fr'?'Supprimer':'Delete'}</button></td></tr>`).join('');
+ tbody.querySelectorAll('input').forEach(x=>x.oninput=e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;officers[i][f]=(f==='orv'||f==='srv')?Number(e.target.value):(f==='notes'?dbRawNote(e.target.value):e.target.value);$('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`});
  tbody.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;officers.splice(i+1,0,{...officers[i],name:officers[i].name+' Copy'});renderDb();renderOfficerOptions();calculate()});
  tbody.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;if(officers.length>1)officers.splice(i,1);renderDb();renderOfficerOptions();calculate()});
  $('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`;
@@ -2706,6 +2718,93 @@ document.addEventListener('DOMContentLoaded',()=>{
       }
     }
 
+
+    // French Bleed Fix 3 — remaining dynamic UI strings.
+    if(l==='fr'){
+      let x;
+      x=base.match(/^READY TO MAX — (.+)$/);
+      if(x) return `PRÊT À MAXIMISER — ${x[1]}`;
+      x=base.match(/^(\d+) saved Officers?$/);
+      if(x) return `${x[1]} Officier${x[1]==='1'?'':'s'} enregistré${x[1]==='1'?'':'s'}`;
+      x=base.match(/^(\d+) MAXED$/);
+      if(x) return `${x[1]} MAXIMISÉ${x[1]==='1'?'':'S'}`;
+      x=base.match(/^Highest progress:\s*(.+)$/);
+      if(x) return `Progression la plus élevée : ${x[1]}`;
+      x=base.match(/^Showing\s+(\d+)$/);
+      if(x) return `${x[1]} affichés`;
+      if(base==='MAXED') return 'MAXIMISÉ';
+      if(base==='IN PROGRESS') return 'EN COURS';
+      if(base==='NOT STARTED') return 'NON COMMENCÉ';
+      if(base==='No saved Officer profiles yet. Use Save Officer Progress to add Officers to this overview.')
+        return 'Aucun profil d’Officier enregistré. Utilisez Enregistrer la progression de l’Officier pour ajouter des Officiers à cette vue.';
+      if(base==='No saved Officers match the selected status filters.')
+        return 'Aucun Officier enregistré ne correspond aux filtres d’état sélectionnés.';
+      if(base==='Fully Funded') return 'Entièrement financé';
+      if(base==='Partially Funded') return 'Partiellement financé';
+      if(base==='Shortfall') return 'Manquant';
+      if(base==='Fully funded') return 'Entièrement financé';
+      if(base==='YES') return 'OUI';
+      if(base==='NO') return 'NON';
+      if(base==='Current Upgrades') return 'Améliorations actuelles';
+      if(base==='Select Officer') return 'Sélectionner un Officier';
+      if(base==='Copy') return 'Copier';
+      if(base==='Delete') return 'Supprimer';
+      if(base==='Tank Destroyer') return 'Chasseur de chars';
+      if(base==='Tank') return 'Char';
+      if(base==='Infantry') return 'Infanterie';
+      if(base==='Rally') return 'Ralliement';
+      if(base==='Garrison') return 'Garnison';
+      if(base==='Gatherer') return 'Collecteur';
+      if(base==='Help & Instructions') return 'Aide et instructions';
+      if(base==='Header, Settings and About all report v4.3.36.')
+        return 'L’en-tête, les Paramètres et la section À propos indiquent tous v4.3.36.';
+      if(base==='Current month:') return 'Mois actuel :';
+      if(base==='Next scheduled release:') return 'Prochaine sortie prévue :';
+      if(base==='CURRENT') return 'ACTUEL';
+      if(base==='NEXT') return 'SUIVANT';
+      if(base==='No scheduled release') return 'Aucune sortie prévue';
+      if(base==='New Dogs') return 'Nouveaux chiens';
+      if(base==='New Ships') return 'Nouveaux navires';
+      if(base==='Guns: Field · Jets: Fighter') return 'Armes : Terrain · Jets : Chasseur';
+      if(base==='Guns: Rally / Garrison · Jets: Bomber') return 'Armes : Ralliement / Garnison · Jets : Bombardier';
+      if(base==='Officers: Rally / Garrison') return 'Officiers : Ralliement / Garnison';
+      if(base==='Officers: Infantry') return 'Officiers : Infanterie';
+      if(base==='Officers: Tanks') return 'Officiers : Chars';
+      if(base==='Officers: Tank Destroyers') return 'Officiers : Chasseurs de chars';
+      x=base.match(/^([A-Za-z]+) • CURRENT$/);
+      if(x){
+        const mm={January:'Janvier',February:'Février',March:'Mars',April:'Avril',May:'Mai',June:'Juin',July:'Juillet',August:'Août',September:'Septembre',October:'Octobre',November:'Novembre',December:'Décembre'};
+        return `${mm[x[1]]||x[1]} • ACTUEL`;
+      }
+      x=base.match(/^([A-Za-z]+) • NEXT$/);
+      if(x){
+        const mm={January:'Janvier',February:'Février',March:'Mars',April:'Avril',May:'Mai',June:'Juin',July:'Juillet',August:'Août',September:'Septembre',October:'Octobre',November:'Novembre',December:'Décembre'};
+        return `${mm[x[1]]||x[1]} • SUIVANT`;
+      }
+      x=base.match(/^Plan result:\s*(\d+) fully funded · (\d+) partially funded · (\d+) shortfall$/);
+      if(x) return `Résultat du plan : ${x[1]} entièrement financé · ${x[2]} partiellement financé · ${x[3]} manquant`;
+      x=base.match(/^([\d,]+) of ([\d,]+) required badges covered\. Remaining shared resources: ([\d,]+) ORV · ([\d,]+) Universal Badges\.$/);
+      if(x) return `${x[1]} sur ${x[2]} badges requis couverts. Ressources partagées restantes : ${x[3]} ORV · ${x[4]} Badges universels.`;
+      x=base.match(/^([\d,]+) Officer Badges still required$/);
+      if(x) return `${x[1]} Badges d’Officier encore requis`;
+      x=base.match(/^([\d,]+) Officer Star value still required$/);
+      if(x) return `${x[1]} de valeur d’Étoiles d’Officier encore requis`;
+      x=base.match(/^([\d,]+) XP still required$/);
+      if(x) return `${x[1]} XP encore requis`;
+      x=base.match(/^Still required:\s*(.+)$/);
+      if(x) return `Encore requis : ${x[1].replace('Development','Développement').replace('Stars','Étoiles')}`;
+      x=base.match(/^Next:\s*(.+)$/);
+      if(x) return `Suivant : ${x[1]}`;
+      x=base.match(/^Priority: Development — ([\d,]+) more Officer Badges are required\.$/);
+      if(x) return `Priorité : Développement — ${x[1]} Badges d’Officier supplémentaires sont requis.`;
+      x=base.match(/^Priority: Stars — ([\d,]+) more Officer Star value is required\.$/);
+      if(x) return `Priorité : Étoiles — ${x[1]} de valeur d’Étoiles d’Officier supplémentaire est requise.`;
+      if(base==='The ORV value follows the highest ORV-per-badge cost in the latest published season.')
+        return 'La valeur ORV suit le coût ORV par badge le plus élevé de la dernière saison publiée.';
+      if(base==='Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.')
+        return 'Les Bons de préparation d’Étoile (SRV) sont disponibles uniquement pour les Officiers saisonniers Légendaires éligibles.';
+    }
+
     return base;
   }
 
@@ -2766,6 +2865,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.kowApplyLanguage=applyLanguage;
+  window.kowTranslateNow=function(){ if(!busy) applyLanguage(lang); };
+
+  function wrapRenderer(name){
+    const original=window[name];
+    if(typeof original!=='function' || original.__kowWrapped)return;
+    const wrapped=function(){
+      const result=original.apply(this,arguments);
+      setTimeout(function(){ if(!busy) applyLanguage(lang); },0);
+      return result;
+    };
+    wrapped.__kowWrapped=true;
+    window[name]=wrapped;
+  }
+  ['renderDb','renderReleases','renderMultiPlanner','calculateMultiPlanner',
+   'updateFutureOfficerForecast','renderSavedOfficerProgress','updateSmartDashboard',
+   'renderSkillStrands','calculate'].forEach(wrapRenderer);
 
   document.addEventListener('DOMContentLoaded',()=>{
     const sel=document.getElementById('appLanguage');
@@ -2778,7 +2893,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let translateTimer=null;
 
   function frenchQaRefresh(){
-    if(getLang()!=='fr') return;
+    if(lang!=='fr') return;
     ['officerSummary','optimizerResult','plannerResult','releaseForecast','releaseCalendar','dashboardStatus','skillsInfo'].forEach(function(id){
       var el=document.getElementById(id);
       if(el) translateElement(el);
