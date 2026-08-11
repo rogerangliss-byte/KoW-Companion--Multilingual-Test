@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.35</title>
+<title>KoW Companion v4.3.36</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -208,7 +208,201 @@ input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px
 .quick-strand-row.locked{opacity:.62}
 .quick-strand-row.locked .quick-strand-select{background:#555;color:#bbb;cursor:not-allowed}
 
+/* v4.3.36 TEST — iPhone / iOS Safari responsive compatibility.
+   Scoped to html.ios-safari so Android and PC layouts are unchanged. */
+html.ios-safari{
+  -webkit-text-size-adjust:100%;
+}
+
+@media (max-width:600px){
+  html.ios-safari body{
+    min-height:100dvh;
+  }
+
+  html.ios-safari .app{
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:calc(92px + env(safe-area-inset-bottom));
+    min-height:100dvh;
+  }
+
+  html.ios-safari .card{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  html.ios-safari .card h2{
+    font-size:1.28rem;
+    line-height:1.18;
+  }
+
+  html.ios-safari .bottom-nav{
+    left:8px;
+    right:8px;
+    width:auto;
+    transform:none;
+    bottom:calc(6px + env(safe-area-inset-bottom));
+    padding:6px 7px;
+    border-radius:18px;
+    gap:2px;
+    max-height:72px;
+  }
+
+  html.ios-safari .bottom-nav button{
+    flex:0 0 62px;
+    min-width:62px;
+    min-height:54px;
+    padding:5px 2px;
+    font-size:.84rem;
+  }
+
+  html.ios-safari .bottom-nav span{
+    font-size:.56rem;
+    line-height:1.05;
+    margin-top:2px;
+  }
+
+  /* Keep the Officer profile action buttons compact on iPhone. */
+  html.ios-safari #officer .toolbar{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    align-items:stretch;
+  }
+
+  html.ios-safari #officer .toolbar button{
+    width:100%;
+    min-width:0;
+    min-height:46px;
+    margin-top:0 !important;
+    padding:8px 9px;
+    white-space:normal;
+    line-height:1.15;
+  }
+
+  /* iPhone edit-progress modal: retain a compact two-column layout
+     instead of stacking every strand vertically. */
+  html.ios-safari #quickProgressModal{
+    padding:
+      max(8px,env(safe-area-inset-top))
+      8px
+      calc(18px + env(safe-area-inset-bottom));
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  html.ios-safari #quickProgressModal > article.card{
+    width:100%;
+    max-width:none !important;
+    margin:0 auto !important;
+    padding:12px;
+    border-radius:16px;
+  }
+
+  html.ios-safari #quickProgressModal h2{
+    font-size:1.2rem;
+    margin:0;
+  }
+
+  html.ios-safari #quickProgressModal h3{
+    font-size:1.05rem;
+    margin:12px 0 8px;
+  }
+
+  html.ios-safari #quickProgressModal label{
+    margin-top:7px;
+    font-size:.82rem;
+  }
+
+  html.ios-safari #quickProgressModal input,
+  html.ios-safari #quickProgressModal select{
+    min-height:42px;
+    padding:8px 10px;
+    font-size:16px; /* prevents iOS Safari auto-zoom */
+  }
+
+  html.ios-safari #quickProgressModal .two{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  html.ios-safari #quickSkills{
+    display:grid;
+    gap:7px;
+  }
+
+  html.ios-safari #quickSkills .quick-strand-row{
+    grid-template-columns:86px minmax(0,1fr);
+    gap:8px;
+    align-items:center;
+  }
+
+  html.ios-safari #quickSkills .skill-strand-label{
+    font-size:.82rem;
+  }
+
+  html.ios-safari #quickSkills .quick-strand-select{
+    min-height:40px;
+  }
+
+  html.ios-safari #quickProgressModal .toolbar{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  html.ios-safari #quickProgressModal .toolbar button{
+    min-height:44px;
+    margin:0 !important;
+    padding:8px;
+    white-space:normal;
+  }
+
+  html.ios-safari #quickProgressCancel{
+    grid-column:1 / -1;
+  }
+
+  html.ios-safari #quickProgressModal .notice{
+    font-size:.78rem;
+    line-height:1.3;
+    padding:8px;
+  }
+
+  /* Make long status/summary text wrap cleanly without widening cards. */
+  html.ios-safari .result-box,
+  html.ios-safari .notice,
+  html.ios-safari .stat,
+  html.ios-safari .background-status{
+    overflow-wrap:anywhere;
+    word-break:normal;
+  }
+}
+
+/* Very narrow iPhones (SE-class) */
+@media (max-width:390px){
+  html.ios-safari .bottom-nav button{
+    flex-basis:58px;
+    min-width:58px;
+  }
+
+  html.ios-safari #quickProgressModal .two{
+    grid-template-columns:1fr;
+  }
+
+  html.ios-safari #quickSkills .quick-strand-row{
+    grid-template-columns:78px minmax(0,1fr);
+  }
+}
+
+
+
 </style>
+<script>
+(function(){
+  var ua=navigator.userAgent||'';
+  var isiOS=/iPhone|iPad|iPod/.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  var isWebKit=/WebKit/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  if(isiOS && isWebKit) document.documentElement.classList.add('ios-safari');
+})();
+</script>
 </head>
 <body>
 <header class="topbar">
@@ -218,7 +412,7 @@ input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px
   </div>
   <div class="creator-credit">Created by FireStorm (371)</div>
 </header>
-<div class="test-banner">⚠ MULTILINGUAL TEST VERSION — v4.3.35 — NOT LIVE ⚠</div>
+<div class="test-banner">⚠ MULTILINGUAL TEST VERSION — v4.3.36 — NOT LIVE ⚠</div>
 <main class="app">
   <section id="dashboard" class="view active">
 <article class="card" id="smartDashboardCard">
@@ -657,10 +851,10 @@ input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px
 </nav>
 
 
-<script src="lang/en.js?v=4.3.35"></script>
-<script src="lang/fr.js?v=4.3.35"></script>
-<script src="lang/de.js?v=4.3.35"></script>
-<script src="lang/it.js?v=4.3.35"></script>
+<script src="lang/en.js?v=4.3.36"></script>
+<script src="lang/fr.js?v=4.3.36"></script>
+<script src="lang/de.js?v=4.3.36"></script>
+<script src="lang/it.js?v=4.3.36"></script>
 <script type="module">
 const DEFAULT_OFFICERS=[{"name":"S7 Roisin","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Barbara","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Romana","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Liora","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Stella","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Klara","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Code","season":"S7","role":"Rally","orv":346,"srv":173,"notes":"Rally","rarity":"Legendary"},{"name":"S7 Kamila","season":"S7","role":"Garrison","orv":346,"srv":173,"notes":"Garrison","rarity":"Legendary"},{"name":"S6 Regina","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Veronica","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Silverhand","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Red Queen","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Samantha","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Saoirse","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Emily","season":"S6","role":"Rally","orv":167,"srv":84,"notes":"Rally","rarity":"Legendary"},{"name":"S6 Zoya","season":"S6","role":"Garrison","orv":167,"srv":84,"notes":"Garrison","rarity":"Legendary"},{"name":"S5 Feng","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Halina","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Eva","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Elsa","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Camile","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Betty","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Miyeon","season":"S5","role":"Rally","orv":80,"srv":40,"notes":"Rally","rarity":"Legendary"},{"name":"S5 Julia","season":"S5","role":"Garrison","orv":80,"srv":40,"notes":"Garrison","rarity":"Legendary"},{"name":"S4 Melina","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Jane","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Anna","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Yuki","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Eunice","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Derya","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Hardwin","season":"S4","role":"Rally","orv":39,"srv":20,"notes":"Rally","rarity":"Legendary"},{"name":"S4 Erin","season":"S4","role":"Garrison","orv":39,"srv":20,"notes":"Garrison","rarity":"Legendary"},{"name":"S3 Su","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Erica","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Aurora","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Ada","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Hannah","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Christina","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Sophia","season":"S3","role":"Rally","orv":23,"srv":11,"notes":"Rally","rarity":"Legendary"},{"name":"S3 Oliva","season":"S3","role":"Garrison","orv":23,"srv":11,"notes":"Garrison","rarity":"Legendary"},{"name":"S2 Lady Pandora","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"S2 Amanda","season":"S2","role":"Infantry","orv":20,"srv":10,"notes":"Infantry","rarity":"Legendary"},{"name":"S2 Diana","season":"S2","role":"Tank Destroyer","orv":20,"srv":10,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S2 Natalia","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"Katherine","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Grace","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Chloe","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Ling","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Jessica","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Lilith","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Angel","season":"Original","role":"Gatherer","orv":0,"srv":0,"notes":"Gatherer","rarity":"Legendary"},{"name":"Sakura","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Loubna","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Angelica","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Ophelia","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Doireann","season":"Original","role":"Garrison","orv":0,"srv":0,"notes":"Garrison","rarity":"Legendary"},{"name":"Dorothea","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Abigail","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Monica","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Epic"},{"name":"Linda","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Riven","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Epic"},{"name":"Maria","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Epic"},{"name":"Evelyn","season":"Original","role":"Infantry, Gatherer","orv":0,"srv":0,"notes":"Infantry, Gatherer","rarity":"Epic"},{"name":"Helena","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Marjorie","season":"Original","role":"Tank, Gatherer","orv":0,"srv":0,"notes":"Tank, Gatherer","rarity":"Elite"},{"name":"Jeanne","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Elite"}];
 const STAR_CUM=[0,500,1500,8000,33000,98000];
@@ -1085,11 +1279,13 @@ function calculate(){
  const xpRequired=Math.max(0,cumulativeXp(tl)-cumulativeXp(cl));const xpShortfall=Math.max(0,xpRequired-xpHeld);
  $('xpHeld').textContent=fmt(xpHeld);$('xpRequired').textContent=fmt(xpRequired);$('xpShortfall').textContent=fmt(xpShortfall);$('xpBar').style.width=pct(xpHeld,xpRequired||1)+'%';
 
- const overall=(pct(starsTotal,MAX_STAR)+pct(badgeTotal,officerMaxBadges)+pct(xpHeld,MAX_XP))/3;
+ // Overall Officer progress must use Officer-specific level progress, not shared XP inventory.
+ const officerXpProgress=cl>=70?MAX_XP:cumulativeXp(cl);
+ const overall=(pct(starsUsed,MAX_STAR)+pct(badgesUsed,officerMaxBadges)+pct(officerXpProgress,MAX_XP))/3;
  $('overallPct').textContent=overall.toFixed(1)+'%';$('overallBar').style.width=overall+'%';
  $('dashStarsHeld').textContent=fmt(starsHeld);$('dashStarsRequired').textContent=fmt(Math.max(0,MAX_STAR-starsTotal));
  $('dashBadgesFromOrv').textContent=fmt(badgesFromOrv);$('dashBadgesRequired').textContent=fmt(badgesRequired);
- $('dashXpHeld').textContent=fmt(xpHeld);$('dashXpRequired').textContent=fmt(Math.max(0,MAX_XP-xpHeld));
+ $('dashXpHeld').textContent=fmt(xpHeld);$('dashXpRequired').textContent=fmt(Math.max(0,MAX_XP-officerXpProgress));
 
  renderPlanner(o,cs,starsUsed,legendaryHeld,srvHeld,badgesUsed,badgesHeld+universalBadgesAvailable,orvHeld,xpHeld,xpRequired);
  if(typeof updateSmartDashboard==='function')updateSmartDashboard();
@@ -1390,7 +1586,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='4.3.35';
+const APP_VERSION='4.3.36';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -1473,11 +1669,12 @@ function buildUpgradeSummary(){
 
  const badgeUsed=numericText('badgesUsed');
  const starsUsed=numericText('starsUsed');
- const xpUsed=numericText('xpUsed');
+ const currentLevel=Math.max(1,Math.min(70,Number($('currentLevel')?.value)||1));
+ const xpUsed=currentLevel>=70?MAX_XP:cumulativeXp(currentLevel);
 
- const badgeNeed=Math.max(0,1600-badgeUsed);
- const starNeed=Math.max(0,98000-starsUsed);
- const xpNeed=Math.max(0,199646700-xpUsed);
+ const badgeNeed=Math.max(0,maxBadgesForOfficer(o)-badgeUsed);
+ const starNeed=Math.max(0,MAX_STAR-starsUsed);
+ const xpNeed=Math.max(0,MAX_XP-xpUsed);
 
  if(box)box.innerHTML=`<b>${esc(o.name)}</b><br>
  Officer Badges remaining: <b>${badgeNeed.toLocaleString()}</b><br>
@@ -1941,7 +2138,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.35';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.36';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -1973,7 +2170,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
 
  loadProgress();
 
- // v4.3.35 feature wiring
+ // v4.3.36 feature wiring
  populateCompareOfficers();
  const compareSelect=$('compareOfficerSelect');
  if(compareSelect){
@@ -2449,6 +2646,30 @@ document.addEventListener('DOMContentLoaded',()=>{
     m=base.match(/^Build integrity:\s*OK$/);
     if(m) return l==='fr'?'Intégrité du build : OK':l==='de'?'Build-Integrität: OK':'Integrità build: OK';
 
+    m=base.match(/^Officer Badges remaining:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`Badges d’Officier restants : ${m[1]}`:l==='de'?`Verbleibende Offiziersabzeichen: ${m[1]}`:`Badge Ufficiale rimanenti: ${m[1]}`;
+    m=base.match(/^Officer Stars remaining:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`Étoiles d’Officier restantes : ${m[1]}`:l==='de'?`Verbleibende Offizierssterne: ${m[1]}`:`Stelle Ufficiale rimanenti: ${m[1]}`;
+    m=base.match(/^Officer XP remaining:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`XP d’Officier restante : ${m[1]}`:l==='de'?`Verbleibende Offiziers-XP: ${m[1]}`:`XP Ufficiale rimanenti: ${m[1]}`;
+    m=base.match(/^Shared Legendary badge resources detected:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`Ressources partagées de Badges légendaires détectées : ${m[1]}`:l==='de'?`Erkannte gemeinsame legendäre Abzeichenressourcen: ${m[1]}`:`Risorse Badge leggendari condivise rilevate: ${m[1]}`;
+    m=base.match(/^Available toward badge requirement:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`Disponibles pour le besoin en Badges : ${m[1]}`:l==='de'?`Für den Abzeichenbedarf verfügbar: ${m[1]}`:`Disponibili per il requisito Badge: ${m[1]}`;
+    m=base.match(/^Remaining badge shortfall:\s*([\d,]+)$/);
+    if(m) return l==='fr'?`Manque de Badges restant : ${m[1]}`:l==='de'?`Verbleibendes Abzeichendefizit: ${m[1]}`:`Carenza Badge rimanente: ${m[1]}`;
+    if(base==='Preview only — resources are not spent.') return l==='fr'?'Aperçu uniquement — les ressources ne sont pas dépensées.':l==='de'?'Nur Vorschau — Ressourcen werden nicht ausgegeben.':'Solo anteprima — le risorse non vengono spese.';
+    m=base.match(/^(.+?) can be maxed with the resources currently entered in the app\.$/);
+    if(m) return l==='fr'?`${m[1]} peut être maximisé avec les ressources actuellement saisies dans l’application.`:l==='de'?`${m[1]} kann mit den aktuell in der App eingegebenen Ressourcen maximiert werden.`:`${m[1]} può essere massimizzato con le risorse attualmente inserite nell’app.`;
+    m=base.match(/^Priority: XP — ([\d,]+) more XP is required\.$/);
+    if(m) return l==='fr'?`Priorité : XP — ${m[1]} XP supplémentaires sont requis.`:l==='de'?`Priorität: XP — ${m[1]} weitere XP werden benötigt.`:`Priorità: XP — sono richiesti altri ${m[1]} XP.`;
+    m=base.match(/^Current month:\s*(.+)$/);
+    if(m) return l==='fr'?`Mois actuel : ${m[1]}`:l==='de'?`Aktueller Monat: ${m[1]}`:`Mese corrente: ${m[1]}`;
+    m=base.match(/^Next scheduled release:\s*(.+)$/);
+    if(m) return l==='fr'?`Prochaine sortie prévue : ${m[1]}`:l==='de'?`Nächste geplante Veröffentlichung: ${m[1]}`:`Prossima uscita prevista: ${m[1]}`;
+    m=base.match(/^Saved\s+(.+)$/);
+    if(m) return l==='fr'?`Enregistré ${m[1]}`:l==='de'?`Gespeichert ${m[1]}`:`Salvato ${m[1]}`;
+
     return base;
   }
 
@@ -2511,7 +2732,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     applyLanguage(lang);
   });
 
-  // v4.3.35 stable multilingual refresh.
+  // v4.3.36 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
   function scheduleLanguageRefresh(){
