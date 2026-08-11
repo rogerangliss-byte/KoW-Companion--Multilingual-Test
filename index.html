@@ -1,0 +1,2531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>KoW Companion v4.3.35</title>
+<link rel="manifest" href="./manifest.json">
+<style>
+:root{
+  --gold:#d5a72f;
+  --gold2:#f2cf6b;
+  --panel:rgba(14,16,19,.92);
+  --line:rgba(213,167,47,.35);
+  --text:#fff8e7;
+  --muted:#c9c1ad;
+  --page-bg:url('background-portrait.jpg?v=413');
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  width:100%;
+  min-width:100%;
+  min-height:100%;
+  font-family:Arial,sans-serif;
+  color:var(--text);
+}
+html,body{
+  margin:0;
+  width:100%;
+  min-width:100%;
+  min-height:100%;
+  font-family:Arial,sans-serif;
+  color:var(--text);
+  background-color:#090b0c;
+}
+body{
+  background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.78)),var(--page-bg);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}
+body{min-height:100vh;overflow-x:hidden}
+.topbar{position:sticky;top:0;z-index:10;padding:18px;background:rgba(0,0,0,.82);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.topbar h1{margin:0;color:var(--gold);font-size:1.4rem}.topbar p{margin:5px 0 0;color:var(--muted)}
+.test-banner{
+  position:sticky;
+  top:0;
+  z-index:11;
+  width:100%;
+  padding:8px 12px;
+  text-align:center;
+  background:#c40000;
+  color:#fff;
+  border-bottom:2px solid #ff6b6b;
+  font-weight:900;
+  letter-spacing:.12em;
+  box-shadow:0 3px 10px rgba(0,0,0,.45);
+}
+
+.app{position:relative;z-index:1;max-width:1000px;margin:auto;padding:14px 14px 100px;min-height:calc(100vh - 90px);background:transparent}.view{display:none}.view.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.wide{grid-column:1/-1}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 36px rgba(0,0,0,.3);backdrop-filter:blur(10px)}
+.card h2{margin:0 0 12px;color:var(--gold2)}.eyebrow{font-size:.78rem;color:var(--gold2);letter-spacing:.12em}.big{font-size:2rem;font-weight:800;color:var(--gold2)}
+label{display:block;margin:10px 0 5px;color:var(--muted);font-size:.86rem}.check{display:flex;align-items:center;gap:8px}.check input{width:auto}
+input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(0,0,0,.5);color:white}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}.stat b{color:var(--gold2);text-align:right}
+.progress{height:12px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin-top:10px}.progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#73500d,var(--gold2))}
+.skills{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.skill{padding:10px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.45);color:white}.skill.active{background:#715313;border-color:var(--gold2)}
+.xp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.xp-item{padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(0,0,0,.3)}
+.notice{margin-top:12px;padding:10px;border-left:3px solid var(--gold);border-radius:8px;background:rgba(213,167,47,.08);font-size:.86rem}
+.primary,.toolbar button,.filebtn{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#5e4512;color:white;cursor:pointer}.primary{width:100%;margin-top:12px}
+.toolbar{display:grid;grid-template-columns:2fr 1fr repeat(5,auto);gap:8px;align-items:end}.filebtn input{display:none}
+.table-wrap{overflow:auto;margin-top:12px}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}th:first-child,td:first-child{text-align:left}.db-table input{min-width:100px}.actions{display:flex;gap:6px}.actions button{padding:7px 9px}
+.bottom-nav{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);width:min(980px,calc(100% - 16px));display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:4px;padding:8px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:20}
+.bottom-nav button{border:0;background:transparent;color:var(--muted);padding:7px 1px;border-radius:10px;min-width:0;white-space:nowrap;font-size:.9rem}.bottom-nav button.active{background:rgba(213,167,47,.17);color:var(--gold2)}.bottom-nav span{display:block;font-size:.62rem;margin-top:3px;white-space:nowrap}
+@media(max-width:760px){
+.grid,.two{grid-template-columns:1fr}
+.toolbar{grid-template-columns:1fr 1fr}
+.bottom-nav{display:flex;overflow-x:auto;overflow-y:hidden;justify-content:flex-start;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 10px}
+.bottom-nav::-webkit-scrollbar{display:none}
+.bottom-nav button{flex:0 0 72px;min-width:72px;padding:8px 4px}
+.bottom-nav span{font-size:.65rem}
+}
+
+.background-status{display:flex;justify-content:space-between;gap:12px;margin:6px 0 14px;padding:9px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(0,0,0,.28);font-size:.82rem}
+.background-status span{color:var(--muted)}
+.background-status b{color:var(--gold2);text-align:right}
+.view.active{display:block}
+@media (orientation:landscape){
+  :root{--page-bg:url('background-landscape.jpg?v=413')}
+  html,body{background-position:center center}
+}
+@media (min-width:1200px) and (orientation:landscape){
+  html,body{background-position:center 35%}
+}
+
+
+/* v4.1.0 layout-shell refactor:
+   background is independent of tab/content height */
+.shell-background{
+  position:fixed;
+  z-index:0;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  min-height:100dvh;
+  pointer-events:none;
+  background-color:#090b0c;
+  background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.78)),var(--page-bg);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+}
+.topbar{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:12px 18px}
+.creator-credit{color:var(--muted);font-size:.82rem;white-space:nowrap;text-align:right;margin-top:3px}
+@media(max-width:600px){.creator-credit{font-size:.72rem}.topbar{padding:10px 12px}}
+.bottom-nav{z-index:20}
+.view{position:relative;z-index:1}
+@media (orientation:portrait){
+  .shell-background{background-position:center top}
+}
+@media (orientation:landscape){
+  :root{--page-bg:url('background-landscape.jpg?v=413')}
+  .shell-background{background-position:center center}
+}
+
+/* v4.1.1: body owns the viewport background; no content-height background layer. */
+.shell-background{display:none!important}
+@media (orientation:portrait){body{background-position:center top}}
+@media (orientation:landscape){body{background-position:center center}}
+
+
+/* v4.2 Officer Experience */
+.officer-filter-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.officer-experience-grid{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:18px;align-items:start}
+.officer-portrait-panel{width:100%;min-height:300px;display:flex;align-items:center;justify-content:center}
+.officer-portrait{display:none;width:100%;max-width:320px;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.officer-portrait-placeholder{width:100%;max-width:320px;min-height:300px;border:1px dashed var(--line);border-radius:14px;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--muted)}
+.officer-portrait-placeholder span{font-size:3rem}.officer-portrait-placeholder b{color:var(--gold2);margin:8px 0}.officer-portrait-placeholder small{line-height:1.4}
+.officer-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.officer-meta div{padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(0,0,0,.28)}
+.officer-meta span{display:block;color:var(--muted);font-size:.76rem}.officer-meta b{display:block;color:var(--gold2);margin-top:4px}
+.dashboard-officer{display:flex;align-items:center;gap:12px}.dash-officer-portrait{display:none;width:76px;height:92px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+@media(max-width:760px){.officer-filter-grid,.officer-experience-grid{grid-template-columns:1fr}.officer-meta{grid-template-columns:repeat(3,1fr)}.officer-portrait-panel{min-height:220px}.officer-portrait-placeholder{min-height:220px}}
+
+
+.button-like{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;background:rgba(0,0,0,.28);font-weight:700}
+.result-box{padding:12px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.28);line-height:1.55}
+
+.progress-meter{height:8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;min-width:90px;margin-top:4px}
+.progress-meter>span{display:block;height:100%;background:var(--gold2);border-radius:999px}
+.status-ready{font-weight:800;color:#79d98c}.status-progress{font-weight:700;color:var(--gold2)}
+@media(max-width:760px){#savedOfficerProgressTable{min-width:980px}}
+
+ .skill-lvl{font-size:12px;padding:8px 5px}
+}
+
+
+.skill-strands{display:grid;gap:10px}
+.skill-strand-row{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}
+.skill-strand-label{font-weight:700;color:var(--gold2)}
+.skill-strand-controls{display:grid;grid-template-columns:repeat(5,minmax(70px,1fr));gap:8px}
+.skill-lvl{min-height:42px;padding:8px 6px}
+.skill-lvl.free{opacity:.9}
+.skill-lvl.active{background:#7a5a10;border-color:#d6aa35;color:#fff}
+.quick-strand-row{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}
+.quick-strand-select{width:100%;min-height:42px}
+@media(max-width:760px){
+ .skill-strand-row,.quick-strand-row{grid-template-columns:1fr}
+ .skill-strand-controls{grid-template-columns:repeat(5,minmax(54px,1fr))}
+}
+
+
+/* Strand grid: reached = gold, unreached = black */
+.strand-level-btn,.skill-strand-level,.strandLevel{
+ background:#090a0c !important;color:#f5f0e6 !important;border-color:#3a3d42 !important;
+}
+.strand-level-btn.reached,.skill-strand-level.reached,.strandLevel.reached,
+.strand-level-btn.selected,.skill-strand-level.selected,.strandLevel.selected{
+ background:#7a5a10 !important;color:#fff !important;border-color:#d6aa35 !important;
+}
+
+
+/* Correct strand cells: reached levels gold, unreached levels black */
+.skill-lvl{
+ background:#090a0c !important;
+ color:#f5f0e6 !important;
+ border-color:#3a3d42 !important;
+}
+.skill-lvl.reached,.skill-lvl.free,.skill-lvl.active{
+ background:#7a5a10 !important;
+ color:#fff !important;
+ border-color:#d6aa35 !important;
+}
+
+.skill-strand-row.locked{opacity:.62}
+.skill-strand-row.locked .skill-strand-label{color:#aaa}
+.skill-lvl.locked,.skill-lvl:disabled{
+ background:#555 !important;
+ border-color:#777 !important;
+ color:#bbb !important;
+ cursor:not-allowed !important;
+ opacity:.72;
+}
+.strand-requirement{display:block;font-size:11px;font-weight:600;color:#c8c8c8;margin-top:3px}
+.quick-strand-row.locked{opacity:.62}
+.quick-strand-row.locked .quick-strand-select{background:#555;color:#bbb;cursor:not-allowed}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
+    <p>Officer Companion <span id="headerVersion"></span></p>
+  </div>
+  <div class="creator-credit">Created by FireStorm (371)</div>
+</header>
+<div class="test-banner">⚠ MULTILINGUAL TEST VERSION — v4.3.35 — NOT LIVE ⚠</div>
+<main class="app">
+  <section id="dashboard" class="view active">
+<article class="card" id="smartDashboardCard">
+  <h2>🎯 Smart Dashboard</h2>
+  <div id="readinessStatus" class="result-box"><b>Readiness:</b> Select an Officer and enter your resources.</div>
+  <div class="two">
+    <div class="result-box"><b>Development</b><br><span id="dashDevelopment">—</span></div>
+    <div class="result-box"><b>Stars</b><br><span id="dashStars">—</span></div>
+  </div>
+  <div class="two">
+    <div class="result-box"><b>XP</b><br><span id="dashXP">—</span></div>
+    <div class="result-box"><b>Can I Max This Officer?</b><br><span id="dashCanMax">—</span></div>
+  </div>
+  <div class="two">
+    <div class="result-box"><b>Next Upgrade Plan</b><br><span id="dashNextPlan">No saved plan selected.</span></div>
+    <div class="result-box"><b>Upcoming Release</b><br><span id="dashRelease">—</span></div>
+  </div>
+  <div id="dashWarning" class="notice" style="margin-top:10px">Enter resources to see planning guidance.</div>
+</article>
+
+    <div class="grid">
+      <article class="card wide">
+        <span class="eyebrow">ACTIVE OFFICER</span>
+        <div class="dashboard-officer"><img id="dashOfficerPortrait" class="dash-officer-portrait" alt=""><div><h2 id="dashOfficer">S7 Liora</h2><span id="dashOfficerRole" class="muted"></span></div></div>
+        <div class="big" id="overallPct">0.0%</div>
+        <div class="progress"><span id="overallBar"></span></div>
+      </article>
+      <article class="card"><h2>⭐ Stars</h2><div class="stat"><span>Held</span><b id="dashStarsHeld">0</b></div><div class="stat"><span>Required</span><b id="dashStarsRequired">98,000</b></div></article>
+      <article class="card"><h2>🏅 Development</h2><div class="stat"><span>Badges from held Officer Readiness Vouchers (ORV)</span><b id="dashBadgesFromOrv">0</b></div><div class="stat"><span>Required</span><b id="dashBadgesRequired">1,600</b></div></article>
+      <article class="card wide"><h2>📘 Officer XP</h2><div class="stat"><span>Held</span><b id="dashXpHeld">0</b></div><div class="stat"><span>Required</span><b id="dashXpRequired">199,646,700</b></div></article>
+    </div>
+  
+
+</section>
+
+  
+<section id="progress" class="view">
+  <article class="card">
+    <h2>📊 Officer Progress</h2>
+    <p class="notice">All Officers are shown automatically. Officers with no saved development are classified as NOT STARTED. Held shared resources do not increase an Officer's progress percentage.</p>
+    <div id="savedOfficerProgressSummary" class="result-box">Save Officer progress to build this dashboard.</div>
+    <div id="progressStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px">
+      <b>Show:</b>
+      <label><input type="checkbox" class="progressStatusFilter" value="maxed" checked> MAXED</label>
+      <label><input type="checkbox" class="progressStatusFilter" value="progress" checked> IN PROGRESS</label>
+      <label><input type="checkbox" class="progressStatusFilter" value="notStarted" checked> NOT STARTED</label>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+      <table id="savedOfficerProgressTable">
+        <thead><tr><th>Officer</th><th>Overall progress</th><th>Development</th><th>Stars</th><th>XP</th><th>Badge shortfall</th><th>Star shortfall</th><th>XP shortfall</th><th>Status</th></tr></thead>
+        <tbody id="savedOfficerProgressRows"></tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card">
+    <h2>🔎 Compare Officer Progress</h2>
+    <p class="notice">Choose any saved Officers to compare their actual saved progress. Shared inventory is not counted as completed progress.</p>
+    <div id="compareStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <b>Compare:</b>
+      <label><input type="checkbox" class="compareStatusFilter" value="maxed" checked> MAXED</label>
+      <label><input type="checkbox" class="compareStatusFilter" value="progress" checked> IN PROGRESS</label>
+      <label><input type="checkbox" class="compareStatusFilter" value="notStarted" checked> NOT STARTED</label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button type="button" id="compareProgressSelectAll">Select All</button>
+      <button type="button" id="compareProgressClear">Clear All</button>
+      <button type="button" id="compareProgressRun" class="primary" style="width:auto;margin-top:0">Compare Selected</button>
+    </div>
+    <div id="compareProgressChoices" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px"></div>
+    <div id="compareProgressRecommendation" class="notice" style="display:none;margin-top:12px"></div>
+    <div class="table-wrap" id="compareProgressResultsWrap" style="display:none;margin-top:12px">
+      <table>
+        <thead><tr><th>Officer</th><th>Overall progress</th><th>Development</th><th>Stars</th><th>XP</th><th>Badges Needed</th><th>Stars Needed</th><th>XP Needed</th><th>Status</th></tr></thead>
+        <tbody id="compareProgressResults"></tbody>
+      </table>
+    </div>
+  </article>
+</section>
+<section id="officer" class="view">
+    <article class="card">
+      <h2>👤 Officer Experience</h2>
+
+      <div class="officer-filter-grid">
+        <div><label>Search Officer</label><input id="officerSearch" placeholder="Type an Officer name"></div>
+        <div><label>Season</label><select id="officerSeasonFilter"><option value="">All Seasons</option></select></div>
+        <div><label>Rarity</label><select id="officerRarityFilter"><option value="">All Rarities</option><option>Legendary</option><option>Epic</option><option>Elite</option></select></div>
+        <div><label>Role</label><select id="officerRoleFilter"><option value="">All Roles</option></select></div>
+      </div>
+
+      <div class="officer-experience-grid">
+        <div class="officer-portrait-panel">
+          <img id="officerPortrait" class="officer-portrait" alt="Selected Officer portrait">
+          <div id="officerPortraitPlaceholder" class="officer-portrait-placeholder">
+            <span>👤</span>
+            <b>Portrait not added yet</b>
+            <small>Add a file named <span id="expectedPortraitFile"></span> to the repository.</small>
+          </div>
+        </div>
+
+        <div>
+          <label>Officer</label><select id="officerSelect"></select>
+          <div class="officer-meta">
+            <div><span>Season</span><b id="officerSeasonValue">—</b></div>
+            <div><span>Rarity</span><b id="officerRarityValue">—</b></div>
+            <div><span>Role</span><b id="officerRoleValue">—</b></div>
+            <div><span>Shown</span><b id="officerFilterCount">0</b></div>
+          </div>
+          <div class="two">
+            <div><label>Officer Readiness Vouchers (ORV) per Officer Badge</label><input id="orvCost" readonly></div>
+            <div><label>Star Readiness Vouchers (SRV) per Exclusive Star</label><input id="srvCost" readonly></div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article class="card">
+      <h2>💾 Officer Progress Profile</h2>
+      <p class="muted">Each Officer keeps their own upgrade progress. Shared resource inventories stay populated when you switch Officers.</p>
+      <div class="two">
+        <div><div class="stat"><span>Profile</span><b id="profileOfficerName">—</b></div></div>
+        <div><div class="stat"><span>Saved status</span><b id="profileSavedStatus">Not saved yet</b></div></div>
+      </div>
+      <div class="toolbar">
+        <button id="saveOfficerProfile" class="primary">Save This Officer</button>
+<button id="quickProgressBtn" class="primary" type="button">✏️ Edit Officer Progress</button>
+<button id="maxOfficerProfile" class="primary" type="button" style="margin-top:8px">⭐ MAX Officer</button>
+        <button id="resetOfficerProfile">Reset This Officer</button>
+      </div>
+      <div class="notice">Changing Officer saves/loads Officer-specific progress only. Shared Stars, vouchers, Universal Badges, Selection Chests and XP Books remain unchanged.</div>
+    </article>
+    <article class="card">
+      <h2>📈 Officer Upgrade Summary</h2>
+      <p class="muted">Live summary for the selected Officer using the resources currently entered in the calculator.</p>
+      <div id="upgradeSummary" class="result-box">Select an Officer and enter resources to see the current upgrade position.</div>
+    </article>
+  </section>
+
+  <section id="stars" class="view">
+    <article class="card">
+      <h2>⭐ Star Planner</h2>
+      <div class="two">
+        <div><label>Current Star Level</label><select id="currentStar"></select></div>
+        <div><label>Target Star Level</label><select id="targetStar"></select></div>
+      </div>
+      <div id="legendaryStarInventory">
+        <div class="two">
+          <div><label>Legendary Star I (110)</label><input id="ls1" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+          <div><label>Legendary Star II (420)</label><input id="ls2" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+        </div>
+        <label>Legendary Star III (960)</label><input id="ls3" type="number" min="0" step="1" inputmode="numeric" value="0">
+      </div>
+      <div id="epicStarInventory" style="display:none">
+        <div class="two"><div><label>Epic Star I (110)</label><input id="es1" type="number" min="0" value="0"></div><div><label>Epic Star II (420)</label><input id="es2" type="number" min="0" value="0"></div></div>
+        <label>Epic Star III (960)</label><input id="es3" type="number" min="0" value="0">
+      </div>
+      <div id="eliteStarInventory" style="display:none">
+        <div class="two"><div><label>Elite Star I (110)</label><input id="bs1" type="number" min="0" value="0"></div><div><label>Elite Star II (420)</label><input id="bs2" type="number" min="0" value="0"></div></div>
+        <label>Elite Star III (960)</label><input id="bs3" type="number" min="0" value="0">
+      </div>
+      <div class="notice" id="starRarityNotice"><b>Legendary Stars:</b> Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.</div>
+      <div id="srvStarFlow">
+        <label>Star Readiness Vouchers (SRV) Held</label><input id="srvHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+        <div class="stat"><span>Exclusive Stars from held SRV</span><b id="exclusiveFromSrv">0</b></div>
+        <div class="stat"><span>Officer Stars from held SRV</span><b id="officerStarsFromSrv">0</b></div>
+        <div class="stat"><span>Star Readiness Vouchers (SRV) remaining</span><b id="srvRemainder">0</b></div>
+      </div>
+      <div class="stat"><span>Stars used</span><b id="starsUsed">0</b></div>
+      <div class="stat"><span>Stars held</span><b id="starsHeld">0</b></div>
+      <div class="stat"><span>Stars required</span><b id="starsRequired">98,000</b></div>
+      <div class="progress"><span id="starBar"></span></div>
+    </article>
+  </section>
+
+  <section id="development" class="view">
+    <article class="card">
+      <h2>🏅 Officer Development</h2>
+      <label class="check"><input id="unlocked" type="checkbox"> Officer unlocked (10 badges)</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+<label style="margin:0">Skill Strands — each starts at Level 1</label>
+<button id="skillCostInfoBtn" type="button" title="Skill cost information" aria-label="Skill cost information" style="width:30px;height:30px;border-radius:50%;padding:0;font-weight:800">i</button>
+</div>
+<div id="skillGrid" class="skill-strands"></div>
+<div id="nextSkillCostSummary" class="notice" style="margin-top:8px"></div>
+      <div class="notice" id="skillSequenceNotice">Skill Promotion costs follow the selected Officer rarity.</div>
+      <label>Training Level: <b id="trainingLabel">0</b> / 180</label><div class="muted" id="trainingRarityNote">Training badge cost follows Officer rarity.</div>
+      <div style="display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center">
+        <input id="training" type="range" min="0" max="180" value="0">
+        <input id="trainingExact" type="number" min="0" max="180" step="1" inputmode="numeric" value="0" aria-label="Exact Training Level">
+      </div>
+      <label>Officer Badges Held</label><input id="badgeHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <label>Universal Legendary Badges Held</label><input id="universalBadgeHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <label>Universal Epic Badges Held</label><input id="universalEpicBadgeHeld" type="number" min="0" step="1" value="0">
+      <label>Universal Elite Badges Held</label><input id="universalEliteBadgeHeld" type="number" min="0" step="1" value="0">
+      <label>Legendary Officer Badge Selection Chests Held</label><input id="legendaryBadgeChestHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <div class="notice">
+        Each Selection Chest can be used as either <b>1 Universal Legendary Badge</b> or
+        <b><span id="selectionChestOrvValue">0</span> Officer Readiness Vouchers</b>.
+        The ORV value follows the highest ORV-per-badge cost in the latest published season.
+      </div>
+      <label>Use Selection Chests as</label>
+      <select id="legendaryBadgeChestMode">
+        <option value="badge">Universal Legendary Badges</option>
+        <option value="orv">Officer Readiness Vouchers</option>
+      </select>
+      <label>Officer Readiness Vouchers (ORV) Held</label><input id="orvHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <div class="stat"><span>Badges used</span><b id="badgesUsed">0</b></div>
+      <div class="stat"><span>Universal Legendary Badges available</span><b id="universalBadgesAvailable">0</b></div>
+      <div class="stat"><span>ORV generated from Selection Chests</span><b id="selectionChestOrvGenerated">0</b></div>
+      <div class="stat"><span>Badges from held Officer Readiness Vouchers (ORV)</span><b id="badgesFromOrv">0</b></div>
+      <div class="stat"><span>Officer Readiness Vouchers (ORV) remaining after whole badges</span><b id="orvRemainder">0</b></div>
+      <div class="stat"><span>Badges required</span><b id="badgesRequired">1,600</b></div>
+      <div class="stat"><span>Officer Readiness Vouchers (ORV) required</span><b id="orvRequired">0</b></div>
+      <div class="progress"><span id="badgeBar"></span></div>
+    </article>
+  </section>
+
+  <section id="xp" class="view">
+    <article class="card">
+      <h2>📘 Officer XP</h2>
+      <div class="two">
+        <div><label>Current Level</label><input id="currentLevel" type="number" min="0" max="70" step="1" inputmode="numeric" value="0"></div>
+        <div><label>Target Level</label><input id="targetLevel" type="number" min="1" max="70" step="1" inputmode="numeric" value="70"></div>
+      </div>
+      <div class="notice">1–40: 5,806,700 · 41–50: 16,960,000 · 51–60: 53,430,000 · 61–70: 123,450,000</div>
+      <div id="xpBooks" class="xp-grid"></div>
+      <div class="stat"><span>XP held in books</span><b id="xpHeld">0</b></div>
+      <div class="stat"><span>XP required for selected levels</span><b id="xpRequired">199,646,700</b></div>
+      <div class="stat"><span>XP shortfall</span><b id="xpShortfall">199,646,700</b></div>
+      <div class="progress"><span id="xpBar"></span></div>
+    </article>
+  </section>
+
+  <section id="planner" class="view">
+    <article class="card">
+      <h2>🎯 Goals Planner</h2>
+      <label>Goal</label>
+      <select id="goalSelect">
+        <option value="max">Max Officer</option>
+        <option value="nextStar">Next Star</option>
+        <option value="fiveStar">Reach 5★</option>
+        <option value="maxSkills">Max Skills</option>
+        <option value="maxTraining">Max Training</option>
+      </select>
+      <div class="table-wrap"><table><thead><tr><th>Resource</th><th>Required</th><th>Held</th><th>Shortfall</th></tr></thead><tbody id="plannerRows"></tbody></table></div>
+      <button id="saveProgress" class="primary">Save Progress</button>
+    </article>
+      <article class="card">
+      <h2>🧮 Resource Optimiser — Preview</h2>
+      <p class="muted">Preview of shared badge resources against the selected Officer. It does not spend or alter resources.</p>
+      <div class="two" style="margin-bottom:10px">
+        <div><label>Compare with Officer</label><select id="compareOfficerSelect"></select></div>
+        <div><label>Comparison</label><div id="compareHint" class="notice">Choose another Officer to compare badge efficiency.</div></div>
+      </div>
+      <div id="optimiserSummary" class="result-box">Enter resources and select an Officer to see the optimiser preview.</div>
+    </article>
+
+    <article class="card" id="multiPlannerCard">
+      <h2>👥 Multi-Officer Upgrade Planner</h2>
+      <p class="muted">Build a priority list and preview how shared badge resources could be allocated. This planner does not spend or alter your normal saved resources.</p>
+
+      <div class="two">
+        <div><label>Plan name</label><input id="multiPlanName" value="Current Upgrades" placeholder="e.g. Next Season"></div>
+        <div><label>Saved plan</label><select id="multiSavedPlans"><option value="">— Select saved plan —</option></select></div>
+      </div>
+
+      <div class="two">
+        <div><label>Shared ORV available</label><input id="multiOrv" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+        <div><label>Universal Legendary Badges available</label><input id="multiUniversal" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+      </div>
+      <div class="two">
+        <div><label>Legendary Officer Badge Selection Chests</label><input id="multiChests" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+        <div><label>Chest strategy</label><select id="multiChestMode"><option value="optimise">Optimise automatically</option><option value="badge">Use as Universal Badges</option><option value="orv">Convert to ORV (600 each)</option></select></div>
+      </div>
+
+      <div class="toolbar" style="margin-top:10px">
+        <button id="multiUseCurrent">Use current held resources</button>
+        <button id="multiAddOfficer">+ Add Officer</button>
+        <button id="multiSavePlan" class="primary">Save Plan</button>
+        <button id="multiDeletePlan">Delete Saved Plan</button>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px">
+        <table>
+          <thead><tr><th>Priority</th><th>Officer</th><th>Badges Needed</th><th>ORV / Badge</th><th>Allocated</th><th>Status</th><th>Order</th></tr></thead>
+          <tbody id="multiPlannerRows"></tbody>
+        </table>
+      </div>
+      <div id="multiPlannerSummary" class="result-box">Add Officers to build an upgrade plan.</div>
+    </article>
+</section>
+
+  <section id="database" class="view">
+    <article class="card">
+      <h2>📋 Officer Database</h2>
+      <div class="toolbar">
+        <input id="dbSearch" placeholder="Search officers">
+        <select id="dbSeason"><option value="">All seasons</option></select>
+        <button id="dbAdd">Add Officer</button>
+        <button id="dbSave">Save</button>
+        <button id="dbExport">Export CSV</button>
+        <label class="filebtn">Import CSV<input id="dbImport" type="file" accept=".csv,text/csv"></label>
+        <button id="dbRestore">Restore Defaults</button>
+      </div>
+      <div class="table-wrap"><table class="db-table"><thead><tr><th>Name</th><th>Season</th><th>ORV</th><th>SRV</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="dbRows"></tbody></table></div>
+      <div id="dbValidation" class="notice"></div>
+    </article>
+  </section>
+
+  
+  <section id="help" class="view">
+    <article class="card">
+      <h2>❓ Help & Instructions</h2>
+      <div id="helpLanguageBody"></div>
+    </article>
+  </section>
+
+
+<section id="releases" class="view">
+<article class="card" id="futureOfficerForecastCard">
+  <h2>🔮 Future Officer Cost Forecast</h2>
+  <p class="muted">Forecast future Officer costs from the established Officer-release sequence. The model uses the latest known S7 Tank Destroyer release (600 ORV / 300 SRV) and compounds approximately 20% for each future Officer release.</p>
+
+  <div class="two">
+    <div>
+      <label>Future Officer release</label>
+      <select id="forecastRelease">
+        <option value="1">October — S8 Rally / Garrison</option>
+        <option value="2">January — S8 Infantry</option>
+        <option value="3" selected>April — S8 Tanks</option>
+        <option value="4">July — S8 Tank Destroyers</option>
+      </select>
+    </div>
+    <div>
+      <label>Forecast increase per Officer release</label>
+      <input id="forecastGrowth" type="number" min="0" max="100" step="0.1" value="20">
+    </div>
+  </div>
+
+  <div class="two">
+    <div>
+      <label>Officer Badges required</label>
+      <input id="forecastBadges" type="number" min="0" step="1" value="1600">
+    </div>
+    <div>
+      <label>Officer Star value required</label>
+      <input id="forecastStarValue" type="number" min="0" step="110" value="98000">
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="result-box"><b>Forecast ORV / Badge</b><br><span id="forecastOrvPerBadge">—</span></div>
+    <div class="result-box"><b>Forecast SRV / Exclusive Star</b><br><span id="forecastSrvPerStar">—</span></div>
+  </div>
+  <div class="two">
+    <div class="result-box"><b>Estimated ORV to fund Badges</b><br><span id="forecastTotalOrv">—</span></div>
+    <div class="result-box"><b>Estimated SRV to fund Stars</b><br><span id="forecastTotalSrv">—</span></div>
+  </div>
+  <div class="notice" id="forecastNote">Forecast only — actual release costs should replace the estimate when published.</div>
+</article>
+
+ <article class="card">
+  <h2>📅 Recurring Release Calendar</h2>
+  <p class="notice">KoW releases follow this recurring August → July annual cycle. The current month is highlighted automatically.</p>
+  <div id="nextRelease" class="notice" style="margin:12px 0"></div>
+  <div id="releaseCalendar"></div>
+ </article>
+</section>
+
+
+<section id="settings" class="view">
+<article class="card">
+  <h2>🌐 Language</h2>
+  <p class="muted">Choose the language used by the app interface. Officer names and game data are not translated.</p>
+  <label>App language</label>
+  <select id="appLanguage">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+  </select>
+  <div class="notice">Your language choice is saved automatically on this device.</div>
+</article>
+
+    <article class="card">
+      <h2>⚙ Settings</h2>
+      <label>App Name</label><input id="appName" value="GODS OF WAR 371">
+      <h3>Responsive Backgrounds</h3>
+      <p class="notice">The app automatically uses the Portrait background on portrait screens and the Landscape background on landscape/PC screens.</p>
+      <label>Portrait Background (Mobile / Tablet)</label>
+      <input id="portraitBackgroundPicker" type="file" accept="image/*">
+      <div class="background-status"><span>Active portrait background</span><b id="portraitBgStatus">Built-in default portrait</b></div>
+      <label>Landscape Background (PC / Landscape)</label>
+      <input id="landscapeBackgroundPicker" type="file" accept="image/*">
+      <div class="background-status"><span>Active landscape background</span><b id="landscapeBgStatus">Built-in default landscape</b></div>
+      <button id="resetAppearance" class="primary">Reset Appearance & Backgrounds</button>
+      <h3>App Updates</h3>
+      <div class="notice">
+        <div><b>Installed version:</b> <span id="installedVersion"></span></div>
+        <div id="updateStatus">Tap Check for Updates to compare with the latest GitHub Pages version.</div>
+      </div>
+      <div class="two">
+        <button id="checkUpdates" class="primary">Check for Updates</button>
+        <button id="refreshLatest" class="primary">Refresh Latest Version</button>
+      </div>
+      <h3>About</h3>
+      <p class="notice"><b>KoW Companion <span id="aboutVersion"></span> LIVE</b><br>Created by FireStorm (371)</p>
+      <h3>Version Integrity</h3>
+      <div id="versionIntegrity" class="notice">Checking build version consistency…</div>
+
+      <h3>Help & Instructions</h3>
+      <p class="notice">Open the in-app User Guide for the recommended setup order, explanations of every tab, saving, database publishing, vouchers, badges and Original Officer restrictions.</p>
+      <button id="openUserGuide" class="primary">📖 User Guide</button>
+          <h3>Backup & Restore</h3>
+      <p class="notice">Export all locally saved KoW Companion browser data, or restore a previous JSON backup.</p>
+      <div class="two">
+        <button id="backupAppData" class="primary">⬇ Export App Backup</button>
+        <label class="button-like">⬆ Restore App Backup<input id="restoreAppData" type="file" accept=".json,application/json" hidden></label>
+      </div>
+      <div id="backupStatus" class="notice" style="margin-top:10px">No backup created yet.</div>
+</article>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button data-view="dashboard" class="active">🏠<span>Home</span></button>
+  <button data-view="progress">📊<span>Progress</span></button>
+  <button data-view="officer">👤<span>Officer</span></button>
+  <button data-view="stars">⭐<span>Stars</span></button>
+  <button data-view="development">🏅<span>Develop</span></button>
+  <button data-view="xp">📘<span>XP</span></button>
+  <button data-view="planner">🎯<span>Planner</span></button>
+  <button data-view="database">📋<span>Database</span></button>
+  <button data-view="releases">📅<span>Releases</span></button>
+  <button data-view="settings">⚙️<span>Settings</span></button>
+  <button data-view="help">📖<span>Help</span></button>
+</nav>
+
+
+<script src="lang/en.js?v=4.3.35"></script>
+<script src="lang/fr.js?v=4.3.35"></script>
+<script src="lang/de.js?v=4.3.35"></script>
+<script src="lang/it.js?v=4.3.35"></script>
+<script type="module">
+const DEFAULT_OFFICERS=[{"name":"S7 Roisin","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Barbara","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Romana","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Liora","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Stella","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Klara","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Code","season":"S7","role":"Rally","orv":346,"srv":173,"notes":"Rally","rarity":"Legendary"},{"name":"S7 Kamila","season":"S7","role":"Garrison","orv":346,"srv":173,"notes":"Garrison","rarity":"Legendary"},{"name":"S6 Regina","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Veronica","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Silverhand","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Red Queen","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Samantha","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Saoirse","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Emily","season":"S6","role":"Rally","orv":167,"srv":84,"notes":"Rally","rarity":"Legendary"},{"name":"S6 Zoya","season":"S6","role":"Garrison","orv":167,"srv":84,"notes":"Garrison","rarity":"Legendary"},{"name":"S5 Feng","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Halina","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Eva","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Elsa","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Camile","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Betty","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Miyeon","season":"S5","role":"Rally","orv":80,"srv":40,"notes":"Rally","rarity":"Legendary"},{"name":"S5 Julia","season":"S5","role":"Garrison","orv":80,"srv":40,"notes":"Garrison","rarity":"Legendary"},{"name":"S4 Melina","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Jane","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Anna","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Yuki","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Eunice","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Derya","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Hardwin","season":"S4","role":"Rally","orv":39,"srv":20,"notes":"Rally","rarity":"Legendary"},{"name":"S4 Erin","season":"S4","role":"Garrison","orv":39,"srv":20,"notes":"Garrison","rarity":"Legendary"},{"name":"S3 Su","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Erica","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Aurora","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Ada","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Hannah","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Christina","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Sophia","season":"S3","role":"Rally","orv":23,"srv":11,"notes":"Rally","rarity":"Legendary"},{"name":"S3 Oliva","season":"S3","role":"Garrison","orv":23,"srv":11,"notes":"Garrison","rarity":"Legendary"},{"name":"S2 Lady Pandora","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"S2 Amanda","season":"S2","role":"Infantry","orv":20,"srv":10,"notes":"Infantry","rarity":"Legendary"},{"name":"S2 Diana","season":"S2","role":"Tank Destroyer","orv":20,"srv":10,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S2 Natalia","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"Katherine","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Grace","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Chloe","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Ling","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Jessica","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Lilith","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Angel","season":"Original","role":"Gatherer","orv":0,"srv":0,"notes":"Gatherer","rarity":"Legendary"},{"name":"Sakura","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Loubna","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Angelica","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Ophelia","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Doireann","season":"Original","role":"Garrison","orv":0,"srv":0,"notes":"Garrison","rarity":"Legendary"},{"name":"Dorothea","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Abigail","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Monica","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Epic"},{"name":"Linda","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Riven","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Epic"},{"name":"Maria","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Epic"},{"name":"Evelyn","season":"Original","role":"Infantry, Gatherer","orv":0,"srv":0,"notes":"Infantry, Gatherer","rarity":"Epic"},{"name":"Helena","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Marjorie","season":"Original","role":"Tank, Gatherer","orv":0,"srv":0,"notes":"Tank, Gatherer","rarity":"Elite"},{"name":"Jeanne","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Elite"}];
+const STAR_CUM=[0,500,1500,8000,33000,98000];
+const LEGENDARY_SKILL_COSTS=[10,10,15,15,30,30,40,40,45,45,50,50,75,75,80,80];
+const EPIC_SKILL_COSTS=[10,10,15,15,20,20,25,25,30,30,35,35,40,40,45,45]; // confirmed total 440
+const ELITE_SKILL_COSTS=[10,10,15,15,20,20,25,25,30,30,35,35,40,40,45,45]; // confirmed total 440
+function skillCostsForOfficer(o=currentOfficer()){const r=officerRarity(o);return r==='Epic'?EPIC_SKILL_COSTS:r==='Elite'?ELITE_SKILL_COSTS:LEGENDARY_SKILL_COSTS;}
+const SKILL_COSTS=LEGENDARY_SKILL_COSTS;
+const XP_DENOMS=[50,100,500,1000,5000,10000,20000,50000];
+const MAX_STAR=98000,MAX_BADGES=1600,MAX_XP=199646700;
+let officers=[],skills=Array(16).fill(false);
+const $=id=>document.getElementById(id);
+
+function getSkillStrandLevels(){
+ const levels=[];
+ for(let strand=0;strand<4;strand++){
+   let paid=0;
+   for(let step=0;step<4;step++){
+     if(skills[strand*4+step]) paid++;
+     else break;
+   }
+   levels.push(1+paid);
+ }
+ return levels;
+}
+function strandRequiredStars(strand){ return Math.max(0,Math.min(3,Number(strand)||0)); }
+function strandIsAvailable(strand,starValue=null,unlockedValue=null){
+ const stars=starValue===null ? Number($('currentStar')?.value||0) : Number(starValue||0);
+ const unlocked=unlockedValue===null ? !!$('unlocked')?.checked : !!unlockedValue;
+ return unlocked && stars>=strandRequiredStars(strand);
+}
+function strandRequirementText(strand,starValue=null,unlockedValue=null){
+ const unlocked=unlockedValue===null ? !!$('unlocked')?.checked : !!unlockedValue;
+ if(!unlocked)return 'Requires Officer unlock';
+ const req=strandRequiredStars(strand);
+ return req===0?'Available when Officer is unlocked':`Requires ${req}★`;
+}
+
+function setSkillStrandLevel(strand,level){
+ if(!strandIsAvailable(strand))return;
+ level=Math.max(1,Math.min(5,Number(level)||1));
+ for(let step=0;step<4;step++){
+   skills[strand*4+step]=step < (level-1);
+ }
+ renderSkillStrands();
+ calculate();
+ scheduleOfficerAutoSave();
+}
+function totalPaidSkillUpgrades(){
+ return getSkillStrandLevels().reduce((sum,lvl)=>sum+(lvl-1),0);
+}
+function skillBadgesSpent(o=currentOfficer()){
+ const n=totalPaidSkillUpgrades();
+ const c=skillCostsForOfficer(o); return c.slice(0,n).reduce((a,b)=>a+b,0);
+}
+function nextSkillUpgradeCost(o=currentOfficer()){
+ const n=totalPaidSkillUpgrades();
+ const c=skillCostsForOfficer(o); return n>=c.length?0:c[n];
+}
+function skillCostStatusText(o=currentOfficer()){
+ const levels=getSkillStrandLevels(),n=totalPaidSkillUpgrades(),next=nextSkillUpgradeCost(o);
+ const c=skillCostsForOfficer(o);
+ const total=c.reduce((a,b)=>a+b,0);
+ const spent=c.slice(0,n).reduce((a,b)=>a+b,0);
+ const remaining=Math.max(0,total-spent);
+ const state=levels.map((lvl,i)=>`Strand ${i+1}: Lv${lvl}`).join(' · ');
+ return n>=16
+   ? `${state} · Skills complete · ${spent}/${total} badges used · 0 remaining.`
+   : `${state} · Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`;
+}
+function updateSkillCostSummaries(){
+ const o=currentOfficer();
+ const a=$('nextSkillCostSummary');if(a)a.innerHTML=`<b>${skillCostStatusText(o)}</b>`;
+ const b=document.getElementById('quickNextSkillCostSummary');if(b)b.innerHTML=`<b>${skillCostStatusText(o)}</b>`;
+}
+function updateSkillRarityNotice(o=currentOfficer()){
+ const el=$('skillSequenceNotice');if(!el||!o)return;
+ const rarity=officerRarity(o),costs=skillCostsForOfficer(o),total=costs.reduce((a,b)=>a+b,0);
+ el.innerHTML=`Strands unlock with the Officer’s Current Star Level: unlocked at 0★ = Strand 1, 1★ = Strands 1–2, 2★ = Strands 1–3, and 3★+ = all four strands. Level 1 is free when a strand becomes available. <b>${rarity} Promotion sequence:</b> ${costs.join(', ')} badges · <b>${total} total</b>.`;
+}
+function openSkillCostInfo(){
+ const used=totalPaidSkillUpgrades(),rows=document.getElementById('skillCostSequenceRows');
+ const costs=skillCostsForOfficer(); if(rows)rows.innerHTML=costs.map((c,i)=>`<tr><td>${i+1}${i===used?' ← NEXT':''}</td><td>${c}</td></tr>`).join('');
+ const o=currentOfficer();
+ const cur=document.getElementById('skillCostCurrent');if(cur)cur.innerHTML=`<b>${officerRarity(o)} Officer · ${skillCostStatusText(o)}</b>`;
+ const levels=getSkillStrandLevels(),next=nextSkillUpgradeCost(o),per=document.getElementById('skillCostPerStrand');
+ if(per)per.innerHTML=levels.map((lvl,i)=>lvl>=5?`<b>Strand ${i+1}:</b> Level 5 — MAX`:`<b>Strand ${i+1}:</b> Level ${lvl} → Level ${lvl+1} would currently cost ${next} badges`).join('<br>');
+ document.getElementById('skillCostInfoModal').style.display='block';
+}
+function closeSkillCostInfo(){document.getElementById('skillCostInfoModal').style.display='none';}
+function renderSkillStrands(){
+ const g=$('skillGrid'); if(!g)return;
+ g.innerHTML='';
+ const levels=getSkillStrandLevels();
+ for(let strand=0;strand<4;strand++){
+   const available=strandIsAvailable(strand);
+   const row=document.createElement('div');
+   row.className='skill-strand-row'+(available?'':' locked');
+
+   const label=document.createElement('div');
+   label.className='skill-strand-label';
+   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${strandRequirementText(strand)}</span>`}`;
+   row.appendChild(label);
+
+   const controls=document.createElement('div');
+   controls.className='skill-strand-controls';
+
+   for(let level=1;level<=5;level++){
+     const b=document.createElement('button');
+     b.type='button';
+     b.disabled=!available;
+     b.className='skill-lvl'+(level===1?' free':'')+(level<=levels[strand]?' reached':'')+(levels[strand]===level?' active':'')+(available?'':' locked');
+     b.textContent=level===1?'Lv1 ✓':`Lv${level}`;
+     b.title=available
+       ? (level===1?'Level 1 is free on this unlocked strand':`Set Strand ${strand+1} to Level ${level}`)
+       : strandRequirementText(strand);
+     b.onclick=()=>setSkillStrandLevel(strand,level);
+     controls.appendChild(b);
+   }
+   row.appendChild(controls);
+   g.appendChild(row);
+ }
+ updateSkillCostSummaries();
+ updateSkillRarityNotice();
+}
+
+function applyResponsivePageBackground(){
+ const portrait=localStorage.getItem('kow_bg_portrait_v401');
+ const landscape=localStorage.getItem('kow_bg_landscape_v401');
+ const isLandscape=window.matchMedia('(orientation: landscape)').matches;
+ const chosen=isLandscape?landscape:portrait;
+ const fallback=isLandscape?'background-landscape.jpg?v=413':'background-portrait.jpg?v=413';
+ document.documentElement.style.setProperty('--page-bg',`url("${chosen||fallback}")`);
+}
+const fmt=n=>Math.max(0,Math.round(Number(n)||0)).toLocaleString();
+const pct=(v,m)=>Math.min(100,Math.max(0,m?100*v/m:0));
+const clone=v=>JSON.parse(JSON.stringify(v));
+
+function normalizeOfficer(o){
+ let name=String(o?.name||'').trim();
+ if(name.toLowerCase()==='dorethea'||name.toLowerCase()==='dorothea')name='Dorothea';
+ const season=String(o?.season||name.match(/^S\d+/)?.[0]||'').trim();
+ return {name,season,orv:Number(o?.orv)||0,srv:Number(o?.srv)||0,role:String(o?.role||'').trim(),notes:String(o?.notes||''),rarity:['Legendary','Epic','Elite'].includes(o?.rarity)?o.rarity:'Legendary',readinessEligible:season.toLowerCase()!=='original'&&o?.readinessEligible!==false}
+}
+async function loadOfficers(){
+ let published=clone(DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);
+ try{
+   const response=await fetch('./officers.json?v=435-live-comprehensive-docs',{cache:'no-store'});
+   if(response.ok){
+     const data=await response.json();
+     if(Array.isArray(data)&&data.length){
+       // Merge the published file into the bundled database instead of replacing it.
+       // This keeps newly bundled Officers available when a browser/repository still has
+       // an older 56-Officer officers.json during an upgrade.
+       const fetched=data.map(normalizeOfficer).filter(o=>o.name);
+       const byName=new Map(published.map(o=>[o.name.toLowerCase(),o]));
+       fetched.forEach(o=>{
+         const key=o.name.toLowerCase();
+         const existing=byName.get(key);
+         if(existing) Object.assign(existing,o);
+         else { published.push(o); byName.set(key,o); }
+       });
+     }
+   }
+ }catch(e){}
+
+ try{
+   const saved=JSON.parse(localStorage.getItem('kow_officers_v4')||'null');
+   if(Array.isArray(saved)&&saved.length){
+     const merged=saved.map(normalizeOfficer).filter(o=>o.name);
+     const names=new Set(merged.map(o=>o.name.toLowerCase()));
+     published.forEach(o=>{
+       const key=o.name.toLowerCase();
+       const existing=merged.find(x=>x.name.toLowerCase()===key);
+       if(!existing){
+         merged.push(o);
+         names.add(key);
+       }else{
+         // Published officer metadata wins over stale cached filter metadata.
+         existing.season=o.season;
+         existing.notes=o.notes;
+         existing.role=officerRole(o);
+         existing.orv=o.orv;
+         existing.srv=o.srv;
+         existing.readinessEligible=o.readinessEligible;
+         existing.rarity=o.rarity;
+       }
+     });
+     officers=merged;
+   }else{
+     officers=clone(published);
+   }
+   window.KOW_PUBLISHED_OFFICERS=clone(published);
+   saveOfficers();
+ }catch(e){
+   officers=clone(published);
+   window.KOW_PUBLISHED_OFFICERS=clone(published);
+ }
+}
+function saveOfficers(){localStorage.setItem('kow_officers_v4',JSON.stringify(officers))}
+function currentOfficer(){const s=$('officerSelect');if(s&&s.value==='')return null;return officers[+s?.value]||officers[0]||{name:'Officer',season:'',orv:0,srv:0,readinessEligible:true}}
+function officerPortraitCandidates(name){
+ const slug=String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+ return [
+  'officer-portraits/officer-'+slug+'.jpg',
+  'officer-portraits/'+slug+'.jpg',
+  'officer-'+slug+'.jpg',
+  slug+'.jpg'
+ ];
+}
+function officerRole(o){ return String(o?.role||'').trim()||'Unspecified'; }
+function officerRoles(o){ return officerRole(o).split(',').map(v=>v.trim()).filter(Boolean); }
+function officerRarity(o){ return ['Legendary','Epic','Elite'].includes(o?.rarity)?o.rarity:'Legendary'; }
+function trainingBadgeCost(o=currentOfficer()){ return officerRarity(o)==='Elite'?100:officerRarity(o)==='Epic'?25:5; }
+function promotionBadgeTotal(o=currentOfficer()){return officerRarity(o)==='Epic'?440:officerRarity(o)==='Elite'?440:690;}
+function maxBadgesForOfficer(o=currentOfficer()){ return 10+promotionBadgeTotal(o)+180*trainingBadgeCost(o); }
+function seasonSort(a,b){
+ if(a==='Original')return -1;if(b==='Original')return 1;
+ const an=Number(String(a).match(/\d+/)?.[0]||999),bn=Number(String(b).match(/\d+/)?.[0]||999);
+ return an-bn||String(a).localeCompare(String(b));
+}
+function renderOfficerFilters(){
+ const seasonEl=$('officerSeasonFilter'),roleEl=$('officerRoleFilter');if(!seasonEl||!roleEl)return;
+ const currentSeason=seasonEl.value,currentRole=roleEl.value;
+ const seasons=[...new Set(officers.map(o=>o.season).filter(Boolean))].sort(seasonSort);
+ const roles=[...new Set(officers.flatMap(officerRoles).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ seasonEl.innerHTML='<option value="">All Seasons</option>'+seasons.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+ roleEl.innerHTML='<option value="">All Roles</option>'+roles.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+ if(seasons.includes(currentSeason))seasonEl.value=currentSeason;
+ if(roles.includes(currentRole))roleEl.value=currentRole;
+}
+function filteredOfficerIndexes(){
+ const q=String($('officerSearch')?.value||'').trim().toLowerCase();
+ const season=$('officerSeasonFilter')?.value||'',rarity=$('officerRarityFilter')?.value||'',role=$('officerRoleFilter')?.value||'';
+ return officers.map((o,i)=>({o,i})).filter(({o})=>
+  (!q||o.name.toLowerCase().includes(q))&&(!season||o.season===season)&&(!rarity||officerRarity(o)===rarity)&&(!role||officerRoles(o).includes(role))
+ );
+}
+function renderOfficerOptions(name){
+ const s=$('officerSelect');if(!s)return;
+ const prev=name||s.options[s.selectedIndex]?.textContent||currentOfficer()?.name||'S7 Liora';
+ const rows=filteredOfficerIndexes();
+ s.innerHTML=rows.map(({o,i})=>`<option value="${i}">${esc(o.name)}</option>`).join('');
+ let chosen=rows.find(({o})=>o.name===prev);
+ if(!chosen)chosen=rows[0];
+ if(chosen){
+   s.value=chosen.i;
+   $('officerFilterCount').textContent=rows.length;
+   updateOfficerExperience();
+ }else{
+   s.innerHTML='<option value="">No Officers match these filters</option>';
+   $('officerFilterCount').textContent='0';
+   if($('officerSeasonValue'))$('officerSeasonValue').textContent='—';
+   if($('officerRarityValue'))$('officerRarityValue').textContent='—';
+   if($('officerRoleValue'))$('officerRoleValue').textContent='—';
+   if($('orvCost'))$('orvCost').value='';
+   if($('srvCost'))$('srvCost').value='';
+   if($('officerPortrait'))$('officerPortrait').style.display='none';
+   if($('officerPortraitPlaceholder'))$('officerPortraitPlaceholder').style.display='flex';
+ }
+}
+function setPortraitWithFallback(img,placeholder,candidates,index=0){
+ if(!img)return;
+ if(index>=candidates.length){
+  img.style.display='none';
+  if(placeholder)placeholder.style.display='flex';
+  return;
+ }
+ img.onload=()=>{
+  img.style.display='block';
+  if(placeholder)placeholder.style.display='none';
+ };
+ img.onerror=()=>setPortraitWithFallback(img,placeholder,candidates,index+1);
+ img.src=candidates[index]+'?v=4213';
+}
+function updateOfficerExperience(){
+ const o=currentOfficer();if(!o)return;
+ const role=officerRole(o),candidates=officerPortraitCandidates(o.name);
+ if($('officerSeasonValue'))$('officerSeasonValue').textContent=o.season||'—';
+ if($('officerRarityValue'))$('officerRarityValue').textContent=officerRarity(o);
+ if($('officerRoleValue'))$('officerRoleValue').textContent=role;
+ updateStarRarityUI(o);
+ if($('dashOfficerRole'))$('dashOfficerRole').textContent=[o.season,role].filter(Boolean).join(' · ');
+ if($('expectedPortraitFile'))$('expectedPortraitFile').textContent=candidates[0];
+
+ const img=$('officerPortrait'),placeholder=$('officerPortraitPlaceholder');
+ setPortraitWithFallback(img,placeholder,candidates);
+
+ const dash=$('dashOfficerPortrait');
+ if(dash){
+  dash.onload=()=>dash.style.display='block';
+  dash.onerror=()=>{
+   const current=decodeURIComponent(dash.getAttribute('data-portrait-index')||'0');
+   const next=Number(current)+1;
+   if(next<candidates.length){
+    dash.setAttribute('data-portrait-index',String(next));
+    dash.src=candidates[next]+'?v=4213';
+   }else{
+    dash.style.display='none';
+   }
+  };
+  dash.setAttribute('data-portrait-index','0');
+  dash.src=candidates[0]+'?v=4213';
+ }
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function cumulativeXp(level){
+ level=Math.max(1,Math.min(70,Number(level)||1));
+ if(level<=1)return 0;
+ if(level<=40)return 5806700*((level-1)/39);
+ if(level<=50)return 5806700+16960000*((level-40)/10);
+ if(level<=60)return 22766700+53430000*((level-50)/10);
+ return 76196700+123450000*((level-60)/10);
+}
+
+
+function latestSeasonOrvCost(){
+ const seasonal=officers
+  .map(o=>({...o,seasonNum:Number(String(o.season||'').match(/^S(\d+)$/i)?.[1]||0)}))
+  .filter(o=>o.seasonNum>0&&o.readinessEligible!==false&&Number(o.orv)>0);
+ if(!seasonal.length)return 0;
+ const latest=Math.max(...seasonal.map(o=>o.seasonNum));
+ return Math.max(...seasonal.filter(o=>o.seasonNum===latest).map(o=>Number(o.orv)||0));
+}
+
+
+$('currentLevel')?.addEventListener('input',()=>{
+ const level=Number($('currentLevel').value);
+ if(Number.isFinite(level) && level>0 && !$('unlocked').checked){
+  $('unlocked').checked=true;
+  renderSkillStrands();
+ }
+});
+
+function clampTrainingValue(v){
+ v=Math.round(Number(v)||0);
+ return Math.max(0,Math.min(180,v));
+}
+function syncMainTrainingFromSlider(){
+ const v=clampTrainingValue($('training').value);
+ $('training').value=v;
+ if($('trainingExact'))$('trainingExact').value=v;
+ if($('trainingLabel'))$('trainingLabel').textContent=v;
+}
+function syncMainTrainingFromExact(){
+ const v=clampTrainingValue($('trainingExact').value);
+ $('trainingExact').value=v;
+ $('training').value=v;
+ if($('trainingLabel'))$('trainingLabel').textContent=v;
+ calculate();
+}
+$('training')?.addEventListener('input',syncMainTrainingFromSlider);
+$('trainingExact')?.addEventListener('input',syncMainTrainingFromExact);
+function updateStarRarityUI(o=currentOfficer()){
+ if(!o)return;
+ const rarity=officerRarity(o);
+ const map={Legendary:'legendaryStarInventory',Epic:'epicStarInventory',Elite:'eliteStarInventory'};
+ Object.entries(map).forEach(([r,id])=>{const el=$(id);if(el)el.style.display=r===rarity?'block':'none';});
+ const srvFlow=$('srvStarFlow');if(srvFlow)srvFlow.style.display=rarity==='Legendary'?'block':'none';
+ const note=$('starRarityNotice');
+ if(note){
+  note.innerHTML=rarity==='Legendary'
+   ?'<b>Legendary Stars:</b> uses Legendary Star I / II / III. Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.'
+   :`<b>${rarity} Stars:</b> uses ${rarity} Star I / II / III only. ${rarity} Officers cannot use Star Readiness Vouchers (SRV).`;
+ }
+}
+
+function calculate(){
+ const o=currentOfficer();
+ if(!o)return;
+ if(!o)return;
+ updateStarRarityUI(o);
+ const readinessEligible=o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original';
+ $('orvCost').value=readinessEligible?o.orv:'N/A';$('srvCost').value=readinessEligible?o.srv:'N/A';$('dashOfficer').textContent=o.name;updateOfficerExperience();
+ $('orvHeld').disabled=!readinessEligible||officerRarity(o)!=='Legendary';$('srvHeld').disabled=!readinessEligible||officerRarity(o)!=='Legendary';
+ const trc=trainingBadgeCost(o); if($('trainingRarityNote'))$('trainingRarityNote').textContent=`${officerRarity(o)}: ${trc} badges per Training point · ${promotionBadgeTotal(o)} Promotion badges · ${fmt(maxBadgesForOfficer(o))} total to MAX.`;
+ updateSkillRarityNotice(o);
+ updateSkillCostSummaries();
+ $('orvHeld').title=readinessEligible?'':'Officer Readiness Vouchers are not available for Original Officers';
+ $('srvHeld').title=readinessEligible?'':'Star Readiness Vouchers are not available for Original Officers';
+
+ let cs=+$('currentStar').value,ts=+$('targetStar').value;if(ts<cs){ts=cs;$('targetStar').value=ts}
+ const starsUsed=STAR_CUM[cs];
+ const rarity=officerRarity(o);
+ const legendaryHeld=(rarity==='Epic'?(+$('es1').value*110 + +$('es2').value*420 + +$('es3').value*960):rarity==='Elite'?(+$('bs1').value*110 + +$('bs2').value*420 + +$('bs3').value*960):(+$('ls1').value*110 + +$('ls2').value*420 + +$('ls3').value*960));
+ const srvHeld=rarity==='Legendary'?+$('srvHeld').value:0;
+ const exclusiveFromSrv=rarity==='Legendary'&&readinessEligible&&o.srv>0?Math.floor(srvHeld/o.srv):0;
+ const srvRemainder=o.srv>0?srvHeld-exclusiveFromSrv*o.srv:srvHeld;
+ const starsFromSrv=exclusiveFromSrv*110;
+ const starsHeld=legendaryHeld+starsFromSrv;
+ const starsTotal=starsUsed+starsHeld;
+ const starsRequired=Math.max(0,STAR_CUM[ts]-starsTotal);
+ $('exclusiveFromSrv').textContent=fmt(exclusiveFromSrv);$('officerStarsFromSrv').textContent=fmt(starsFromSrv);$('srvRemainder').textContent=fmt(srvRemainder);
+ $('starsUsed').textContent=fmt(starsUsed);$('starsHeld').textContent=fmt(starsHeld);$('starsRequired').textContent=fmt(starsRequired);$('starBar').style.width=pct(starsTotal,STAR_CUM[ts]||1)+'%';
+
+ const badgesHeld=+$('badgeHeld').value;
+ const universalBadgesHeld=officerRarity(o)==='Epic'?+$('universalEpicBadgeHeld').value:officerRarity(o)==='Elite'?+$('universalEliteBadgeHeld').value:+$('universalBadgeHeld').value;
+ const selectionChests=officerRarity(o)==='Legendary'?+$('legendaryBadgeChestHeld').value:0;
+ const selectionMode=$('legendaryBadgeChestMode').value;
+ const latestOrvCost=latestSeasonOrvCost();
+ const selectionChestBadges=selectionMode==='badge'?selectionChests:0;
+ const selectionChestOrv=selectionMode==='orv'?selectionChests*latestOrvCost:0;
+ const universalBadgesAvailable=universalBadgesHeld+selectionChestBadges;
+ const directOrv=+$('orvHeld').value;
+ const orvHeld=directOrv+selectionChestOrv;
+ $('selectionChestOrvValue').textContent=fmt(latestOrvCost);
+ $('selectionChestOrvGenerated').textContent=fmt(selectionChestOrv);
+ $('universalBadgesAvailable').textContent=fmt(universalBadgesAvailable);
+
+ const officerMaxBadges=maxBadgesForOfficer(o);
+ const badgesUsed=($('unlocked').checked?10:0)+skillBadgesSpent()+ +$('training').value*trainingBadgeCost(o);
+ const badgesFromOrv=readinessEligible&&o.orv>0?Math.floor(orvHeld/o.orv):0;
+ const orvRemainder=o.orv>0?orvHeld-badgesFromOrv*o.orv:orvHeld;
+ const badgeTotal=badgesUsed+badgesHeld+universalBadgesAvailable+badgesFromOrv;
+ const badgesRequired=Math.max(0,officerMaxBadges-badgeTotal);
+ const orvRequired=readinessEligible?badgesRequired*o.orv:0;
+ $('trainingLabel').textContent=$('training').value;$('badgesUsed').textContent=fmt(badgesUsed);$('badgesFromOrv').textContent=fmt(badgesFromOrv);$('orvRemainder').textContent=fmt(orvRemainder);$('badgesRequired').textContent=fmt(badgesRequired);$('orvRequired').textContent=fmt(orvRequired);$('badgeBar').style.width=pct(badgeTotal,officerMaxBadges)+'%';
+
+ let xpHeld=0;XP_DENOMS.forEach(v=>xpHeld+=(+($('xp'+v)?.value||0))*v);
+ const cl=Math.max(1,Math.min(70,Number($('currentLevel').value)||1));const tl=Math.max(cl,Math.min(70,Number($('targetLevel').value)||70));
+ const xpRequired=Math.max(0,cumulativeXp(tl)-cumulativeXp(cl));const xpShortfall=Math.max(0,xpRequired-xpHeld);
+ $('xpHeld').textContent=fmt(xpHeld);$('xpRequired').textContent=fmt(xpRequired);$('xpShortfall').textContent=fmt(xpShortfall);$('xpBar').style.width=pct(xpHeld,xpRequired||1)+'%';
+
+ const overall=(pct(starsTotal,MAX_STAR)+pct(badgeTotal,officerMaxBadges)+pct(xpHeld,MAX_XP))/3;
+ $('overallPct').textContent=overall.toFixed(1)+'%';$('overallBar').style.width=overall+'%';
+ $('dashStarsHeld').textContent=fmt(starsHeld);$('dashStarsRequired').textContent=fmt(Math.max(0,MAX_STAR-starsTotal));
+ $('dashBadgesFromOrv').textContent=fmt(badgesFromOrv);$('dashBadgesRequired').textContent=fmt(badgesRequired);
+ $('dashXpHeld').textContent=fmt(xpHeld);$('dashXpRequired').textContent=fmt(Math.max(0,MAX_XP-xpHeld));
+
+ renderPlanner(o,cs,starsUsed,legendaryHeld,srvHeld,badgesUsed,badgesHeld+universalBadgesAvailable,orvHeld,xpHeld,xpRequired);
+ if(typeof updateSmartDashboard==='function')updateSmartDashboard();
+}
+
+function renderPlanner(o,cs,starsUsed,legendaryHeld,srvHeld,badgesUsed,badgesHeld,orvHeld,xpHeld,xpRequiredSelected){
+ const readinessEligible=o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original';
+ const g=$('goalSelect').value;let starTarget=0,badgeTarget=0,xpTarget=0;
+ if(g==='nextStar')starTarget=STAR_CUM[Math.min(5,cs+1)];else if(g==='fiveStar'||g==='max')starTarget=MAX_STAR;
+ if(g==='maxSkills')badgeTarget=10+promotionBadgeTotal(o);else if(g==='maxTraining'||g==='max')badgeTarget=maxBadgesForOfficer(o);
+ if(g==='max')xpTarget=xpRequiredSelected;
+ const rarity=officerRarity(o);
+ const srvAllowed=rarity==='Legendary'&&readinessEligible;
+ const exclusiveFromSrv=srvAllowed&&o.srv?Math.floor(srvHeld/o.srv):0;
+ const starHeld=legendaryHeld+exclusiveFromSrv*110;
+ const badgesFromOrv=rarity==='Legendary'&&readinessEligible&&o.orv?Math.floor(orvHeld/o.orv):0;
+ const rows=[
+ [`${rarity} Stars`,Math.max(0,starTarget-starsUsed),starHeld],
+ ['Officer Badges',Math.max(0,badgeTarget-badgesUsed),badgesHeld+badgesFromOrv]
+ ];
+ if(rarity==='Legendary'){
+  rows.push(['Officer Readiness Vouchers',readinessEligible?Math.max(0,badgeTarget-badgesUsed-badgesHeld)*o.orv:0,readinessEligible?orvHeld:0]);
+  rows.push(['Exclusive Stars',Math.ceil(Math.max(0,starTarget-starsUsed-legendaryHeld)/110),exclusiveFromSrv]);
+  rows.push(['Star Readiness Vouchers',readinessEligible?Math.ceil(Math.max(0,starTarget-starsUsed-legendaryHeld)/110)*o.srv:0,readinessEligible?srvHeld:0]);
+ }
+ rows.push(['Officer XP',Math.max(0,xpTarget),xpHeld]);
+ $('plannerRows').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${fmt(Math.max(0,r[1]-r[2]))}</td></tr>`).join('');
+}
+
+function validateDb(list=officers){const e=[],seen=new Set();list.forEach((o,i)=>{const k=(o.name||'').trim().toLowerCase(),orig=String(o.season||'').toLowerCase()==='original';if(!k)e.push(`Row ${i+1}: name required`);if(k&&seen.has(k))e.push(`Row ${i+1}: duplicate name`);if(k)seen.add(k);if(!Number.isInteger(+o.orv)||(orig?+o.orv<0:+o.orv<=0))e.push(`Row ${i+1}: invalid ORV`);if(!Number.isInteger(+o.srv)||(orig?+o.srv<0:+o.srv<=0))e.push(`Row ${i+1}: invalid SRV`)});return e}
+function renderDb(){
+ const search=$('dbSearch');const filter=$('dbSeason');const tbody=$('dbRows');if(!search||!filter||!tbody)return;
+ const q=String(search.value||'').trim().toLowerCase();
+ const seasons=[...new Set(officers.map(o=>String(o.season||'').trim()).filter(Boolean))].sort();
+ const requested=filter.value||'';
+ filter.innerHTML='<option value="">All seasons</option>'+seasons.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
+ filter.value=seasons.includes(requested)?requested:'';
+ const season=filter.value;
+ const rows=officers.map((o,i)=>({...normalizeOfficer(o),_i:i})).filter(o=>(!q||o.name.toLowerCase().includes(q))&&(!season||o.season===season));
+ tbody.innerHTML=rows.map(o=>`<tr data-i="${o._i}"><td><input data-f="name" value="${esc(o.name)}"></td><td><input data-f="season" value="${esc(o.season)}"></td><td><input data-f="orv" type="number" min="1" step="1" value="${o.orv}"></td><td><input data-f="srv" type="number" min="1" step="1" value="${o.srv}"></td><td><input data-f="notes" value="${esc(o.notes)}"></td><td class="actions"><button data-copy>Copy</button><button data-del>Delete</button></td></tr>`).join('');
+ tbody.querySelectorAll('input').forEach(x=>x.oninput=e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;officers[i][f]=(f==='orv'||f==='srv')?Number(e.target.value):e.target.value;$('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`});
+ tbody.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;officers.splice(i+1,0,{...officers[i],name:officers[i].name+' Copy'});renderDb();renderOfficerOptions();calculate()});
+ tbody.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;if(officers.length>1)officers.splice(i,1);renderDb();renderOfficerOptions();calculate()});
+ $('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`;
+}
+
+function exportCsv(){const escCsv=v=>`"${String(v??'').replaceAll('"','""')}"`;const rows=[['Officer Name','Season','Officer Readiness Vouchers (ORV) per Badge','Star Readiness Vouchers (SRV) per Exclusive Star','Notes'],...officers.map(o=>[o.name,o.season,o.orv,o.srv,o.notes])];const blob=new Blob([rows.map(r=>r.map(escCsv).join(',')).join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='officers.csv';a.click();URL.revokeObjectURL(a.href)}
+function parseCsv(text){const lines=text.trim().split(/\r?\n/).slice(1);return lines.map(line=>{const p=line.match(/("([^"]|"")*"|[^,]*)(,|$)/g)?.map(x=>x.replace(/,$/,'').replace(/^"|"$/g,'').replaceAll('""','"'))||[];return{name:p[0]||'',season:p[1]||'',orv:Number(p[2]),srv:Number(p[3]),notes:p[4]||''}})}
+
+const OFFICER_PROFILE_KEY='kow_officer_profiles_v435';
+const GLOBAL_RESOURCE_KEY='kow_global_resources_v435';
+let loadedOfficerProfileIndex=null;
+
+function getOfficerProfiles(){
+ try{
+  const profiles=JSON.parse(localStorage.getItem(OFFICER_PROFILE_KEY)||'{}')||{};
+  const oldKey='Original|Dorethea',newKey='Original|Dorothea';
+  if(profiles[oldKey]&&!profiles[newKey]){
+   profiles[newKey]=profiles[oldKey];
+   delete profiles[oldKey];
+   localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
+  }else if(profiles[oldKey]){
+   delete profiles[oldKey];
+   localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
+  }
+  return profiles;
+ }catch{return {}}
+}
+function getGlobalResources(){
+ try{return JSON.parse(localStorage.getItem(GLOBAL_RESOURCE_KEY)||'{}')||{}}
+ catch{return {}}
+}
+function officerProfileKey(index){
+ const o=officers[+index];
+ return o ? `${o.season||''}|${o.name||''}` : String(index);
+}
+function officerDisplayName(o){
+ if(!o)return 'Officer';
+ const season=String(o.season||'').trim();
+ const name=String(o.name||'').trim();
+ if(!season)return name||'Officer';
+ return name.toLowerCase().startsWith((season+' ').toLowerCase()) ? name : `${season} ${name}`.trim();
+}
+
+// Officer-specific progress only.
+function captureOfficerProgress(){
+ return {
+  currentStar:$('currentStar').value,
+  targetStar:$('targetStar').value,
+  unlocked:$('unlocked').checked,
+  skills:[...skills],
+  training:$('training').value,
+  badgeHeld:$('badgeHeld').value,
+  currentLevel:$('currentLevel').value,
+  targetLevel:$('targetLevel').value,
+  goal:$('goalSelect').value,
+  savedAt:new Date().toISOString()
+ };
+}
+function applyOfficerProgress(d){
+ d=d||{};
+ $('currentStar').value=d.currentStar??0;
+ $('targetStar').value=d.targetStar??5;
+ $('unlocked').checked=!!d.unlocked;
+ skills=Array.isArray(d.skills)?d.skills.slice(0,16):Array(16).fill(false);
+ while(skills.length<16)skills.push(false);
+ $('training').value=d.training??0;
+ if($('trainingExact'))$('trainingExact').value=d.training??0;
+ if($('trainingLabel'))$('trainingLabel').textContent=d.training??0;
+ $('badgeHeld').value=d.badgeHeld??0;
+ $('currentLevel').value=d.currentLevel??1;
+ $('targetLevel').value=d.targetLevel??70;
+ $('goalSelect').value=d.goal??'max';
+ renderSkillStrands();
+}
+
+// Shared inventory/resources. These must NOT clear when switching Officer.
+function captureGlobalResources(){
+ const d={
+  ls1:$('ls1').value,
+  ls2:$('ls2').value,
+  ls3:$('ls3').value,
+  es1:$('es1').value,es2:$('es2').value,es3:$('es3').value,
+  bs1:$('bs1').value,bs2:$('bs2').value,bs3:$('bs3').value,
+  srvHeld:$('srvHeld').value,
+  universalBadgeHeld:$('universalBadgeHeld').value,
+  universalEpicBadgeHeld:$('universalEpicBadgeHeld').value,universalEliteBadgeHeld:$('universalEliteBadgeHeld').value,
+  legendaryBadgeChestHeld:$('legendaryBadgeChestHeld').value,
+  legendaryBadgeChestMode:$('legendaryBadgeChestMode').value,
+  orvHeld:$('orvHeld').value,
+  xp:{},
+  savedAt:new Date().toISOString()
+ };
+ XP_DENOMS.forEach(v=>d.xp[v]=$('xp'+v).value);
+ return d;
+}
+function applyGlobalResources(d){
+ d=d||{};
+ $('ls1').value=d.ls1??0;
+ $('ls2').value=d.ls2??0;
+ $('ls3').value=d.ls3??0;
+ $('es1').value=d.es1??0;$('es2').value=d.es2??0;$('es3').value=d.es3??0;
+ $('bs1').value=d.bs1??0;$('bs2').value=d.bs2??0;$('bs3').value=d.bs3??0;
+ $('srvHeld').value=d.srvHeld??0;
+ $('universalBadgeHeld').value=d.universalBadgeHeld??0;
+ $('universalEpicBadgeHeld').value=d.universalEpicBadgeHeld??0;$('universalEliteBadgeHeld').value=d.universalEliteBadgeHeld??0;
+ $('legendaryBadgeChestHeld').value=d.legendaryBadgeChestHeld??0;
+ $('legendaryBadgeChestMode').value=d.legendaryBadgeChestMode??'badge';
+ $('orvHeld').value=d.orvHeld??0;
+ XP_DENOMS.forEach(v=>$('xp'+v).value=d.xp?.[v]??0);
+}
+function saveGlobalResources(){
+ localStorage.setItem(GLOBAL_RESOURCE_KEY,JSON.stringify(captureGlobalResources()));
+}
+function updateProfileStatus(d){
+ const o=currentOfficer(), n=$('profileOfficerName'), st=$('profileSavedStatus');
+ if(n)n.textContent=o?officerDisplayName(o):'—';
+ if(st)st.textContent=d?.savedAt ? `Saved ${new Date(d.savedAt).toLocaleString()}` : 'Not saved yet';
+}
+function saveOfficerProfile(silent=false,index=null){
+ const idx=index==null ? +$('officerSelect').value : +index;
+ if(!Number.isFinite(idx)||!officers[idx])return;
+ const profiles=getOfficerProfiles(), d=captureOfficerProgress();
+ profiles[officerProfileKey(idx)]=d;
+ localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
+ saveGlobalResources();
+ loadedOfficerProfileIndex=idx;
+ updateProfileStatus(d);
+ if(!silent)alert(`${officerDisplayName(officers[idx])} progress saved.`);
+}
+function loadOfficerProfile(index){
+ const idx=+index, profiles=getOfficerProfiles(), d=profiles[officerProfileKey(idx)]||null;
+ // Only Officer progress changes here. Global resources are deliberately left untouched.
+ applyOfficerProgress(d);
+ loadedOfficerProfileIndex=idx;
+ updateProfileStatus(d);
+ calculate();
+}
+
+function maxSelectedOfficerProfile(){
+ const idx=+$('officerSelect').value;
+ const o=officers[idx];
+ if(!o)return;
+
+ const label=officerDisplayName(o);
+ if(!confirm(`Set ${label} to fully MAXED?\n\nThis will set:\n• 5 Stars\n• Level 70\n• Unlocked\n• All 4 Skill Strands at Level 5\n• Training Level 180\n\nShared ORV, SRV, badges, stars and XP inventory will not be spent or changed.`))return;
+
+ $('currentStar').value=5;
+ $('targetStar').value=5;
+ $('unlocked').checked=true;
+
+ skills=Array(16).fill(true);
+ renderSkillStrands();
+
+ $('training').value=180;
+ if($('trainingExact'))$('trainingExact').value=180;
+ if($('trainingLabel'))$('trainingLabel').textContent='180';
+
+ $('currentLevel').value=70;
+ $('targetLevel').value=70;
+
+ calculate();
+ saveOfficerProfile(true);
+
+ if(typeof renderSavedOfficerProgress==='function')renderSavedOfficerProgress();
+ if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
+
+ alert(`${label} is now saved as MAXED.`);
+}
+
+function resetOfficerProfile(){
+ const idx=+$('officerSelect').value,o=officers[idx];if(!o)return;
+ if(!confirm(`Reset saved progress for ${officerDisplayName(o)}? Shared resources will not be changed.`))return;
+ const profiles=getOfficerProfiles();
+ delete profiles[officerProfileKey(idx)];
+ localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
+ applyOfficerProgress(null);
+ updateProfileStatus(null);
+ calculate();
+}
+
+function saveProgress(){saveOfficerProfile(false)}
+function loadProgress(){
+ try{
+  const profiles=getOfficerProfiles();
+  let globals=getGlobalResources();
+
+  // One-time migration from v4.3.4 Officer profiles:
+  // take resource inventory from the currently selected Officer profile if global inventory is empty.
+  if(!Object.keys(globals).length){
+   try{
+    const oldProfiles=JSON.parse(localStorage.getItem('kow_officer_profiles_v434')||'{}')||{};
+    const oldKey=officerProfileKey($('officerSelect').value);
+    const old=oldProfiles[oldKey]||Object.values(oldProfiles)[0];
+    if(old){
+     globals={
+      ls1:old.ls1??0,ls2:old.ls2??0,ls3:old.ls3??0,srvHeld:old.srvHeld??0,
+      universalBadgeHeld:old.universalBadgeHeld??0,
+      legendaryBadgeChestHeld:old.legendaryBadgeChestHeld??0,
+      legendaryBadgeChestMode:old.legendaryBadgeChestMode??'badge',
+      orvHeld:old.orvHeld??0,xp:old.xp||{},savedAt:new Date().toISOString()
+     };
+     localStorage.setItem(GLOBAL_RESOURCE_KEY,JSON.stringify(globals));
+    }
+   }catch{}
+  }
+
+  // Migrate Officer progress from v4.3.4 if new profile store is empty.
+  if(!Object.keys(profiles).length){
+   try{
+    const oldProfiles=JSON.parse(localStorage.getItem('kow_officer_profiles_v434')||'{}')||{};
+    const migrated={};
+    for(const [key,old] of Object.entries(oldProfiles)){
+     migrated[key]={
+      currentStar:old.currentStar??0,targetStar:old.targetStar??5,
+      unlocked:!!old.unlocked,skills:Array.isArray(old.skills)?old.skills:[],
+      training:old.training??0,badgeHeld:old.badgeHeld??0,
+      currentLevel:old.currentLevel??1,targetLevel:old.targetLevel??70,
+      goal:old.goal??'max',savedAt:old.savedAt||new Date().toISOString()
+     };
+    }
+    if(Object.keys(migrated).length)localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(migrated));
+   }catch{}
+  }
+
+  // Legacy single-save migration if required.
+  if(!Object.keys(getOfficerProfiles()).length){
+   const legacy=JSON.parse(localStorage.getItem('kow_progress_v4')||'null');
+   if(legacy){
+    const idx=Number(legacy.officer??$('officerSelect').value??0);
+    $('officerSelect').value=idx;
+    const migrated={
+     currentStar:legacy.currentStar??0,targetStar:legacy.targetStar??5,
+     unlocked:!!legacy.unlocked,skills:Array.isArray(legacy.skills)?legacy.skills:[],
+     training:legacy.training??0,badgeHeld:legacy.badgeHeld??0,
+     currentLevel:legacy.currentLevel??1,targetLevel:legacy.targetLevel??70,
+     goal:legacy.goal??'max',savedAt:new Date().toISOString()
+    };
+    const p=getOfficerProfiles();p[officerProfileKey(idx)]=migrated;
+    localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(p));
+
+    if(!Object.keys(getGlobalResources()).length){
+     const g={
+      ls1:legacy.ls1??0,ls2:legacy.ls2??0,ls3:legacy.ls3??0,srvHeld:legacy.srvHeld??0,
+      universalBadgeHeld:legacy.universalBadgeHeld??0,
+      legendaryBadgeChestHeld:legacy.legendaryBadgeChestHeld??0,
+      legendaryBadgeChestMode:legacy.legendaryBadgeChestMode??'badge',
+      orvHeld:legacy.orvHeld??0,xp:legacy.xp||{},savedAt:new Date().toISOString()
+     };
+     localStorage.setItem(GLOBAL_RESOURCE_KEY,JSON.stringify(g));
+    }
+   }
+  }
+ }catch{}
+
+ applyGlobalResources(getGlobalResources());
+ loadOfficerProfile($('officerSelect').value);
+}
+
+
+const APP_VERSION='4.3.35';
+function syncVersionUI(){
+ const v='v'+APP_VERSION;
+ if($('headerVersion'))$('headerVersion').textContent=v;
+ if($('installedVersion'))$('installedVersion').textContent=v;
+ if($('aboutVersion'))$('aboutVersion').textContent=v;
+ const integrity=$('versionIntegrity');
+ if(integrity){
+   const values=[
+     $('headerVersion')?.textContent,
+     $('installedVersion')?.textContent,
+     $('aboutVersion')?.textContent
+   ].filter(Boolean);
+   const ok=values.every(x=>x===v);
+   integrity.innerHTML=ok
+     ? `<b>Build integrity: OK</b><br>Header, Settings and About all report ${v}.`
+     : `<b>Build integrity: MISMATCH</b><br>Expected ${v}.`;
+ }
+}
+
+
+document.addEventListener('DOMContentLoaded',syncVersionUI);
+
+function parseVersion(v){
+ return String(v||'').replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0);
+}
+function compareVersions(a,b){
+ const aa=parseVersion(a),bb=parseVersion(b);
+ for(let i=0;i<Math.max(aa.length,bb.length);i++){
+   const av=aa[i]||0,bv=bb[i]||0;
+   if(av>bv)return 1;
+   if(av<bv)return -1;
+ }
+ return 0;
+}
+async function fetchPublishedVersion(){
+ const response=await fetch('./index.html?version_check='+Date.now(),{
+   cache:'no-store',
+   headers:{'Cache-Control':'no-cache'}
+ });
+ if(!response.ok)throw new Error('Version check failed');
+ const text=await response.text();
+ const match=text.match(/Officer Companion v(\d+\.\d+\.\d+)/i) ||
+             text.match(/KoW Companion v(\d+\.\d+\.\d+)/i);
+ return match?match[1]:null;
+}
+async function clearAppCacheAndReload(){
+ const status=$('updateStatus');
+ if(status)status.textContent='Refreshing application files…';
+ try{
+   if('serviceWorker' in navigator){
+     const regs=await navigator.serviceWorker.getRegistrations();
+     await Promise.all(regs.map(r=>r.unregister()));
+   }
+   if('caches' in window){
+     const keys=await caches.keys();
+     await Promise.all(keys.filter(k=>k.startsWith('kow-')).map(k=>caches.delete(k)));
+   }
+ }catch(e){}
+ const baseUrl=location.origin+location.pathname;
+ location.replace(baseUrl+'?refresh='+Date.now());
+}
+
+
+function numericText(id){
+ const el=$(id);if(!el)return 0;
+ return Number(String(('value' in el?el.value:el.textContent)||0).replace(/[^0-9.-]/g,''))||0;
+}
+function populateCompareOfficers(){
+ const s=$('compareOfficerSelect');if(!s)return;
+ const primary=currentOfficer();
+ const prev=s.value;
+ s.innerHTML='<option value="">Select Officer</option>'+
+  officers.map((o,i)=>({o,i}))
+   .filter(x=>!primary||x.o.name!==primary.name)
+   .map(({o,i})=>`<option value="${i}">${esc(o.name)}</option>`).join('');
+ if(prev && [...s.options].some(o=>o.value===prev))s.value=prev;
+}
+function buildUpgradeSummary(){
+ const box=$('upgradeSummary'),opt=$('optimiserSummary'),hint=$('compareHint'),o=currentOfficer();if(!o)return;
+
+ const badgeUsed=numericText('badgesUsed');
+ const starsUsed=numericText('starsUsed');
+ const xpUsed=numericText('xpUsed');
+
+ const badgeNeed=Math.max(0,1600-badgeUsed);
+ const starNeed=Math.max(0,98000-starsUsed);
+ const xpNeed=Math.max(0,199646700-xpUsed);
+
+ if(box)box.innerHTML=`<b>${esc(o.name)}</b><br>
+ Officer Badges remaining: <b>${badgeNeed.toLocaleString()}</b><br>
+ Officer Stars remaining: <b>${starNeed.toLocaleString()}</b><br>
+ Officer XP remaining: <b>${xpNeed.toLocaleString()}</b>`;
+
+ if(opt){
+  const shared=numericText('universalBadgeHeld')+numericText('legendaryBadgeChestHeld');
+  const usable=Math.min(shared,badgeNeed);
+  let comparison='';
+
+  const compareIndex=$('compareOfficerSelect')?.value;
+  if(compareIndex!==''){
+    const c=officers[Number(compareIndex)];
+    if(c){
+      if(hint)hint.innerHTML=`Comparing <b>${esc(o.name)}</b> with <b>${esc(c.name)}</b>.`;
+      const primaryCost=Number(o.orv)||0;
+      const compareCost=Number(c.orv)||0;
+
+      let recommendation='ORV comparison is not available for one of these Officers.';
+      if(primaryCost && compareCost){
+        if(primaryCost < compareCost){
+          recommendation=`Use shared Universal Legendary Badges / Selection Chests on <b>${esc(c.name)}</b> first, and favour ORV on <b>${esc(o.name)}</b>. This protects the more expensive Officer from ORV spending.`;
+        }else if(primaryCost > compareCost){
+          recommendation=`Use shared Universal Legendary Badges / Selection Chests on <b>${esc(o.name)}</b> first, and favour ORV on <b>${esc(c.name)}</b>. This protects the more expensive Officer from ORV spending.`;
+        }else{
+          recommendation=`Both Officers have the same ORV cost per badge, so shared badges can be allocated according to your upgrade priority.`;
+        }
+      }
+
+      comparison=`<hr style="border:0;border-top:1px solid rgba(255,255,255,.1);margin:10px 0">
+      <b>Comparison: ${esc(o.name)} vs ${esc(c.name)}</b><br>
+      ${esc(o.name)} ORV per Badge: <b>${primaryCost||'N/A'}</b><br>
+      ${esc(c.name)} ORV per Badge: <b>${compareCost||'N/A'}</b><br>
+      ${
+        primaryCost && compareCost
+          ? (primaryCost<compareCost
+              ? `<b>${esc(o.name)}</b> is cheaper by ${(compareCost-primaryCost).toLocaleString()} ORV per badge.`
+              : primaryCost>compareCost
+                ? `<b>${esc(c.name)}</b> is cheaper by ${(primaryCost-compareCost).toLocaleString()} ORV per badge.`
+                : `Both Officers have the same ORV cost per badge.`)
+          : ''
+      }
+      <div class="notice" style="margin-top:10px"><b>Suggested resource strategy:</b><br>${recommendation}</div>`;
+    }
+  }else{
+    if(hint)hint.textContent='Choose another Officer to compare badge efficiency.';
+  }
+
+  opt.innerHTML=`<b>${esc(o.name)}</b><br>
+  Shared Legendary badge resources detected: <b>${shared.toLocaleString()}</b><br>
+  Available toward badge requirement: <b>${usable.toLocaleString()}</b><br>
+  Remaining badge shortfall: <b>${Math.max(0,badgeNeed-usable).toLocaleString()}</b><br>
+  <span class="muted">Preview only — resources are not spent.</span>${comparison}`;
+ }
+}
+let officerAutoSaveTimer=null;
+function scheduleOfficerAutoSave(){
+ clearTimeout(officerAutoSaveTimer);
+ officerAutoSaveTimer=setTimeout(()=>{
+  try{
+   if(loadedOfficerProfileIndex!==null && +$('officerSelect').value===loadedOfficerProfileIndex){
+    saveOfficerProfile(true);
+   }else{
+    saveGlobalResources();
+   }
+  }catch{}
+ },250);
+}
+function persistCurrentStateBeforeBackup(){
+ // Force the currently visible Officer-specific fields and shared inventory into localStorage
+ // before the browser storage snapshot is created. This prevents the latest unsaved badgeHeld,
+ // skill, training, level, stars and resource values being omitted from a cross-device backup.
+ if($('officerSelect') && officers[+$('officerSelect').value]) saveOfficerProfile(true);
+ else saveGlobalResources();
+}
+function exportFullBackup(){
+ try{
+  persistCurrentStateBeforeBackup();
+  const payload={app:'KoW Companion',version:APP_VERSION,exported:new Date().toISOString(),localStorage:{}};
+  for(let i=0;i<localStorage.length;i++){
+   const k=localStorage.key(i);
+   payload.localStorage[k]=localStorage.getItem(k);
+  }
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='KoW-Companion-Backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},2000);
+  const s=$('backupStatus');
+  if(s)s.textContent='Backup created. Check your browser Downloads folder.';
+ }catch(err){
+  const s=$('backupStatus');
+  if(s)s.textContent='Backup failed: '+err.message;
+  alert('Backup failed: '+err.message);
+ }
+}
+async function restoreFullBackup(file){
+ const payload=JSON.parse(await file.text());
+ if(!payload||!payload.localStorage)throw new Error('Invalid KoW Companion backup file.');
+ if(payload.app && payload.app!=='KoW Companion')throw new Error('This is not a KoW Companion backup file.');
+ // Restore as an exact localStorage snapshot. Clearing first prevents stale keys on the target
+ // device from surviving when they were not present in the source-device backup.
+ localStorage.clear();
+ Object.entries(payload.localStorage).forEach(([k,v])=>{if(v!==null&&v!==undefined)localStorage.setItem(k,String(v));});
+ alert('Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.');location.reload();
+}
+
+let multiPlanOfficers=[];
+
+function multiOfficerOptions(selected=''){
+ return officers.map((o,i)=>`<option value="${i}" ${String(i)===String(selected)?'selected':''}>${esc(o.name)}</option>`).join('');
+}
+function renderMultiPlanner(){
+ const tbody=$('multiPlannerRows'); if(!tbody)return;
+ tbody.innerHTML=multiPlanOfficers.map((row,pos)=>{
+   const o=officers[row.officerIndex]||officers[0];
+   return `<tr data-pos="${pos}">
+    <td>${pos+1}</td>
+    <td><select data-multi-officer>${multiOfficerOptions(row.officerIndex)}</select></td>
+    <td><input data-multi-needed type="number" min="0" max="1600" step="1" value="${Math.max(0,Number(row.badgesNeeded)||0)}" style="min-width:90px"></td>
+    <td>${o&&o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original'?fmt(o.orv):'N/A'}</td>
+    <td data-multi-allocated>—</td><td data-multi-status>—</td>
+    <td><button data-up title="Move up">↑</button> <button data-down title="Move down">↓</button> <button data-remove title="Remove">×</button></td>
+   </tr>`;
+ }).join('');
+ tbody.querySelectorAll('[data-multi-officer]').forEach((el,i)=>el.onchange=()=>{multiPlanOfficers[i].officerIndex=+el.value;renderMultiPlanner();calculateMultiPlanner()});
+ tbody.querySelectorAll('[data-multi-needed]').forEach((el,i)=>el.oninput=()=>{multiPlanOfficers[i].badgesNeeded=Math.max(0,+el.value||0);calculateMultiPlanner()});
+ tbody.querySelectorAll('[data-up]').forEach((b,i)=>b.onclick=()=>{if(i){[multiPlanOfficers[i-1],multiPlanOfficers[i]]=[multiPlanOfficers[i],multiPlanOfficers[i-1]];renderMultiPlanner();calculateMultiPlanner()}});
+ tbody.querySelectorAll('[data-down]').forEach((b,i)=>b.onclick=()=>{if(i<multiPlanOfficers.length-1){[multiPlanOfficers[i+1],multiPlanOfficers[i]]=[multiPlanOfficers[i],multiPlanOfficers[i+1]];renderMultiPlanner();calculateMultiPlanner()}});
+ tbody.querySelectorAll('[data-remove]').forEach((b,i)=>b.onclick=()=>{multiPlanOfficers.splice(i,1);renderMultiPlanner();calculateMultiPlanner()});
+ calculateMultiPlanner();
+}
+function calculateMultiPlanner(){
+ const rows=[...document.querySelectorAll('#multiPlannerRows tr')];
+ if(!rows.length){$('multiPlannerSummary').innerHTML='Add Officers to build an upgrade plan.';return}
+ let orv=Math.max(0,+$('multiOrv').value||0), universal=Math.max(0,+$('multiUniversal').value||0), chests=Math.max(0,+$('multiChests').value||0);
+ const mode=$('multiChestMode').value;
+ // Current S7 benchmark: 600 ORV per Selection Chest.
+ if(mode==='badge') universal+=chests;
+ else if(mode==='orv') orv+=chests*600;
+ else {
+   // Optimise: protect high-ORV Officers by treating chests as badges first.
+   universal+=chests;
+ }
+ let fully=0, partial=0, unfunded=0, totalNeed=0, totalAllocated=0;
+ multiPlanOfficers.forEach((row,pos)=>{
+   const o=officers[row.officerIndex]||officers[0], needed=Math.max(0,+row.badgesNeeded||0);
+   totalNeed+=needed;
+   let allocated=0;
+   const eligible=o&&o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original'&&+o.orv>0;
+   // For efficiency, use ORV first on lower-cost Officers; however priority order remains authoritative.
+   if(eligible){
+     const fromOrv=Math.min(needed,Math.floor(orv/o.orv));
+     allocated+=fromOrv; orv-=fromOrv*o.orv;
+   }
+   const fromUniversal=Math.min(needed-allocated,universal);
+   allocated+=fromUniversal; universal-=fromUniversal;
+   totalAllocated+=allocated;
+   const status=allocated>=needed?'Fully Funded':allocated>0?'Partially Funded':'Shortfall';
+   if(status==='Fully Funded')fully++; else if(status==='Partially Funded')partial++; else unfunded++;
+   const tr=rows[pos]; if(tr){
+     tr.querySelector('[data-multi-allocated]').textContent=fmt(allocated)+' / '+fmt(needed);
+     tr.querySelector('[data-multi-status]').textContent=status;
+   }
+ });
+ $('multiPlannerSummary').innerHTML=`<b>Plan result:</b> ${fully} fully funded · ${partial} partially funded · ${unfunded} shortfall<br><span class="muted">${fmt(totalAllocated)} of ${fmt(totalNeed)} required badges covered. Remaining shared resources: ${fmt(orv)} ORV · ${fmt(universal)} Universal Badges.</span>`;
+}
+function getMultiPlans(){try{return JSON.parse(localStorage.getItem('kow_multi_plans_v430')||'{}')}catch{return {}}}
+function refreshMultiSavedPlans(selectName=''){
+ const sel=$('multiSavedPlans');if(!sel)return;const plans=getMultiPlans();
+ sel.innerHTML='<option value="">— Select saved plan —</option>'+Object.keys(plans).sort().map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ if(selectName&&plans[selectName])sel.value=selectName;
+}
+function saveMultiPlan(){
+ const name=String($('multiPlanName').value||'').trim();if(!name){alert('Enter a plan name.');return}
+ const plans=getMultiPlans();plans[name]={name,orv:+$('multiOrv').value||0,universal:+$('multiUniversal').value||0,chests:+$('multiChests').value||0,chestMode:$('multiChestMode').value,officers:multiPlanOfficers};
+ localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans(name);alert('Plan saved.');
+}
+function loadMultiPlan(name){
+ const p=getMultiPlans()[name];if(!p)return;$('multiPlanName').value=p.name||name;$('multiOrv').value=p.orv||0;$('multiUniversal').value=p.universal||0;$('multiChests').value=p.chests||0;$('multiChestMode').value=p.chestMode||'optimise';multiPlanOfficers=Array.isArray(p.officers)?p.officers:[];renderMultiPlanner();
+}
+function deleteMultiPlan(){
+ const name=$('multiSavedPlans').value;if(!name)return;const plans=getMultiPlans();delete plans[name];localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans();alert('Saved plan deleted.');
+}
+
+
+function dashValue(id){
+ const el=$(id);
+ if(!el)return 0;
+ const raw=(('value' in el && el.value!==undefined)?el.value:el.textContent)||'0';
+ return Math.max(0,Number(String(raw).replace(/,/g,'').replace(/[^\d.-]/g,''))||0);
+}
+
+function updateSmartDashboard(){
+ if(!$('readinessStatus'))return;
+
+ // Use the app's real active Officer selector rather than a separate index.
+ const officer=currentOfficer();
+ if(!officer){
+  $('readinessStatus').innerHTML='<b>Readiness:</b> Select an Officer.';
+  return;
+ }
+ const officerName=officer.name;
+
+ // These three values are already calculated by calculate() for MAX Officer,
+ // so the Smart Dashboard simply mirrors the authoritative app results.
+ const badgeShort=dashValue('dashBadgesRequired');
+ const starShort=dashValue('dashStarsRequired');
+ const xpShort=dashValue('dashXpRequired');
+
+ const devOK=badgeShort===0;
+ const starOK=starShort===0;
+ const xpOK=xpShort===0;
+ const allOK=devOK&&starOK&&xpOK;
+
+ $('dashDevelopment').textContent=devOK
+   ? 'Fully funded'
+   : `${fmt(badgeShort)} Officer Badges still required`;
+ $('dashStars').textContent=starOK
+   ? 'Fully funded'
+   : `${fmt(starShort)} Officer Star value still required`;
+ $('dashXP').textContent=xpOK
+   ? 'Fully funded'
+   : `${fmt(xpShort)} XP still required`;
+ $('dashCanMax').innerHTML=allOK?'<b>YES</b>':'<b>NO</b>';
+
+ const missing=[];
+ if(!devOK)missing.push('Development');
+ if(!starOK)missing.push('Stars');
+ if(!xpOK)missing.push('XP');
+
+ if(allOK){
+  $('readinessStatus').innerHTML=`<b>🟢 READY TO MAX — ${esc(officerName)}</b>`;
+ }else{
+  const fundedCount=[devOK,starOK,xpOK].filter(Boolean).length;
+  const icon=fundedCount>0?'🟠':'🔴';
+  const state=fundedCount>0?'PARTIALLY READY':'RESOURCES REQUIRED';
+  $('readinessStatus').innerHTML=`<b>${icon} ${state} — ${esc(officerName)}</b><br><span class="muted">Still required: ${missing.join(', ')}</span>`;
+ }
+
+ // Read the actual saved Multi-Officer Planner data.
+ try{
+  const plans=typeof getMultiPlans==='function'?getMultiPlans():{};
+  const savedSelect=$('multiSavedPlans');
+  const selected=(savedSelect&&savedSelect.value)||Object.keys(plans)[0]||'';
+  const plan=plans[selected];
+
+  if(plan&&Array.isArray(plan.officers)&&plan.officers.length){
+   const first=plan.officers[0];
+   const po=officers[first.officerIndex];
+   const extra=plan.officers.length>1?` + ${plan.officers.length-1} more`:'';
+   $('dashNextPlan').innerHTML=`<b>${esc(plan.name||selected)}</b><br>${esc(po?.name||'Officer')} — ${fmt(first.badgesNeeded||0)} badges${extra}`;
+  }else{
+   $('dashNextPlan').textContent='No saved upgrade plan selected.';
+  }
+ }catch(e){
+  $('dashNextPlan').textContent='No saved upgrade plan selected.';
+ }
+
+ // Recurring annual release cycle.
+ const releases=[
+  ['August','New Dogs'],
+  ['September','Guns: Field · Jets: Fighter'],
+  ['October','Officers: Rally / Garrison'],
+  ['November','New Ships'],
+  ['December','Guns: Rally / Garrison · Jets: Bomber'],
+  ['January','Officers: Infantry'],
+  ['February','No scheduled release'],
+  ['March','Guns: Field · Jets: Fighter'],
+  ['April','Officers: Tanks'],
+  ['May','New Ships'],
+  ['June','Guns: Rally / Garrison · Jets: Bomber'],
+  ['July','Officers: Tank Destroyers']
+ ];
+ const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+ const currentMonth=monthNames[new Date().getMonth()];
+ const idx=releases.findIndex(r=>r[0]===currentMonth);
+ const current=releases[idx>=0?idx:0];
+ let ni=(idx+1)%releases.length;
+ while(releases[ni][1]==='No scheduled release')ni=(ni+1)%releases.length;
+ const next=releases[ni];
+ $('dashRelease').innerHTML=`<b>${current[0]}:</b> ${current[1]}<br><span class="muted">Next: ${next[0]} — ${next[1]}</span>`;
+
+ if(allOK){
+  $('dashWarning').textContent=`${officerName} can be maxed with the resources currently entered in the app.`;
+ }else if(!devOK){
+  $('dashWarning').textContent=`Priority: Development — ${fmt(badgeShort)} more Officer Badges are required.`;
+ }else if(!starOK){
+  $('dashWarning').textContent=`Priority: Stars — ${fmt(starShort)} more Officer Star value is required.`;
+ }else{
+  $('dashWarning').textContent=`Priority: XP — ${fmt(xpShort)} more XP is required.`;
+ }
+}
+
+
+function updateFutureOfficerForecast(){
+ if(!$('forecastRelease'))return;
+ const steps=Math.max(1,+$('forecastRelease').value||1);
+ const growth=Math.max(0,+$('forecastGrowth').value||20)/100;
+ const badges=Math.max(0,+$('forecastBadges').value||0);
+ const starValue=Math.max(0,+$('forecastStarValue').value||0);
+
+ // Latest confirmed published sequence point in the app database:
+ // S7 Tank Destroyer = 600 ORV/badge and 300 SRV/Exclusive Star.
+ const baseOrv=600, baseSrv=300;
+ const orvExact=baseOrv*Math.pow(1+growth,steps);
+ const srvExact=baseSrv*Math.pow(1+growth,steps);
+
+ // Round to whole vouchers for a practical planning figure.
+ const orv=Math.round(orvExact);
+ const srv=Math.round(srvExact);
+
+ // One Exclusive Star contributes 110 Officer Star value.
+ const exclusiveStars=Math.ceil(starValue/110);
+ const totalOrv=badges*orv;
+ const totalSrv=exclusiveStars*srv;
+
+ $('forecastOrvPerBadge').textContent=fmt(orv);
+ $('forecastSrvPerStar').textContent=fmt(srv);
+ $('forecastTotalOrv').textContent=fmt(totalOrv);
+ $('forecastTotalSrv').textContent=fmt(totalSrv);
+
+ const labels={
+   1:'October — S8 Rally / Garrison',
+   2:'January — S8 Infantry',
+   3:'April — S8 Tanks',
+   4:'July — S8 Tank Destroyers'
+ };
+ $('forecastNote').innerHTML=`<b>${labels[steps]}</b><br>Planning estimate using ${($('forecastGrowth').value||20)}% growth per Officer release from the latest known 600 ORV / 300 SRV release. For ${fmt(badges)} badges and ${fmt(starValue)} Star value (${fmt(exclusiveStars)} Exclusive Stars), plan for approximately <b>${fmt(totalOrv)} ORV</b> and <b>${fmt(totalSrv)} SRV</b>. Forecast only — replace with confirmed costs when released.`;
+}
+async function init(){
+ await loadOfficers();renderOfficerFilters();renderOfficerOptions();
+ ['officerSearch','officerSeasonFilter','officerRarityFilter','officerRoleFilter'].forEach(id=>{
+  const el=$(id);if(!el)return;
+  const evt=id==='officerSearch'?'input':'change';
+  el.addEventListener(evt,()=>{renderOfficerOptions();calculate();populateCompareOfficers();buildUpgradeSummary()});
+ });
+ $('officerSelect').addEventListener('change',()=>{
+ if(loadedOfficerProfileIndex!==null && loadedOfficerProfileIndex!==+$('officerSelect').value)saveOfficerProfile(true,loadedOfficerProfileIndex);
+ updateOfficerExperience();
+ loadOfficerProfile($('officerSelect').value);
+ calculate();
+ updateSkillRarityNotice(currentOfficer());
+ updateSkillCostSummaries();
+ populateCompareOfficers();
+ buildUpgradeSummary();
+ requestAnimationFrame(()=>{calculate();updateSkillRarityNotice(currentOfficer());updateSkillCostSummaries();});
+});
+ [0,1,2,3,4,5].forEach(v=>{$('currentStar').add(new Option(v+'★',v));$('targetStar').add(new Option(v+'★',v))});$('targetStar').value=5;
+ renderSkillStrands();
+ XP_DENOMS.forEach(v=>{const d=document.createElement('div');d.className='xp-item';d.innerHTML=`<label>${v.toLocaleString()} XP</label><input id="xp${v}" type="number" min="0" step="1" inputmode="numeric" value="0">`;$('xpBooks').appendChild(d)});
+ document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',calculate));
+ // Auto-save Officer-specific progress so cross-device backups do not depend on pressing Save Progress.
+ ['currentStar','targetStar','unlocked','training','trainingExact','badgeHeld','currentLevel','targetLevel','goalSelect'].forEach(id=>{
+  const el=$(id); if(!el)return;
+  el.addEventListener('input',scheduleOfficerAutoSave);
+  el.addEventListener('change',scheduleOfficerAutoSave);
+ });
+ ['currentStar','unlocked'].forEach(id=>{
+  const el=$(id); if(!el)return;
+  el.addEventListener('input',renderSkillStrands);
+  el.addEventListener('change',renderSkillStrands);
+ });
+ // Shared resources are also persisted automatically.
+ ['ls1','ls2','ls3','es1','es2','es3','bs1','bs2','bs3','srvHeld','universalBadgeHeld','universalEpicBadgeHeld','universalEliteBadgeHeld','legendaryBadgeChestHeld','legendaryBadgeChestMode','orvHeld'].forEach(id=>{
+  const el=$(id); if(!el)return;
+  el.addEventListener('input',()=>{clearTimeout(officerAutoSaveTimer);officerAutoSaveTimer=setTimeout(saveGlobalResources,250)});
+  el.addEventListener('change',()=>{clearTimeout(officerAutoSaveTimer);officerAutoSaveTimer=setTimeout(saveGlobalResources,250)});
+ });
+ XP_DENOMS.forEach(v=>{const el=$('xp'+v);if(el)el.addEventListener('input',()=>{clearTimeout(officerAutoSaveTimer);officerAutoSaveTimer=setTimeout(saveGlobalResources,250)})});
+ const RELEASES=[
+ ['August','New Dogs'],
+ ['September','Guns: Field · Jets: Fighter'],
+ ['October','Officers: Rally / Garrison'],
+ ['November','New Ships'],
+ ['December','Guns: Rally / Garrison · Jets: Bomber'],
+ ['January','Officers: Infantry'],
+ ['February','—'],
+ ['March','Guns: Field · Jets: Fighter'],
+ ['April','Officers: Tanks'],
+ ['May','New Ships'],
+ ['June','Guns: Rally / Garrison · Jets: Bomber'],
+ ['July','Officers: Tank Destroyers']
+];
+function renderReleases(){
+ const now=new Date();
+ const names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+ const currentMonth=names[now.getMonth()];
+ const currentEntry=RELEASES.find(([m])=>m===currentMonth);
+ const recurring=RELEASES.map(([m,r])=>({m,r,idx:names.indexOf(m)})).filter(x=>x.r!=='—');
+
+ let next=recurring
+   .filter(x=>x.idx>now.getMonth())
+   .sort((a,b)=>a.idx-b.idx)[0];
+ if(!next) next=recurring.sort((a,b)=>a.idx-b.idx)[0];
+
+ const currentText=currentEntry && currentEntry[1]!=='—'
+   ? `${currentEntry[0]} — ${currentEntry[1]}`
+   : `${currentMonth} — No scheduled release`;
+
+ $('nextRelease').innerHTML=
+   `<b>Current month:</b> ${currentText}<br>`+
+   `<b>Next scheduled release:</b> ${next.m} — ${next.r}`;
+
+ let html='<div style="display:grid;gap:8px">';
+ RELEASES.forEach(([m,r])=>{
+  const active=m===currentMonth;
+  const upcoming=m===next.m;
+  html+=`<div style="display:grid;grid-template-columns:minmax(95px,140px) 1fr;gap:12px;padding:13px;border:1px solid ${active?'#d6aa2b':upcoming?'rgba(213,167,47,.55)':'rgba(255,255,255,.15)'};border-radius:10px;background:${active?'rgba(214,170,43,.14)':upcoming?'rgba(213,167,47,.07)':'rgba(0,0,0,.18)'}">
+   <b>${m}${active?' • CURRENT':upcoming?' • NEXT':''}</b><span>${r}</span>
+  </div>`;
+ });
+ html+='</div>';
+ $('releaseCalendar').innerHTML=html;
+}
+renderReleases();
+document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.bottom-nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.view).classList.add('active');if(b.dataset.view==='database')renderDb();if(b.dataset.view==='dashboard'){if(typeof updateSmartDashboard==='function')updateSmartDashboard();}if(b.dataset.view==='progress'){renderSavedOfficerProgress();renderProgressCompareChoices();}if(b.dataset.view==='development'){calculate();renderSkillStrands();updateSkillRarityNotice(currentOfficer());updateSkillCostSummaries();}});
+ $('openUserGuide').onclick=()=>{document.querySelectorAll('.bottom-nav button').forEach(x=>x.classList.toggle('active',x.dataset.view==='help'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('help').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});};
+
+ $('saveProgress').onclick=saveProgress;
+ if($('saveOfficerProfile'))$('saveOfficerProfile').onclick=()=>{saveOfficerProfile(false);setTimeout(renderSavedOfficerProgress,0)};
+ if($('maxOfficerProfile'))$('maxOfficerProfile').onclick=maxSelectedOfficerProfile;
+ if($('resetOfficerProfile'))$('resetOfficerProfile').onclick=resetOfficerProfile;
+ $('dbSearch').oninput=renderDb;$('dbSeason').onchange=renderDb;$('dbAdd').onclick=()=>{officers.push({name:'New Officer',season:'S8',orv:1,srv:1,notes:''});renderDb();renderOfficerOptions('New Officer');calculate()};
+ $('dbSave').onclick=()=>{const e=validateDb();if(e.length){alert('Fix validation issues first.');return}saveOfficers();renderOfficerFilters();renderOfficerOptions();alert('Officer database saved.')};
+ $('dbExport').onclick=exportCsv;
+ $('dbImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const parsed=parseCsv(r.result);if(validateDb(parsed).length){alert('CSV validation failed.');return}officers=parsed;saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions();calculate();alert('CSV imported.')};r.readAsText(f);e.target.value=''};
+ $('dbRestore').onclick=()=>{if(confirm('Restore default officer database?')){officers=clone(window.KOW_PUBLISHED_OFFICERS||DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions('S7 Liora');calculate()}};
+
+
+ if($('multiAddOfficer'))$('multiAddOfficer').onclick=()=>{multiPlanOfficers.push({officerIndex:0,badgesNeeded:1600});renderMultiPlanner()};
+ if($('multiUseCurrent'))$('multiUseCurrent').onclick=()=>{$('multiOrv').value=$('orvHeld').value||0;$('multiUniversal').value=$('universalBadgeHeld').value||0;$('multiChests').value=$('legendaryBadgeChestHeld').value||0;calculateMultiPlanner()};
+ if($('multiSavePlan'))$('multiSavePlan').onclick=saveMultiPlan;
+ if($('multiDeletePlan'))$('multiDeletePlan').onclick=deleteMultiPlan;
+ if($('multiSavedPlans'))$('multiSavedPlans').onchange=e=>loadMultiPlan(e.target.value);
+ ['multiOrv','multiUniversal','multiChests','multiChestMode'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',calculateMultiPlanner)});
+ refreshMultiSavedPlans();
+ multiPlanOfficers=[{officerIndex:0,badgesNeeded:1600}];
+ renderMultiPlanner();
+
+
+ ['forecastRelease','forecastGrowth','forecastBadges','forecastStarValue'].forEach(id=>{
+   const el=$(id); if(el){el.addEventListener('input',updateFutureOfficerForecast);el.addEventListener('change',updateFutureOfficerForecast)}
+ });
+ updateFutureOfficerForecast();
+
+ const savedName=localStorage.getItem('kow_app_name_v4');if(savedName){$('appName').value=savedName;$('appTitle').textContent=savedName;document.title=savedName}
+ const savedPortrait=localStorage.getItem('kow_bg_portrait_v401');
+ const savedLandscape=localStorage.getItem('kow_bg_landscape_v401');
+ if(savedPortrait){$('portraitBgStatus').textContent='Custom portrait'}
+ if(savedLandscape){$('landscapeBgStatus').textContent='Custom landscape'}
+ applyResponsivePageBackground();
+ $('appName').oninput=e=>{const n=e.target.value||'GODS OF WAR 371';localStorage.setItem('kow_app_name_v4',n);$('appTitle').textContent=n;document.title=n};
+ const setBackground=(inputId,key,statusId,label)=>{$(inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{localStorage.setItem(key,r.result);$(statusId).textContent=label+' · '+f.name;applyResponsivePageBackground()}catch(err){alert('This image is too large for browser storage. Try a smaller JPG or PNG.')}};r.readAsDataURL(f)}};
+ setBackground('portraitBackgroundPicker','kow_bg_portrait_v401','portraitBgStatus','Custom portrait');
+ setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
+ $('resetAppearance').onclick=()=>{
+  ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.35';
+  $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
+  $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
+   applyResponsivePageBackground();
+  alert('Appearance and backgrounds restored to defaults.');
+ };
+
+ $('checkUpdates').onclick=async()=>{
+  const status=$('updateStatus');
+  $('checkUpdates').disabled=true;
+  status.textContent='Checking GitHub Pages for the latest version…';
+  try{
+    const latest=await fetchPublishedVersion();
+    if(!latest){
+      status.textContent='Could not determine the published version. You can still use Refresh Latest Version.';
+    }else if(compareVersions(latest,APP_VERSION)>0){
+      status.textContent=`Update available: v${latest}. Tap Refresh Latest Version to install it.`;
+    }else if(compareVersions(latest,APP_VERSION)===0){
+      status.textContent=`You are up to date — v${APP_VERSION}.`;
+    }else{
+      status.textContent=`Installed v${APP_VERSION}; published site reports v${latest}.`;
+    }
+  }catch(e){
+    status.textContent='Unable to check right now. Check your internet connection, or use Refresh Latest Version.';
+  }finally{
+    $('checkUpdates').disabled=false;
+  }
+ };
+ $('refreshLatest').onclick=clearAppCacheAndReload;
+
+ loadProgress();
+
+ // v4.3.35 feature wiring
+ populateCompareOfficers();
+ const compareSelect=$('compareOfficerSelect');
+ if(compareSelect){
+  compareSelect.addEventListener('change',buildUpgradeSummary);
+ }
+
+ const backupBtn=$('backupAppData');
+ if(backupBtn){
+  backupBtn.addEventListener('click',exportFullBackup);
+ }
+
+ const restoreInput=$('restoreAppData');
+ if(restoreInput){
+  restoreInput.addEventListener('change',async e=>{
+   try{
+    const f=e.target.files?.[0];
+    if(f)await restoreFullBackup(f);
+   }catch(err){
+    const s=$('backupStatus');
+    if(s)s.textContent='Restore failed: '+err.message;
+    alert('Restore failed: '+err.message);
+   }finally{
+    e.target.value='';
+   }
+  });
+ }
+
+ ['universalBadgeHeld','legendaryBadgeChestHeld','legendaryBadgeChestMode'].forEach(id=>{
+  const el=$(id);if(el)el.addEventListener(id==='legendaryBadgeChestMode'?'change':'input',calculate);
+ });
+ renderSkillStrands();renderDb();calculate();populateCompareOfficers();buildUpgradeSummary();
+ window.addEventListener('resize',applyResponsivePageBackground);
+ if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
+}
+init();
+
+
+document.addEventListener('input',()=>setTimeout(updateSmartDashboard,0));
+document.addEventListener('input',()=>{if(typeof saveGlobalResources==='function')saveGlobalResources()});
+document.addEventListener('change',()=>setTimeout(updateSmartDashboard,0));
+document.addEventListener('click',()=>setTimeout(updateSmartDashboard,0));
+window.addEventListener('load',()=>{setTimeout(updateSmartDashboard,100);setTimeout(updateSmartDashboard,500);});
+
+function savedPct(v,max){return Math.max(0,Math.min(100,max?Math.round((Number(v)||0)/max*100):0));}
+function meter(value){return `${value}%<div class="progress-meter"><span style="width:${value}%"></span></div>`;}
+function savedOfficerProgressData(){
+ const profiles=(typeof getOfficerProfiles==='function'?getOfficerProfiles():{})||{};
+
+ function profileKeyForOfficer(o){
+   return `${String(o.season||'').trim()}|${String(o.name||'').trim()}`;
+ }
+ function profileForOfficer(o){
+   const exact=profiles[profileKeyForOfficer(o)];
+   if(exact)return exact;
+   const wantedName=String(o.name||'').trim();
+   const entry=Object.entries(profiles).find(([key])=>String(key).split('|').pop().trim()===wantedName);
+   return entry?entry[1]:null;
+ }
+
+ // Every Officer is represented. Officers with no saved development are automatically NOT STARTED.
+ return officers.map(o=>{
+   const p=profileForOfficer(o) || {};
+   const displayName=o?.name || '';
+   const season=o?.season || '';
+
+   const skillFlags=Array.isArray(p.skills)?p.skills.slice(0,16):[];
+   // Each true flag is one paid skill increase (Lv1 is free). Count all saved paid
+   // increases rather than stopping at the first false, so older profiles cannot
+   // be under-counted by strand ordering.
+   const paidSkillUpgrades=Math.min(16,skillFlags.filter(Boolean).length);
+   const skillCosts=skillCostsForOfficer(o);
+   const promotionTotal=promotionBadgeTotal(o);
+   const skillSpent=paidSkillUpgrades>=16
+     ? promotionTotal
+     : skillCosts.slice(0,paidSkillUpgrades).reduce((a,b)=>a+b,0);
+
+   const training=Math.max(0,Math.min(180,Number(p.training)||0));
+   const officerMaxBadges=maxBadgesForOfficer(o);
+   const developmentComplete=!!p.unlocked && paidSkillUpgrades>=16 && training>=180;
+
+   // A semantically MAXED development profile is always 100%, regardless of the
+   // rarity cost table used to reach it. Partial profiles remain rarity-aware.
+   const rawBadgesUsed=(p.unlocked?10:0)+skillSpent+training*trainingBadgeCost(o);
+   const badgesUsed=developmentComplete?officerMaxBadges:Math.min(officerMaxBadges,rawBadgesUsed);
+   const badgeShort=developmentComplete?0:Math.max(0,officerMaxBadges-badgesUsed);
+   const dev=developmentComplete?100:savedPct(badgesUsed,officerMaxBadges);
+
+   const currentStar=Math.max(0,Math.min(5,Number(p.currentStar)||0));
+   const starValue=STAR_CUM[currentStar]||0;
+   const starShort=currentStar>=5?0:Math.max(0,MAX_STAR-starValue);
+   const stars=currentStar>=5?100:savedPct(starValue,MAX_STAR);
+
+   const level=Math.max(0,Math.min(70,Number(p.currentLevel)||0));
+   const xpUsed=level>=70?MAX_XP:cumulativeXp(Math.max(1,level||1));
+   const xpShort=level>=70?0:Math.max(0,MAX_XP-xpUsed);
+   const xp=level>=70?100:savedPct(xpUsed,MAX_XP);
+
+   const maxed=developmentComplete && currentStar>=5 && level>=70;
+   const overall=maxed?100:Math.round(((dev+stars+xp)/3)*10)/10;
+   const hasProgress=badgesUsed>0||currentStar>0||level>1;
+   const notStarted=!maxed&&!hasProgress;
+   const status=maxed?'MAXED':hasProgress?'IN PROGRESS':'NOT STARTED';
+
+   return {
+     name:displayName,season,overall,dev,stars,xp,
+     badgeShort,starShort,xpShort,maxed,notStarted,status
+   };
+ }).sort((a,b)=>{
+   const statusRank=r=>r.maxed?0:(r.notStarted?2:1);
+   const seasonRank=s=>{
+     const v=String(s||'').trim().toLowerCase();
+     if(v==='original')return 0;
+     const m=v.match(/^s(\d+)$/);
+     return m?Number(m[1]):0;
+   };
+   const officerDbIndex=name=>officers.findIndex(o=>String(o.name||'').trim()===String(name||'').trim());
+   return statusRank(a)-statusRank(b) ||
+          seasonRank(b.season)-seasonRank(a.season) ||
+          officerDbIndex(a.name)-officerDbIndex(b.name) ||
+          String(a.name).localeCompare(String(b.name));
+ });
+}
+function progressStatusAllowed(r){
+ const boxes=[...document.querySelectorAll('.progressStatusFilter')];
+ if(!boxes.length)return true;
+ const selected=new Set(boxes.filter(x=>x.checked).map(x=>x.value));
+ if(r.maxed)return selected.has('maxed');
+ if(r.notStarted)return selected.has('notStarted');
+ return selected.has('progress');
+}
+function renderSavedOfficerProgress(){
+ const body=document.getElementById('savedOfficerProgressRows');
+ const summary=document.getElementById('savedOfficerProgressSummary');
+ if(!body||!summary)return;
+ const allRows=savedOfficerProgressData();
+ if(!allRows.length){
+   body.innerHTML='';
+   summary.textContent='No saved Officer profiles yet. Use Save Officer Progress to add Officers to this overview.';
+   return;
+ }
+ const rows=allRows.filter(progressStatusAllowed);
+ const ready=allRows.filter(x=>x.maxed);
+ const closest=allRows[0];
+ summary.innerHTML=`<b>${allRows.length} saved Officer${allRows.length===1?'':'s'}</b> · `+
+   `<b>${ready.length} MAXED</b> · `+
+   `<b>Highest progress:</b> ${esc(closest.name)} (${closest.overall}%)`+
+   (rows.length!==allRows.length?` · <b>Showing ${rows.length}</b>`:'');
+ body.innerHTML=rows.length?rows.map(r=>`<tr>
+   <td><b>${esc(r.name)}</b></td>
+   <td>${meter(r.overall)}</td>
+   <td>${meter(r.dev)}</td>
+   <td>${meter(r.stars)}</td>
+   <td>${meter(r.xp)}</td>
+   <td>${fmt(r.badgeShort)}</td>
+   <td>${fmt(r.starShort)}</td>
+   <td>${fmt(r.xpShort)}</td>
+   <td class="${r.maxed?'status-ready':r.notStarted?'':'status-progress'}">${r.status}</td>
+ </tr>`).join(''):`<tr><td colspan="9" class="muted">No saved Officers match the selected status filters.</td></tr>`;
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(renderSavedOfficerProgress,0));
+function compareStatusAllowed(r){
+ const boxes=[...document.querySelectorAll('.compareStatusFilter')];
+ if(!boxes.length)return true;
+ const selected=new Set(boxes.filter(x=>x.checked).map(x=>x.value));
+ if(r.maxed)return selected.has('maxed');
+ if(r.notStarted)return selected.has('notStarted');
+ return selected.has('progress');
+}
+function renderProgressCompareChoices(){
+ const box=document.getElementById('compareProgressChoices'); if(!box)return;
+ const seasonRank=s=>{
+   const v=String(s||'').trim().toLowerCase();
+   if(v==='original')return 0;
+   const m=v.match(/^s(\d+)$/);
+   return m?Number(m[1]):999;
+ };
+ const rows=savedOfficerProgressData().filter(compareStatusAllowed).slice().sort((a,b)=>
+   seasonRank(b.season)-seasonRank(a.season) ||
+   String(a.name).localeCompare(String(b.name))
+ );
+ box.innerHTML=rows.length?rows.map((r,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #4a3a12;border-radius:8px"><input type="checkbox" class="progressComparePick" value="${i}"> <span>${esc(r.name)}</span></label>`).join(''):'No saved Officer profiles.';
+ box.dataset.compareRows=JSON.stringify(rows);
+}
+function runProgressComparison(){
+ const box=document.getElementById('compareProgressChoices');
+ let all=[];
+ try{all=JSON.parse(box?.dataset.compareRows||'[]')}catch{}
+ if(!all.length)all=savedOfficerProgressData();
+
+ const picks=[...document.querySelectorAll('.progressComparePick:checked')]
+   .map(x=>all[Number(x.value)]).filter(Boolean);
+
+ const wrap=document.getElementById('compareProgressResultsWrap'),
+       body=document.getElementById('compareProgressResults'),
+       rec=document.getElementById('compareProgressRecommendation');
+
+ if(picks.length<2){
+   wrap.style.display='none';
+   rec.style.display='block';
+   rec.textContent='Select at least 2 saved Officers to compare.';
+   return;
+ }
+
+ picks.sort((a,b)=>Number(b.maxed)-Number(a.maxed)||b.overall-a.overall||a.name.localeCompare(b.name));
+
+ body.innerHTML=picks.map(r=>`<tr>
+   <td><b>${esc(r.name)}</b></td>
+   <td>${meter(r.overall)}</td>
+   <td>${meter(r.dev)}</td>
+   <td>${meter(r.stars)}</td>
+   <td>${meter(r.xp)}</td>
+   <td>${fmt(r.badgeShort)}</td>
+   <td>${fmt(r.starShort)}</td>
+   <td>${fmt(r.xpShort)}</td>
+   <td class="${r.maxed?'status-ready':r.notStarted?'':'status-progress'}">${r.status}</td>
+ </tr>`).join('');
+
+ const best=picks[0];
+ rec.style.display='block';
+ if(best.maxed){
+   rec.innerHTML=`<b>${esc(officerDisplayName(best))}</b> is already MAXED.`;
+ }else if(picks.every(r=>r.notStarted)){
+   rec.innerHTML='<b>No selected Officer has been started yet.</b>';
+ }else{
+   rec.innerHTML=`<b>Highest actual progress:</b> ${esc(officerDisplayName(best))} at ${best.overall}%.`;
+ }
+ wrap.style.display='block';
+}
+function setupProgressComparison(){
+ renderProgressCompareChoices();
+ const all=document.getElementById('compareProgressSelectAll');
+ const clear=document.getElementById('compareProgressClear');
+ const run=document.getElementById('compareProgressRun');
+ if(all)all.onclick=()=>document.querySelectorAll('.progressComparePick').forEach(x=>x.checked=true);
+ if(clear)clear.onclick=()=>{document.querySelectorAll('.progressComparePick').forEach(x=>x.checked=false);document.getElementById('compareProgressResultsWrap').style.display='none';document.getElementById('compareProgressRecommendation').style.display='none';};
+ if(run)run.onclick=runProgressComparison;
+}
+document.addEventListener('DOMContentLoaded',setupProgressComparison);
+document.addEventListener('DOMContentLoaded',()=>{
+ document.querySelectorAll('.progressStatusFilter').forEach(x=>x.addEventListener('change',()=>{
+   renderSavedOfficerProgress();
+ }));
+ document.querySelectorAll('.compareStatusFilter').forEach(x=>x.addEventListener('change',()=>{
+   renderProgressCompareChoices();
+   const wrap=document.getElementById('compareProgressResultsWrap');
+   const rec=document.getElementById('compareProgressRecommendation');
+   if(wrap)wrap.style.display='none';
+   if(rec)rec.style.display='none';
+ }));
+});
+
+
+(function(){
+ const q=id=>document.getElementById(id);
+ function buildQuickSkills(){
+ const box=q('quickSkills'); if(!box)return;
+ box.innerHTML='';
+ box.style.display='grid';
+ box.style.gap='10px';
+ const levels=getSkillStrandLevels();
+ const quickStars=Number(q('quickStarLevel')?.value??q('currentStar')?.value??0);
+ const quickUnlocked=!!(q('quickUnlocked')?.checked??q('unlocked')?.checked);
+
+ for(let strand=0;strand<4;strand++){
+   const available=strandIsAvailable(strand,quickStars,quickUnlocked);
+   const row=document.createElement('div');
+   row.className='quick-strand-row'+(available?'':' locked');
+   row.dataset.quickStrand=strand;
+
+   const label=document.createElement('label');
+   label.className='skill-strand-label';
+   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${strandRequirementText(strand,quickStars,quickUnlocked)}</span>`}`;
+   row.appendChild(label);
+
+   const select=document.createElement('select');
+   select.className='quick-strand-select';
+   select.dataset.quickStrandSelect=strand;
+   select.disabled=!available;
+   for(let level=1;level<=5;level++){
+     const opt=document.createElement('option');
+     opt.value=level;
+     opt.textContent=level===1?'Level 1 — Free':`Level ${level}`;
+     select.appendChild(opt);
+   }
+   select.value=levels[strand];
+   row.dataset.selectedLevel=levels[strand];
+   select.title=available?`Set Strand ${strand+1} level`:strandRequirementText(strand,quickStars,quickUnlocked);
+   select.onchange=()=>{
+ row.dataset.selectedLevel=select.value;
+ const paid=[...document.querySelectorAll('#quickSkills .quick-strand-select')].reduce((sum,x)=>sum+Math.max(0,(Number(x.value)||1)-1),0);
+ const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
+ const summaryBox=document.getElementById('quickNextSkillCostSummary');
+ if(summaryBox){
+ const total=cc.reduce((a,b)=>a+b,0);
+ const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
+ const remaining=Math.max(0,total-spent);
+ summaryBox.innerHTML=paid>=16
+  ? `<b>Skills complete · ${spent}/${total} badges used · 0 remaining.</b>`
+  : `<b>Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.</b>`;
+}
+};
+   row.appendChild(select);
+   box.appendChild(row);
+ }
+ const paid=levels.reduce((sum,lvl)=>sum+Math.max(0,lvl-1),0);
+ const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
+ const summary=document.getElementById('quickNextSkillCostSummary');
+ if(summary){
+ const total=cc.reduce((a,b)=>a+b,0);
+ const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
+ const remaining=Math.max(0,total-spent);
+ summary.innerHTML=paid>=16
+  ? `<b>Skills complete · ${spent}/${total} badges used · 0 remaining.</b>`
+  : `<b>Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.</b>`;
+}
+}
+ function openQuickProgress(){
+   buildQuickSkills();
+   const o=typeof currentOfficer==='function'?currentOfficer():null;
+   q('quickProgressOfficer').textContent=o?officerDisplayName(o):'Selected Officer';
+   q('quickStarLevel').value=q('currentStar')?.value??0;
+   q('quickOfficerLevel').value=q('currentLevel')?.value??1;
+   q('quickUnlocked').checked=!!q('unlocked')?.checked;
+   q('quickTraining').value=q('training')?.value??0;
+   q('quickTrainingValue').textContent=q('quickTraining').value;
+   if(q('quickTrainingExact'))q('quickTrainingExact').value=q('quickTraining').value;
+   buildQuickSkills();
+   q('quickProgressModal').style.display='block';
+ }
+ function closeQuickProgress(){q('quickProgressModal').style.display='none';}
+ function applyQuickProgress(){
+   q('currentStar').value=q('quickStarLevel').value;
+   q('targetStar').value=Math.max(Number(q('targetStar').value)||5,Number(q('quickStarLevel').value)||0);
+   q('currentLevel').value=q('quickOfficerLevel').value;
+   q('targetLevel').value=Math.max(Number(q('targetLevel').value)||70,Number(q('quickOfficerLevel').value)||1);
+   q('unlocked').checked=q('quickUnlocked').checked;
+   skills=Array(16).fill(false);
+   document.querySelectorAll('#quickSkills .quick-strand-row').forEach((row,strand)=>{
+     const level=Math.max(1,Math.min(5,Number(row.dataset.selectedLevel)||1));
+     for(let step=0;step<4;step++)skills[strand*4+step]=step<(level-1);
+   });
+   renderSkillStrands();
+   q('training').value=q('quickTrainingExact')?q('quickTrainingExact').value:q('quickTraining').value;
+   if(q('trainingExact'))q('trainingExact').value=q('training').value;
+   if(q('trainingLabel'))q('trainingLabel').textContent=q('quickTraining').value;
+   calculate();
+   saveOfficerProfile(true);
+   if(typeof renderSavedOfficerProgress==='function')renderSavedOfficerProgress();
+   if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
+   closeQuickProgress();
+   const o=typeof currentOfficer==='function'?currentOfficer():null;
+   alert(`${o?officerDisplayName(o):'Officer'} progress saved.`);
+ }
+ q('quickProgressBtn')?.addEventListener('click',openQuickProgress);
+ q('quickStarLevel')?.addEventListener('change',buildQuickSkills);
+ q('quickUnlocked')?.addEventListener('change',buildQuickSkills);
+ q('skillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
+ q('quickSkillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
+ q('skillCostInfoClose')?.addEventListener('click',closeSkillCostInfo);
+ q('skillCostInfoModal')?.addEventListener('click',e=>{if(e.target===q('skillCostInfoModal'))closeSkillCostInfo();});
+ q('quickProgressClose')?.addEventListener('click',closeQuickProgress);
+ q('quickProgressCancel')?.addEventListener('click',closeQuickProgress);
+ q('quickTraining')?.addEventListener('input',()=>{
+   const v=Math.max(0,Math.min(180,Math.round(Number(q('quickTraining').value)||0)));
+   q('quickTraining').value=v;
+   q('quickTrainingValue').textContent=v;
+   if(q('quickTrainingExact'))q('quickTrainingExact').value=v;
+ });
+ q('quickTrainingExact')?.addEventListener('input',()=>{
+   const v=Math.max(0,Math.min(180,Math.round(Number(q('quickTrainingExact').value)||0)));
+   q('quickTrainingExact').value=v;
+   q('quickTraining').value=v;
+   q('quickTrainingValue').textContent=v;
+ });
+ q('quickOfficerLevel')?.addEventListener('input',()=>{
+   const level=Number(q('quickOfficerLevel').value);
+   if(Number.isFinite(level) && level>0 && !q('quickUnlocked').checked){
+     q('quickUnlocked').checked=true;
+     buildQuickSkills();
+   }
+ });
+ q('quickProgressSave')?.addEventListener('click',applyQuickProgress);
+ q('quickProgressMax')?.addEventListener('click',()=>{
+   q('quickStarLevel').value='5';q('quickOfficerLevel').value='70';q('quickUnlocked').checked=true;
+   q('quickTraining').value='180';q('quickTrainingValue').textContent='180';if(q('quickTrainingExact'))q('quickTrainingExact').value='180';
+   document.querySelectorAll('#quickSkills .quick-strand-row').forEach(row=>{row.dataset.selectedLevel='5';const sel=row.querySelector('.quick-strand-select');if(sel)sel.value='5';});
+ });
+ q('quickProgressModal')?.addEventListener('click',e=>{if(e.target===q('quickProgressModal'))closeQuickProgress();});
+})();;
+</script>
+
+<div id="skillCostInfoModal" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.82);padding:18px;overflow:auto">
+<article class="card" style="max-width:720px;margin:5vh auto">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 style="margin:0">ℹ️ Skill Strand Costs</h2><button id="skillCostInfoClose" type="button">✕</button></div>
+<div id="skillCostCurrent" class="notice" style="margin:14px 0"></div>
+<p>Each strand starts at <b>Level 1 for free</b>. Every extra level on any strand uses the next cost in the shared sequence.</p>
+<div class="table-wrap"><table><thead><tr><th>Paid upgrade #</th><th>Badge cost</th></tr></thead><tbody id="skillCostSequenceRows"></tbody></table></div>
+<div id="skillCostPerStrand" class="notice" style="margin-top:14px"></div>
+</article></div>
+<div id="quickProgressModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.8);padding:18px;overflow:auto">
+ <article class="card" style="max-width:820px;margin:3vh auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2>✏️ Edit Officer Progress</h2><button id="quickProgressClose" type="button">✕</button></div>
+  <div id="quickProgressOfficer" class="notice"></div>
+  <div class="two">
+   <div><label>Current Star Level</label><select id="quickStarLevel"><option value="0">0★</option><option value="1">1★</option><option value="2">2★</option><option value="3">3★</option><option value="4">4★</option><option value="5">5★</option></select></div>
+   <div><label>Current Officer Level</label><input id="quickOfficerLevel" type="number" min="0" max="70"></div>
+  </div>
+  <label><input id="quickUnlocked" type="checkbox"> Officer unlocked (10 badges)</label>
+  <h3>Skill Strands — each starts at Level 1</h3><div id="quickSkills"></div>
+  <label style="display:block;margin-top:14px">Training Level: <b id="quickTrainingValue">0</b> / 180</label>
+  <div style="display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center">
+    <input id="quickTraining" type="range" min="0" max="180" value="0" style="width:100%">
+    <input id="quickTrainingExact" type="number" min="0" max="180" step="1" inputmode="numeric" value="0" aria-label="Exact Training Level">
+  </div>
+  <div class="toolbar" style="margin-top:16px"><button id="quickProgressSave" class="primary" type="button">💾 Save Progress</button><button id="quickProgressMax" class="primary" type="button">⭐ MAX Officer</button><button id="quickProgressCancel" type="button">Cancel</button></div>
+  <div class="notice">Officer-specific progress only. Shared resources remain on Stars, Develop and XP.</div>
+ </article>
+</div>
+
+<script>
+(function(){
+  const I18N={
+    en:window.KOW_I18N_EN||{}, fr:window.KOW_I18N_FR||{},
+    de:window.KOW_I18N_DE||{}, it:window.KOW_I18N_IT||{}
+  };
+  const HELP={
+    en:window.KOW_HELP_HTML_EN||'', fr:window.KOW_HELP_HTML_FR||'',
+    de:window.KOW_HELP_HTML_DE||'', it:window.KOW_HELP_HTML_IT||''
+  };
+  const SUPPORTED=['en','fr','de','it'];
+  const SKIP=new Set(['SCRIPT','STYLE','TEXTAREA']);
+  let busy=false, lang=(localStorage.getItem('kow_language')||'en').toLowerCase();
+  if(!SUPPORTED.includes(lang))lang='en';
+
+  function reverseToEnglish(text){
+    for(const l of SUPPORTED){
+      if(l==='en')continue;
+      const d=I18N[l]||{};
+      for(const [en,tr] of Object.entries(d)) if(tr===text) return en;
+    }
+    return text;
+  }
+  function dynamicTranslate(base,l){
+    if(l==='en')return base;
+    const d=I18N[l]||{};
+    if(d[base])return d[base];
+
+    // Rarity-aware dynamic development strings.
+    let m=base.match(/^(Legendary|Epic|Elite):\s*([\d,]+) badges per Training point · ([\d,]+) Promotion badges · ([\d,]+) total to MAX\.$/);
+    if(m){
+      const r=d[m[1]]||m[1];
+      const per = l==='fr'?'badges par point d’entraînement':l==='de'?'Abzeichen pro Trainingspunkt':'badge per punto Addestramento';
+      const promo = l==='fr'?'Badges de Promotion':l==='de'?'Beförderungsabzeichen':'Badge Promozione';
+      const total = l==='fr'?'au total pour MAX':l==='de'?'gesamt bis MAX':'totali per MAX';
+      return `${r}: ${m[2]} ${per} · ${m[3]} ${promo} · ${m[4]} ${total}.`;
+    }
+
+    m=base.match(/^Training Level:\s*(\d+)\s*\/\s*(180)$/);
+    if(m){
+      const label=l==='fr'?'Niveau d’entraînement':l==='de'?'Trainingsstufe':'Livello Addestramento';
+      return `${label}: ${m[1]} / ${m[2]}`;
+    }
+
+    m=base.match(/^Strand (\d+): Lv(\d+) · Strand (\d+): Lv(\d+) · Strand (\d+): Lv(\d+) · Strand (\d+): Lv(\d+) · Skills complete · ([\d,]+)\/([\d,]+) badges used · ([\d,]+) remaining\.$/);
+    if(m){
+      const strand=l==='fr'?'Branche':l==='de'?'Strang':'Ramo';
+      const complete=l==='fr'?'Compétences terminées':l==='de'?'Fähigkeiten abgeschlossen':'Abilità completate';
+      const used=l==='fr'?'badges utilisés':l==='de'?'Abzeichen verbraucht':'badge usati';
+      const rem=l==='fr'?'restants':l==='de'?'verbleibend':'rimanenti';
+      return `${strand} ${m[1]}: Nv${m[2]} · ${strand} ${m[3]}: Nv${m[4]} · ${strand} ${m[5]}: Nv${m[6]} · ${strand} ${m[7]}: Nv${m[8]} · ${complete} · ${m[9]}/${m[10]} ${used} · ${m[11]} ${rem}.`;
+    }
+
+    m=base.match(/^Build integrity:\s*OK$/);
+    if(m) return l==='fr'?'Intégrité du build : OK':l==='de'?'Build-Integrität: OK':'Integrità build: OK';
+
+    return base;
+  }
+
+  function translateTextNode(node,l){
+    if(!node || !node.parentElement || SKIP.has(node.parentElement.tagName))return;
+    // Do not translate the selected Officer names/options.
+    if(node.parentElement.closest && node.parentElement.closest('#officerSelect,#compareOfficerSelect,#progressCompareChoices,#multiOfficerRows'))return;
+    const raw=node.nodeValue, trimmed=raw.trim();
+    if(!trimmed)return;
+    if(node.__kowEnglish===undefined) node.__kowEnglish=reverseToEnglish(trimmed);
+    const base=node.__kowEnglish;
+    const tr=dynamicTranslate(base,l);
+    const next=raw.replace(trimmed,tr);
+    if(next!==raw) node.nodeValue=next;
+  }
+
+  function translateAttributes(root,l){
+    const d=I18N[l]||{};
+    root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el=>{
+      for(const a of ['placeholder','title','aria-label']){
+        if(!el.hasAttribute(a))continue;
+        const k='__kow_'+a;
+        if(el[k]===undefined)el[k]=reverseToEnglish(el.getAttribute(a));
+        const base=el[k];
+        el.setAttribute(a,d[base]||base);
+      }
+    });
+  }
+
+  function walk(root,l){
+    if(!root)return;
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode);
+    nodes.forEach(n=>translateTextNode(n,l));
+    translateAttributes(root,l);
+  }
+
+  function renderHelp(l){
+    const box=document.getElementById('helpLanguageBody');
+    if(box)box.innerHTML=HELP[l]||HELP.en||'';
+  }
+
+  function applyLanguage(l){
+    if(!SUPPORTED.includes(l))l='en';
+    lang=l;
+    if(localStorage.getItem('kow_language')!==l) localStorage.setItem('kow_language',l);
+    const sel=document.getElementById('appLanguage'); if(sel && sel.value!==l)sel.value=l;
+    document.documentElement.lang=l;
+    busy=true;
+    renderHelp(l);
+    walk(document.body,l);
+    busy=false;
+  }
+
+  window.kowApplyLanguage=applyLanguage;
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const sel=document.getElementById('appLanguage');
+    if(sel)sel.addEventListener('change',e=>applyLanguage(e.target.value));
+    applyLanguage(lang);
+  });
+
+  // v4.3.35 stable multilingual refresh.
+  // No MutationObserver: prevents translation recursion and blank-page freezes.
+  let translateTimer=null;
+  function scheduleLanguageRefresh(){
+    clearTimeout(translateTimer);
+    translateTimer=setTimeout(function(){
+      if(!busy) applyLanguage(lang);
+    },120);
+  }
+
+  document.addEventListener('click',scheduleLanguageRefresh,true);
+  document.addEventListener('change',scheduleLanguageRefresh,true);
+
+})();
+</script>
+
+</body>
+</html>
