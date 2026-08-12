@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.61</title>
+<title>KoW Companion v4.3.62</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -548,7 +548,7 @@ nav.bottom-nav::-webkit-scrollbar,
 
 </head>
 <body>
-<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.61</div>
+<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.62</div>
 
 <header class="topbar">
   <div>
@@ -1762,7 +1762,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='v4.3.61';
+const APP_VERSION='v4.3.62';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -2334,7 +2334,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.61';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.62';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -3159,7 +3159,7 @@ document.addEventListener("click",function(e){
   }
 
 
-  // v4.3.61 TEST Translation Audit. QA only: does not modify player data.
+  // v4.3.62 TEST Translation Audit. QA only: does not modify player data.
   const AUDIT_ALLOWED_EXACT=new Set(['XP','ORV','SRV','MAX','S2','S3','S4','S5','S6','S7','English','Français','Deutsch','Italiano']);
   function auditSection(el){
     const view=el.closest&&el.closest('section.view');
@@ -3184,7 +3184,7 @@ document.addEventListener("click",function(e){
     applyLanguage(lang);
   });
 
-  // v4.3.61 stable multilingual refresh.
+  // v4.3.62 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
 
@@ -3340,10 +3340,72 @@ window.__kowApplyGermanDynamicTranslations=apply;
 })();
 </script>
 
-<script id="translation-audit-v4361">
+
+<script id="v4362-italian-dynamic-translation-fixes">
 (function(){
 'use strict';
-const VERSION='4.3.61';
+function isIt(){return (localStorage.getItem('appLanguage')||document.documentElement.lang||'').slice(0,2)==='it';}
+function tx(s){
+ let t=String(s||'');
+ const exact={
+  'Copy':'Copia','Delete':'Elimina','Search officers':'Cerca ufficiali',
+  'Fully funded':'Completamente finanziato',
+  'Shared Legendary badge resources detected:':'Rilevate risorse condivise di distintivi leggendari:',
+  'Available toward badge requirement:':'Disponibili per il requisito dei distintivi:',
+  'Remaining badge shortfall:':'Distintivi ancora mancanti:',
+  'Shared Allocated':'Condivisi assegnati',
+  '❓ Help & Instructions':'❓ Aiuto e istruzioni','Help & Instructions':'Aiuto e istruzioni',
+  'August — New Dogs':'Agosto — Nuovi Dogs',
+  'September — Guns: Field · Jets: Fighter':'Settembre — Cannoni: campo · Jet: caccia',
+  'August • CURRENT':'Agosto • ATTUALE','September • NEXT':'Settembre • PROSSIMO'
+ };
+ const k=t.trim(); if(exact[k]) return t.replace(k,exact[k]);
+ t=t.replace(/\bfully funded\b/gi,'completamente finanziato')
+    .replace(/\bpartially funded\b/gi,'parzialmente finanziato')
+    .replace(/\bshortfall\b/gi,'carenza')
+    .replace(/\brequired badges covered\b/gi,'distintivi richiesti coperti')
+    .replace(/\bIndividual Officer Badges held\b/gi,'distintivi individuali ufficiale posseduti')
+    .replace(/\bshared badges allocated\b/gi,'distintivi condivisi assegnati')
+    .replace(/\bbadges remain unfunded\b/gi,'distintivi restano non finanziati')
+    .replace(/\bRemaining shared resources\b/gi,'Risorse condivise rimanenti')
+    .replace(/\bUniversal Badges\b/gi,'distintivi universali')
+    .replace(/\bSelection Chests\b/gi,'casse di selezione');
+ t=t.replace(/\bPlanning estimate using 20% growth per Officer release from the latest known 600 ORV \/ 300 SRV release\./gi,
+   "Stima di pianificazione con una crescita del 20% per ogni uscita di ufficiali, a partire dall'ultima uscita nota da 600 ORV / 300 SRV.");
+ t=t.replace(/\bFor 1,600 badges and 98,000 Star value \(891 Exclusive Stars\), plan for approximately\b/gi,
+   'Per 1.600 distintivi e un valore Stelle di 98.000 (891 Stelle Esclusive), pianifica approssimativamente');
+ t=t.replace(/\bNew Dogs\b/g,'Nuovi Dogs')
+    .replace(/\bGuns:\s*Field\b/g,'Cannoni: campo')
+    .replace(/\bJets:\s*Fighter\b/g,'Jet: caccia')
+    .replace(/\bCURRENT\b/g,'ATTUALE')
+    .replace(/\bNEXT\b/g,'PROSSIMO');
+ return t;
+}
+function apply(root=document.body){
+ if(!isIt())return;
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ let n;while(n=w.nextNode()){
+  const e=n.parentElement;if(!e||['SCRIPT','STYLE','NOSCRIPT'].includes(e.tagName))continue;
+  const v=tx(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v;
+ }
+ document.querySelectorAll('option').forEach(e=>{const v=tx(e.textContent);if(v!==e.textContent)e.textContent=v;});
+ document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(e=>{
+  const a=e.getAttribute('placeholder'),v=tx(a);if(v!==a)e.setAttribute('placeholder',v);
+ });
+}
+const obs=new MutationObserver(ms=>{if(!isIt())return;ms.forEach(m=>m.addedNodes.forEach(n=>{
+ if(n.nodeType===1)apply(n);else if(n.nodeType===3&&n.parentElement){const v=tx(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v;}
+}));});
+document.addEventListener('DOMContentLoaded',()=>{apply();obs.observe(document.body,{childList:true,subtree:true});});
+window.addEventListener('load',()=>setTimeout(()=>apply(),100));
+window.__kowApplyItalianDynamicTranslations=apply;
+})();
+</script>
+
+<script id="translation-audit-v4362">
+(function(){
+'use strict';
+const VERSION='4.3.62';
 const APPROVED_EXACT=new Set(['ORV','SRV','XP','ORV / Badge','SRV / Star','MAX','MAXED','English','Français','Deutsch','Italiano']);
 const APPROVED_RE=[/^\d[\d\s,./%+–—-]*$/,/^S\d+$/i,/^(ORV|SRV|XP)(\s*\/\s*(Badge|Star))?$/i];
 const MARKERS=[
@@ -3407,6 +3469,7 @@ function scan(){
  const hits=[],seen=new Set();
  for(const x of collect()){
    if(approved(x.text))continue;
+   if(lang()==='de' && clean(x.text)==='Status') continue;
    for(const [label,re] of MARKERS){
      if(re.test(x.text)){
        const s=section(x.el),key=s+'|'+label+'|'+x.text;
@@ -3426,6 +3489,7 @@ function report(){
  safeRender();
  try{if(typeof window.__kowApplyFrenchDynamicTranslations==='function')window.__kowApplyFrenchDynamicTranslations();}catch(e){}
  try{if(typeof window.__kowApplyGermanDynamicTranslations==='function')window.__kowApplyGermanDynamicTranslations();}catch(e){}
+ try{if(typeof window.__kowApplyItalianDynamicTranslations==='function')window.__kowApplyItalianDynamicTranslations();}catch(e){}
  const d=dict(), hits=scan(), L=lang(), status=(d.missing.length||d.identical.length||hits.length)?'WARN':'PASS';
  const by={};hits.forEach(x=>(by[x.section]??=[]).push(x.text));
  let a=[
