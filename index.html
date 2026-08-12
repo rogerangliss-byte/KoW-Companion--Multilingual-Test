@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.57</title>
+<title>KoW Companion v4.3.58</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -548,7 +548,7 @@ nav.bottom-nav::-webkit-scrollbar,
 
 </head>
 <body>
-<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.57</div>
+<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.58</div>
 
 <header class="topbar">
   <div>
@@ -1762,7 +1762,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='v4.3.57';
+const APP_VERSION='v4.3.58';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -2334,7 +2334,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.57';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.58';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -3159,7 +3159,7 @@ document.addEventListener("click",function(e){
   }
 
 
-  // v4.3.57 TEST Translation Audit. QA only: does not modify player data.
+  // v4.3.58 TEST Translation Audit. QA only: does not modify player data.
   const AUDIT_ALLOWED_EXACT=new Set(['XP','ORV','SRV','MAX','S2','S3','S4','S5','S6','S7','English','Français','Deutsch','Italiano']);
   function auditSection(el){
     const view=el.closest&&el.closest('section.view');
@@ -3201,7 +3201,7 @@ document.addEventListener("click",function(e){
     remnants.forEach(x=>{const k=x.section+'|'+x.text;if(!seen.has(k)){seen.add(k);unique.push(x);}});
     const status=(l==='en')?'REFERENCE':(missing.length||identical.length||unique.length?'WARN':'PASS');
     const names={en:'English',fr:'French',de:'German',it:'Italian'};
-    let out=`KoW Companion Translation Audit — v4.3.57 TEST\nLanguage: ${names[l]||l}\nStatus: ${status}\n\n`;
+    let out=`KoW Companion Translation Audit — v4.3.58 TEST\nLanguage: ${names[l]||l}\nStatus: ${status}\n\n`;
     out+=`Dictionary keys checked: ${keys.length}\nMissing translation keys: ${missing.length}\nEnglish-identical translations: ${identical.length}\nRendered English remnants: ${unique.length}\n`;
     if(missing.length) out+='\nMISSING KEYS\n'+missing.map(x=>'• '+x).join('\n')+'\n';
     if(identical.length) out+='\nIDENTICAL TO ENGLISH (review)\n'+identical.map(x=>'• '+x).join('\n')+'\n';
@@ -3214,7 +3214,7 @@ document.addEventListener("click",function(e){
   function exportTranslationAudit(){
     const text=window.__kowLastTranslationAudit||runTranslationAudit();
     const blob=new Blob([text],{type:'text/plain;charset=utf-8'}), a=document.createElement('a');
-    a.href=URL.createObjectURL(blob); a.download=`KoW-Translation-Audit-v4.3.57-${lang}.txt`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);
+    a.href=URL.createObjectURL(blob); a.download=`KoW-Translation-Audit-v4.3.58-${lang}.txt`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);
   }
   document.addEventListener('click',e=>{
     if(e.target&&e.target.id==='runTranslationAudit')runTranslationAudit();
@@ -3229,7 +3229,7 @@ document.addEventListener("click",function(e){
     applyLanguage(lang);
   });
 
-  // v4.3.57 stable multilingual refresh.
+  // v4.3.58 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
 
@@ -3256,5 +3256,142 @@ document.addEventListener("click",function(e){
 })();
 
 </script>
+
+<script id="v4358-comprehensive-translation-audit">
+(function(){
+  const APPROVED_EXACT = new Set([
+    'ORV','SRV','XP','ORV / Badge','SRV / Star','MAX','S2','S3','S4','S5','S6','S7','S8',
+    'English','Français','Deutsch','Italiano'
+  ]);
+  const APPROVED_PATTERNS=[
+    /^\d[\d\s,./%+-]*$/,
+    /^S\d+$/i,
+    /^(ORV|SRV|XP)(\s*\/\s*(Badge|Star))?$/i
+  ];
+  const ENGLISH_MARKERS=[
+    /\bHelp & Instructions\b/i, /\bCurrent Upgrades\b/i, /\bSelect Officer\b/i,
+    /\bShared Legendary badge resources detected\b/i, /\bAvailable toward badge requirement\b/i,
+    /\bRemaining badge shortfall\b/i, /\bIndividual Officer Badges held\b/i,
+    /\bshared badges allocated\b/i, /\bbadges remain unfunded\b/i,
+    /\bRemaining shared resources\b/i, /\bFully Funded\b/i, /\bPartially Funded\b/i,
+    /\bShortfall\b/i, /\bCurrent\b/i, /\bNext\b/i, /\bNew Dogs\b/i,
+    /\bChoose File\b/i, /\bNo file chosen\b/i, /\bplanning estimate using\b/i,
+    /\bgrowth\b/i, /\bSelect another officer\b/i, /\bCopy\b/i, /\bDelete\b/i,
+    /\bSearch\b/i, /\bOrder\b/i, /\bStatus\b/i, /\bShared Allocated\b/i
+  ];
+  const SECTION_IDS=['home','officer','inventory','stars','development','xp','planning','progress','compare','releases','database','settings','help'];
+
+  function clean(s){return String(s||'').replace(/\s+/g,' ').trim();}
+  function approved(s){
+    s=clean(s);
+    if(!s || APPROVED_EXACT.has(s)) return true;
+    return APPROVED_PATTERNS.some(r=>r.test(s));
+  }
+  function sectionOf(el){
+    let n=el;
+    while(n && n!==document.body){
+      if(n.id && SECTION_IDS.includes(n.id)) return n.id;
+      n=n.parentElement;
+    }
+    return 'global';
+  }
+  function textCandidates(root=document.body){
+    const out=[];
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{
+      acceptNode(n){
+        const p=n.parentElement;
+        if(!p || ['SCRIPT','STYLE','NOSCRIPT','OPTION'].includes(p.tagName)) return NodeFilter.FILTER_REJECT;
+        const t=clean(n.nodeValue);
+        if(t.length<2) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    let n;
+    while(n=walker.nextNode()) out.push({text:clean(n.nodeValue),el:n.parentElement});
+    document.querySelectorAll('input[placeholder],textarea[placeholder],option').forEach(el=>{
+      const t=clean(el.getAttribute('placeholder')||el.textContent);
+      if(t) out.push({text:t,el});
+    });
+    return out;
+  }
+  function englishHits(){
+    const hits=[],seen=new Set();
+    for(const x of textCandidates()){
+      if(approved(x.text)) continue;
+      if(ENGLISH_MARKERS.some(r=>r.test(x.text))){
+        const key=sectionOf(x.el)+'|'+x.text;
+        if(!seen.has(key)){seen.add(key);hits.push({section:sectionOf(x.el),text:x.text});}
+      }
+    }
+    return hits;
+  }
+  function dictionaryAudit(lang){
+    const en=(window.I18N&&window.I18N.en)||{};
+    const tr=(window.I18N&&window.I18N[lang])||{};
+    const missing=[],identical=[];
+    Object.keys(en).forEach(k=>{
+      if(!(k in tr)||clean(tr[k])==='') missing.push(k);
+      else if(lang!=='en' && clean(tr[k])===clean(en[k]) && !approved(en[k])) identical.push(k);
+    });
+    return {checked:Object.keys(en).length,missing,identical};
+  }
+  function dynamicAudit(){
+    // Trigger safe preview/update functions only; never save/reset/spend data.
+    const safe=[
+      'renderMultiPlanner','calculateMultiPlanner','renderProgressDashboard',
+      'renderRecurringReleases','renderReleaseSchedule','renderForecast',
+      'renderDatabase','renderInventory'
+    ];
+    safe.forEach(n=>{try{if(typeof window[n]==='function') window[n]();}catch(e){}});
+    return englishHits();
+  }
+  function buildReport(){
+    const lang=(localStorage.getItem('appLanguage')||document.documentElement.lang||'en').slice(0,2);
+    const d=dictionaryAudit(lang), rendered=dynamicAudit();
+    const status=(d.missing.length||rendered.length)?'WARN':(d.identical.length?'WARN':'PASS');
+    const by={}; rendered.forEach(x=>(by[x.section]??=[]).push(x.text));
+    let lines=[
+      'KoW Companion Comprehensive Translation Audit — v4.3.58 TEST',
+      'Language: '+({fr:'French',de:'German',it:'Italian',en:'English'}[lang]||lang),
+      'Status: '+status,'',
+      'Dictionary keys checked: '+d.checked,
+      'Missing translation keys: '+d.missing.length,
+      'English-identical translations: '+d.identical.length,
+      'Rendered/dynamic English remnants: '+rendered.length,''
+    ];
+    if(d.missing.length){lines.push('MISSING KEYS',...d.missing.map(x=>'• '+x),'');}
+    if(d.identical.length){lines.push('IDENTICAL TO ENGLISH (review)',...d.identical.map(x=>'• '+x),'');}
+    Object.keys(by).sort().forEach(sec=>{
+      lines.push('RENDERED / DYNAMIC — ['+sec+']',...by[sec].map(x=>'• '+x),'');
+    });
+    lines.push('Approved exclusions: Officer names, XP, ORV, SRV, season codes, numbers, language names and ORV / Badge. Native browser file-picker wording is reported only when visible and may follow browser/OS locale.');
+    return {status,text:lines.join('\n'),counts:{missing:d.missing.length,identical:d.identical.length,rendered:rendered.length}};
+  }
+  window.runComprehensiveTranslationAudit=function(){
+    const r=buildReport();
+    const old=document.getElementById('translationAuditOutput');
+    if(old) old.value=r.text;
+    const status=document.getElementById('translationAuditStatus');
+    if(status) status.textContent=r.status+' — '+r.counts.missing+' missing · '+r.counts.identical+' identical · '+r.counts.rendered+' rendered/dynamic';
+    window.__kowTranslationAuditReport=r.text;
+    return r;
+  };
+  window.exportComprehensiveTranslationAudit=function(){
+    const r=window.__kowTranslationAuditReport||buildReport().text;
+    const lang=(localStorage.getItem('appLanguage')||document.documentElement.lang||'en').slice(0,2);
+    const blob=new Blob([r],{type:'text/plain;charset=utf-8'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='KoW-Translation-Audit-v4.3.58-'+lang+'.txt'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  };
+  document.addEventListener('DOMContentLoaded',()=>{
+    const run=[...document.querySelectorAll('button')].find(b=>/Run Translation Audit/i.test(b.textContent));
+    const exp=[...document.querySelectorAll('button')].find(b=>/Export Audit Report/i.test(b.textContent));
+    if(run) run.onclick=()=>window.runComprehensiveTranslationAudit();
+    if(exp) exp.onclick=()=>window.exportComprehensiveTranslationAudit();
+  });
+})();
+</script>
+
 </body>
 </html>
