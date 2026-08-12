@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.62-comprehensive-audit';
+const CACHE='kow-multilingual-v4.3.55-test-domain-comprehensive-audit';
 const ASSETS=[
   './',
   './index.html',

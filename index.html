@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.62</title>
+<title>KoW Companion Multilingual TEST v4.3.55</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -548,7 +548,9 @@ nav.bottom-nav::-webkit-scrollbar,
 
 </head>
 <body>
-<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.62</div>
+<div id="testEnvironmentBanner" style="position:relative;z-index:9999;width:100%;box-sizing:border-box;background:#d40000;color:#fff;text-align:center;font-weight:800;font-size:18px;padding:10px 12px;">
+⚠ MULTILINGUAL TEST VERSION — v4.3.55 — NOT LIVE ⚠
+</div>
 
 <header class="topbar">
   <div>
@@ -988,16 +990,7 @@ nav.bottom-nav::-webkit-scrollbar,
       <h3>Help & Instructions</h3>
       <p class="notice">Open the in-app User Guide for the recommended setup order, explanations of every tab, saving, database publishing, vouchers, badges and Original Officer restrictions.</p>
       <button id="openUserGuide" class="primary">📖 User Guide</button>
-          <div id="translationAuditCard" class="translation-audit-card">
-      <h3>🧪 Translation Audit</h3>
-      <p class="notice">Automatically checks language-file coverage and the currently rendered interface for untranslated English. Officer names, abbreviations, numbers and approved game terms are excluded.</p>
-      <div class="two">
-        <button id="runTranslationAudit" class="primary">Run Translation Audit</button>
-        <button id="exportTranslationAudit" class="primary">Export Audit Report</button>
-      </div>
-      <pre id="translationAuditReport" style="white-space:pre-wrap;max-height:420px;overflow:auto;background:#08090b;border:1px solid #5f4a0b;border-radius:8px;padding:12px;margin-top:10px">Audit not run yet.</pre>
-      </div>
-      <h3>Backup & Restore</h3>
+<h3>Backup & Restore</h3>
       <p class="notice">Export all locally saved KoW Companion browser data, or restore a previous JSON backup.</p>
       <div class="two">
         <button id="backupAppData" class="primary">⬇ Export App Backup</button>
@@ -1762,7 +1755,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='v4.3.62';
+const APP_VERSION='4.3.55';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -2334,7 +2327,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.62';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion Multilingual TEST v4.3.55';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -3159,7 +3152,7 @@ document.addEventListener("click",function(e){
   }
 
 
-  // v4.3.62 TEST Translation Audit. QA only: does not modify player data.
+  // v4.3.55 TEST Translation Audit. QA only: does not modify player data.
   const AUDIT_ALLOWED_EXACT=new Set(['XP','ORV','SRV','MAX','S2','S3','S4','S5','S6','S7','English','Français','Deutsch','Italiano']);
   function auditSection(el){
     const view=el.closest&&el.closest('section.view');
@@ -3184,7 +3177,7 @@ document.addEventListener("click",function(e){
     applyLanguage(lang);
   });
 
-  // v4.3.62 stable multilingual refresh.
+  // v4.3.55 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
 
@@ -3401,135 +3394,5 @@ window.addEventListener('load',()=>setTimeout(()=>apply(),100));
 window.__kowApplyItalianDynamicTranslations=apply;
 })();
 </script>
-
-<script id="translation-audit-v4362">
-(function(){
-'use strict';
-const VERSION='4.3.62';
-const APPROVED_EXACT=new Set(['ORV','SRV','XP','ORV / Badge','SRV / Star','MAX','MAXED','English','Français','Deutsch','Italiano']);
-const APPROVED_RE=[/^\d[\d\s,./%+–—-]*$/,/^S\d+$/i,/^(ORV|SRV|XP)(\s*\/\s*(Badge|Star))?$/i];
-const MARKERS=[
- ['Help & Instructions',/\bHelp & Instructions\b/i],
- ['Current Upgrades',/\bCurrent Upgrades\b/i],
- ['Select Officer',/\bSelect Officer\b/i],
- ['Shared Legendary badge resources detected',/\bShared Legendary badge resources detected\b/i],
- ['Available toward badge requirement',/\bAvailable toward badge requirement\b/i],
- ['Remaining badge shortfall',/\bRemaining badge shortfall\b/i],
- ['Individual Officer Badges held',/\bIndividual Officer Badges held\b/i],
- ['shared badges allocated',/\bshared badges allocated\b/i],
- ['badges remain unfunded',/\bbadges remain unfunded\b/i],
- ['Remaining shared resources',/\bRemaining shared resources\b/i],
- ['Fully Funded',/\bFully Funded\b/i],
- ['Partially Funded',/\bPartially Funded\b/i],
- ['Shortfall',/\bShortfall\b/i],
- ['Shared Allocated',/\bShared Allocated\b/i],
- ['Select another officer',/\bSelect another officer\b/i],
- ['planning estimate',/\bplanning estimate\b/i],
- ['growth',/\bgrowth\b/i],
- ['New Dogs',/\bNew Dogs\b/i],
- ['Fighter',/\bFighter\b/i],
- ['Current',/\bCURRENT\b/],
- ['Next',/\bNEXT\b/],
- ['Copy',/\bCopy\b/i],['Delete',/\bDelete\b/i],['Search',/\bSearch\b/i],
- ['Status',/^Status$/i],['Order',/\bOrder\b/i]
-];
-const SECTION_IDS=['home','officer','inventory','stars','development','xp','planning','progress','compare','releases','database','settings','help'];
-function clean(x){return String(x||'').replace(/\s+/g,' ').trim();}
-function approved(x){x=clean(x);return !x||APPROVED_EXACT.has(x)||APPROVED_RE.some(r=>r.test(x));}
-function lang(){return (localStorage.getItem('appLanguage')||document.documentElement.lang||'en').slice(0,2);}
-function section(el){while(el&&el!==document.body){if(el.id&&SECTION_IDS.includes(el.id))return el.id;el=el.parentElement;}return 'global';}
-function dict(){
- const L=lang();
- const roots=[window.I18N,window.i18n,window.translations,window.TRANSLATIONS,window.KOW_I18N].filter(x=>x&&typeof x==='object');
- let root=roots.find(x=>x.en&&typeof x.en==='object')||{};
- // Some language packs expose globals such as I18N_EN / LANG_EN rather than a common root.
- const en=root.en||window.I18N_EN||window.LANG_EN||window.enTranslations||{};
- const tr=root[L]||window['I18N_'+L.toUpperCase()]||window['LANG_'+L.toUpperCase()]||window[L+'Translations']||{};
- const missing=[],identical=[];
- for(const k of Object.keys(en)){
-   if(!(k in tr)||!clean(tr[k])) missing.push(k);
-   else if(L!=='en'&&clean(tr[k])===clean(en[k])&&!approved(en[k])) identical.push(k);
- }
- return {checked:Object.keys(en).length,missing,identical};
-}
-function collect(){
- const vals=[];
- const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){
-   const e=n.parentElement,t=clean(n.nodeValue);
-   if(!e||!t||['SCRIPT','STYLE','NOSCRIPT'].includes(e.tagName))return NodeFilter.FILTER_REJECT;
-   return NodeFilter.FILTER_ACCEPT;
- }});
- let n;while(n=walker.nextNode()) vals.push({text:clean(n.nodeValue),el:n.parentElement});
- document.querySelectorAll('input[placeholder],textarea[placeholder],option').forEach(e=>{
-   const t=clean(e.getAttribute('placeholder')||e.textContent);if(t)vals.push({text:t,el:e});
- });
- return vals;
-}
-function scan(){
- const hits=[],seen=new Set();
- for(const x of collect()){
-   if(approved(x.text))continue;
-   if(lang()==='de' && clean(x.text)==='Status') continue;
-   for(const [label,re] of MARKERS){
-     if(re.test(x.text)){
-       const s=section(x.el),key=s+'|'+label+'|'+x.text;
-       if(!seen.has(key)){seen.add(key);hits.push({section:s,text:x.text,marker:label});}
-       break;
-     }
-   }
- }
- return hits;
-}
-function safeRender(){
- ['renderMultiPlanner','calculateMultiPlanner','renderProgressDashboard','renderRecurringReleases',
-  'renderReleaseSchedule','renderForecast','renderDatabase','renderInventory','renderCompare']
- .forEach(n=>{try{if(typeof window[n]==='function')window[n]();}catch(e){}});
-}
-function report(){
- safeRender();
- try{if(typeof window.__kowApplyFrenchDynamicTranslations==='function')window.__kowApplyFrenchDynamicTranslations();}catch(e){}
- try{if(typeof window.__kowApplyGermanDynamicTranslations==='function')window.__kowApplyGermanDynamicTranslations();}catch(e){}
- try{if(typeof window.__kowApplyItalianDynamicTranslations==='function')window.__kowApplyItalianDynamicTranslations();}catch(e){}
- const d=dict(), hits=scan(), L=lang(), status=(d.missing.length||d.identical.length||hits.length)?'WARN':'PASS';
- const by={};hits.forEach(x=>(by[x.section]??=[]).push(x.text));
- let a=[
-  'KoW Companion Comprehensive Translation Audit — v'+VERSION+' TEST',
-  'Language: '+({fr:'French',de:'German',it:'Italian',en:'English'}[L]||L),
-  'Status: '+status,'',
-  'Dictionary keys checked: '+d.checked,
-  'Missing translation keys: '+d.missing.length,
-  'English-identical translations: '+d.identical.length,
-  'Rendered/dynamic English remnants: '+hits.length,''
- ];
- if(d.missing.length)a.push('MISSING TRANSLATION KEYS',...d.missing.map(x=>'• '+x),'');
- if(d.identical.length)a.push('IDENTICAL TO ENGLISH (REVIEW)',...d.identical.map(x=>'• '+x),'');
- Object.keys(by).sort().forEach(s=>a.push('RENDERED / DYNAMIC — ['+s+']',...by[s].map(x=>'• '+x),''));
- a.push('Approved exclusions: Officer names, XP, ORV, SRV, ORV / Badge, SRV / Star, season codes, numbers and language names. Native browser file-picker wording may follow the browser/OS locale.');
- return {status,text:a.join('\n'),missing:d.missing.length,identical:d.identical.length,hits:hits.length};
-}
-function run(){
- const r=report();window.__kowTranslationAuditReport=r.text;
- const o=document.getElementById('translationAuditOutput');if(o)o.value=r.text;
- const s=document.getElementById('translationAuditStatus');if(s)s.textContent=r.status+' — '+r.missing+' missing · '+r.identical+' identical · '+r.hits+' rendered/dynamic';
- return r;
-}
-function exp(){
- const text=window.__kowTranslationAuditReport||run().text,L=lang(),blob=new Blob([text],{type:'text/plain;charset=utf-8'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='KoW-Translation-Audit-v'+VERSION+'-'+L+'.txt';a.click();
- setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-window.runTranslationAudit=run;
-window.exportTranslationAudit=exp;
-window.runComprehensiveTranslationAudit=run;
-window.exportComprehensiveTranslationAudit=exp;
-document.addEventListener('DOMContentLoaded',()=>{
- document.querySelectorAll('button').forEach(b=>{
-   if(/Run Translation Audit|Lancer.*audit|Übersetzungs.*audit|Esegui.*audit/i.test(b.textContent)) b.onclick=run;
-   if(/Export Audit Report|Exporter.*rapport|Export.*Bericht|Esporta.*rapporto/i.test(b.textContent)) b.onclick=exp;
- });
-});
-})();
-</script>
-
 </body>
 </html>
