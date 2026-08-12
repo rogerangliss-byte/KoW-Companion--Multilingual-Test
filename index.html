@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.56</title>
+<title>KoW Companion v4.3.57</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -548,7 +548,7 @@ nav.bottom-nav::-webkit-scrollbar,
 
 </head>
 <body>
-<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.56</div>
+<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.57</div>
 
 <header class="topbar">
   <div>
@@ -988,7 +988,16 @@ nav.bottom-nav::-webkit-scrollbar,
       <h3>Help & Instructions</h3>
       <p class="notice">Open the in-app User Guide for the recommended setup order, explanations of every tab, saving, database publishing, vouchers, badges and Original Officer restrictions.</p>
       <button id="openUserGuide" class="primary">📖 User Guide</button>
-          <h3>Backup & Restore</h3>
+          <div id="translationAuditCard" class="translation-audit-card">
+      <h3>🧪 Translation Audit</h3>
+      <p class="notice">Automatically checks language-file coverage and the currently rendered interface for untranslated English. Officer names, abbreviations, numbers and approved game terms are excluded.</p>
+      <div class="two">
+        <button id="runTranslationAudit" class="primary">Run Translation Audit</button>
+        <button id="exportTranslationAudit" class="primary">Export Audit Report</button>
+      </div>
+      <pre id="translationAuditReport" style="white-space:pre-wrap;max-height:420px;overflow:auto;background:#08090b;border:1px solid #5f4a0b;border-radius:8px;padding:12px;margin-top:10px">Audit not run yet.</pre>
+      </div>
+      <h3>Backup & Restore</h3>
       <p class="notice">Export all locally saved KoW Companion browser data, or restore a previous JSON backup.</p>
       <div class="two">
         <button id="backupAppData" class="primary">⬇ Export App Backup</button>
@@ -1753,7 +1762,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='v4.3.56';
+const APP_VERSION='v4.3.57';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -2325,7 +2334,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.56';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.57';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -3149,6 +3158,69 @@ document.addEventListener("click",function(e){
     busy=false;
   }
 
+
+  // v4.3.57 TEST Translation Audit. QA only: does not modify player data.
+  const AUDIT_ALLOWED_EXACT=new Set(['XP','ORV','SRV','MAX','S2','S3','S4','S5','S6','S7','English','Français','Deutsch','Italiano']);
+  function auditSection(el){
+    const view=el.closest&&el.closest('section.view');
+    return view ? (view.id||'unknown') : 'global';
+  }
+  function looksLikeOfficerName(text){
+    const opts=[...document.querySelectorAll('#officerSelect option')].map(o=>o.textContent.trim());
+    return opts.includes(text) || /^(S[2-7]\s+)?[A-Z][A-Za-z' -]{1,30}$/.test(text)&&opts.some(n=>n.endsWith(text));
+  }
+  function runTranslationAudit(){
+    const l=lang;
+    const en=I18N.en||{}, d=I18N[l]||{};
+    const keys=Object.keys(en);
+    const missing=[], identical=[];
+    if(l!=='en') keys.forEach(k=>{
+      if(!(k in d) || !String(d[k]||'').trim()) missing.push(k);
+      else if(d[k]===k && !AUDIT_ALLOWED_EXACT.has(k) && k.length>2) identical.push(k);
+    });
+    const remnants=[];
+    if(l!=='en'){
+      const englishPhrases=new Set(Object.values(en).filter(v=>typeof v==='string'&&v.trim().length>=4));
+      document.querySelectorAll('body *').forEach(el=>{
+        if(['SCRIPT','STYLE','TEXTAREA','OPTION'].includes(el.tagName))return;
+        if(el.closest('#translationAuditCard'))return;
+        if(el.children.length)return;
+        const text=(el.textContent||'').trim();
+        if(!text || AUDIT_ALLOWED_EXACT.has(text) || looksLikeOfficerName(text))return;
+        let hit=null;
+        if(englishPhrases.has(text) && (!d[text] || d[text]===text)) hit=text;
+        else {
+          for(const phrase of englishPhrases){
+            if(phrase.length>=12 && text.includes(phrase) && (!d[phrase] || d[phrase]===phrase)){hit=phrase;break;}
+          }
+        }
+        if(hit) remnants.push({section:auditSection(el),text:text.slice(0,220)});
+      });
+    }
+    const unique=[]; const seen=new Set();
+    remnants.forEach(x=>{const k=x.section+'|'+x.text;if(!seen.has(k)){seen.add(k);unique.push(x);}});
+    const status=(l==='en')?'REFERENCE':(missing.length||identical.length||unique.length?'WARN':'PASS');
+    const names={en:'English',fr:'French',de:'German',it:'Italian'};
+    let out=`KoW Companion Translation Audit — v4.3.57 TEST\nLanguage: ${names[l]||l}\nStatus: ${status}\n\n`;
+    out+=`Dictionary keys checked: ${keys.length}\nMissing translation keys: ${missing.length}\nEnglish-identical translations: ${identical.length}\nRendered English remnants: ${unique.length}\n`;
+    if(missing.length) out+='\nMISSING KEYS\n'+missing.map(x=>'• '+x).join('\n')+'\n';
+    if(identical.length) out+='\nIDENTICAL TO ENGLISH (review)\n'+identical.map(x=>'• '+x).join('\n')+'\n';
+    if(unique.length) out+='\nRENDERED ENGLISH REMNANTS\n'+unique.map(x=>`• [${x.section}] ${x.text}`).join('\n')+'\n';
+    out+='\nApproved exclusions: Officer names, XP, ORV, SRV, season codes, numbers and language names. Native browser file-picker wording may follow the browser/OS locale and is not counted.';
+    const box=document.getElementById('translationAuditReport'); if(box)box.textContent=out;
+    window.__kowLastTranslationAudit=out;
+    return out;
+  }
+  function exportTranslationAudit(){
+    const text=window.__kowLastTranslationAudit||runTranslationAudit();
+    const blob=new Blob([text],{type:'text/plain;charset=utf-8'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=`KoW-Translation-Audit-v4.3.57-${lang}.txt`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+  document.addEventListener('click',e=>{
+    if(e.target&&e.target.id==='runTranslationAudit')runTranslationAudit();
+    if(e.target&&e.target.id==='exportTranslationAudit')exportTranslationAudit();
+  });
+
   window.kowApplyLanguage=applyLanguage;
 
   document.addEventListener('DOMContentLoaded',()=>{
@@ -3157,7 +3229,7 @@ document.addEventListener("click",function(e){
     applyLanguage(lang);
   });
 
-  // v4.3.56 stable multilingual refresh.
+  // v4.3.57 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
 
