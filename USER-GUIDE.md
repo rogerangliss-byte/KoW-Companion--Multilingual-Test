@@ -1,4 +1,4 @@
-# KoW Companion English v4.3.55 — User Guide
+# KoW Companion English v4.3.56 — User Guide
 
 ## Recommended setup order
 
@@ -224,7 +224,7 @@ If a newly uploaded build does not appear:
 
 1. Refresh the browser.
 2. Use a cache-busting refresh if required.
-3. Check that the displayed version is **v4.3.55**.
+3. Check that the displayed version is **v4.3.56**.
 
 If Planner results look wrong:
 
