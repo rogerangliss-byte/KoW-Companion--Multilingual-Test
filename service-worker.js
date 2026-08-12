@@ -1,5 +1,5 @@
-const CACHE='kow-v4.3.36-multilingual-test-french-fix3';
-const ASSETS=['lang/it.js','lang/de.js','lang/fr.js','lang/en.js',
+const CACHE='kow-v4.3.52-planner-held-badges';
+const ASSETS=[
   './',
   './index.html',
   './manifest.json',

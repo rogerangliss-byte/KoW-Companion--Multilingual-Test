@@ -6,7 +6,7 @@ Enregistrer la progression
 . Utilisez
 Sauvegarde et restauration
 dans Paramètres avant de gros changements ou pour transférer les données entre appareils.
-✨ Nouveautés — v4.3.36 TEST
+✨ Nouveautés — v4.3.36 LIVE
 Les raretés Légendaire, Épique et Élite sont maintenant prises en charge séparément.
 Le Développement, les Étoiles, les Badges universels, les totaux d'entraînement et les calculs de progression suivent la rareté de l'Officier sélectionné.
 1. Officier

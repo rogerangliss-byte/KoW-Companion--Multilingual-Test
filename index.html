@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.3.36</title>
+<title>KoW Companion v4.3.55</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -44,21 +44,6 @@ body{
 body{min-height:100vh;overflow-x:hidden}
 .topbar{position:sticky;top:0;z-index:10;padding:18px;background:rgba(0,0,0,.82);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
 .topbar h1{margin:0;color:var(--gold);font-size:1.4rem}.topbar p{margin:5px 0 0;color:var(--muted)}
-.test-banner{
-  position:sticky;
-  top:0;
-  z-index:11;
-  width:100%;
-  padding:8px 12px;
-  text-align:center;
-  background:#c40000;
-  color:#fff;
-  border-bottom:2px solid #ff6b6b;
-  font-weight:900;
-  letter-spacing:.12em;
-  box-shadow:0 3px 10px rgba(0,0,0,.45);
-}
-
 .app{position:relative;z-index:1;max-width:1000px;margin:auto;padding:14px 14px 100px;min-height:calc(100vh - 90px);background:transparent}.view{display:none}.view.active{display:block}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.wide{grid-column:1/-1}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 36px rgba(0,0,0,.3);backdrop-filter:blur(10px)}
@@ -208,7 +193,7 @@ input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px
 .quick-strand-row.locked{opacity:.62}
 .quick-strand-row.locked .quick-strand-select{background:#555;color:#bbb;cursor:not-allowed}
 
-/* v4.3.36 TEST — iPhone / iOS Safari responsive compatibility.
+/* v4.3.50 LIVE — iPhone / iOS Safari responsive compatibility.
    Scoped to html.ios-safari so Android and PC layouts are unchanged. */
 html.ios-safari{
   -webkit-text-size-adjust:100%;
@@ -393,7 +378,6 @@ html.ios-safari{
 }
 
 
-
 </style>
 <script>
 (function(){
@@ -403,8 +387,169 @@ html.ios-safari{
   if(isiOS && isWebKit) document.documentElement.classList.add('ios-safari');
 })();
 </script>
+
+<style id="v4342-nav-fix">
+nav, .bottom-nav, #bottomNav {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+nav > button, .bottom-nav > button, #bottomNav > button {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+@media (min-width: 700px) {
+  nav, .bottom-nav, #bottomNav { scroll-behavior: smooth; }
+}
+</style>
+
+
+<style id="v4345-officer-badge-grid-style">
+.inv-officer-badge-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px 12px;
+  margin:10px 0 12px;
+}
+.inv-officer-badge-row{
+  display:grid;
+  grid-template-columns:minmax(120px,1fr) 100px;
+  gap:8px;
+  align-items:center;
+  margin:0;
+  padding:7px 9px;
+  border:1px solid #303238;
+  border-radius:8px;
+  background:#0b0d10;
+}
+.inv-officer-badge-row span{font-weight:600}
+.inv-officer-badge-row input{margin:0;width:100%}
+@media(max-width:1050px){
+  .inv-officer-badge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .inv-officer-badge-grid{grid-template-columns:1fr}
+  .inv-officer-badge-row{grid-template-columns:minmax(0,1fr) 92px}
+}
+</style>
+
+
+<style id="v4346-inventory-save-fix">
+#inventory { padding-bottom: 145px !important; }
+#inventory .inventory-save-actions{
+ position:sticky; bottom:72px; z-index:80;
+ display:flex; gap:10px; flex-wrap:nowrap;
+ padding:10px 0 8px;
+ background:linear-gradient(to bottom,rgba(18,20,24,.90),rgba(18,20,24,.98));
+}
+#inventory .inventory-save-actions button{min-height:42px}
+</style>
+
+<style id="v4348-rarity-filter">
+.inv-badge-rarity-filter{display:flex;gap:8px;overflow-x:auto;margin:10px 0 12px;padding-bottom:3px}
+.inv-rarity-btn{flex:0 0 auto;min-width:92px;padding:8px 12px;border:1px solid #8b6a12;border-radius:8px;background:#11151a;color:#fff;font-weight:700}
+.inv-rarity-btn.active{background:#6b5313;border-color:#d4a900}
+</style>
+<style id="v4350-inventory-menu-position">
+/* Inventory is positioned directly after Officer in the bottom menu. */
+.bottom-nav [data-tab="home"], nav [data-tab="home"]{order:1}
+.bottom-nav [data-tab="progress"], nav [data-tab="progress"]{order:2}
+.bottom-nav [data-tab="officer"], nav [data-tab="officer"]{order:3}
+.bottom-nav [data-tab="inventory"], nav [data-tab="inventory"]{order:4}
+.bottom-nav [data-tab="stars"], nav [data-tab="stars"]{order:5}
+.bottom-nav [data-tab="develop"], nav [data-tab="develop"]{order:6}
+.bottom-nav [data-tab="xp"], nav [data-tab="xp"]{order:7}
+.bottom-nav [data-tab="planner"], nav [data-tab="planner"]{order:8}
+.bottom-nav [data-tab="database"], nav [data-tab="database"]{order:9}
+.bottom-nav [data-tab="releases"], nav [data-tab="releases"]{order:10}
+.bottom-nav [data-tab="settings"], nav [data-tab="settings"]{order:11}
+.bottom-nav [data-tab="help"], nav [data-tab="help"]{order:12}
+</style>
+
+<style id="v4354-single-row-scroll-menu">
+/* Keep the bottom navigation on a single row on desktop/tablet/mobile.
+   If the viewport is too narrow, scroll horizontally instead of wrapping. */
+.bottom-nav,
+nav.bottom-nav,
+.navbar,
+.bottom-menu,
+#bottomNav {
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  white-space:nowrap !important;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scroll-behavior:smooth;
+}
+.bottom-nav > *,
+nav.bottom-nav > *,
+.navbar > *,
+.bottom-menu > *,
+#bottomNav > * {
+  flex:0 0 auto !important;
+  white-space:nowrap !important;
+}
+.bottom-nav::-webkit-scrollbar,
+nav.bottom-nav::-webkit-scrollbar,
+.navbar::-webkit-scrollbar,
+.bottom-menu::-webkit-scrollbar,
+#bottomNav::-webkit-scrollbar {
+  height:6px;
+}
+</style>
+
+
+<style id="v4355-full-width-nav">
+/* Use the full available menu width while keeping all buttons on one row.
+   Buttons expand evenly when space is available, but retain a usable minimum
+   size and scroll horizontally when the viewport is narrower. */
+.bottom-nav{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  justify-content:stretch !important;
+  align-items:stretch !important;
+  gap:3px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+  padding:7px 8px !important;
+}
+.bottom-nav > button{
+  flex:1 0 60px !important;
+  min-width:60px !important;
+  min-height:56px !important;
+  padding:6px 3px !important;
+  font-size:1.18rem !important;
+  line-height:1 !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+}
+.bottom-nav > button span{
+  display:block !important;
+  margin-top:5px !important;
+  font-size:.66rem !important;
+  line-height:1.05 !important;
+  white-space:nowrap !important;
+}
+@media (max-width:700px){
+  .bottom-nav > button{
+    flex-basis:58px !important;
+    min-width:58px !important;
+    font-size:1.12rem !important;
+  }
+  .bottom-nav > button span{font-size:.61rem !important;}
+}
+</style>
+
 </head>
 <body>
+<div id="english-test-banner" style="position:sticky;top:0;z-index:99999;background:#d00000;color:#fff;text-align:center;font-weight:800;padding:9px 12px;">KoW Companion — v4.3.55</div>
+
 <header class="topbar">
   <div>
     <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
@@ -412,7 +557,6 @@ html.ios-safari{
   </div>
   <div class="creator-credit">Created by FireStorm (371)</div>
 </header>
-<div class="test-banner">⚠ MULTILINGUAL TEST VERSION — v4.3.36 — NOT LIVE ⚠</div>
 <main class="app">
   <section id="dashboard" class="view active">
 <article class="card" id="smartDashboardCard">
@@ -454,7 +598,7 @@ html.ios-safari{
     <h2>📊 Officer Progress</h2>
     <p class="notice">All Officers are shown automatically. Officers with no saved development are classified as NOT STARTED. Held shared resources do not increase an Officer's progress percentage.</p>
     <div id="savedOfficerProgressSummary" class="result-box">Save Officer progress to build this dashboard.</div>
-    <div id="progressStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px">
+    <div id="progressStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:nowrap;align-items:center;margin-top:12px">
       <b>Show:</b>
       <label><input type="checkbox" class="progressStatusFilter" value="maxed" checked> MAXED</label>
       <label><input type="checkbox" class="progressStatusFilter" value="progress" checked> IN PROGRESS</label>
@@ -471,13 +615,13 @@ html.ios-safari{
   <article class="card">
     <h2>🔎 Compare Officer Progress</h2>
     <p class="notice">Choose any saved Officers to compare their actual saved progress. Shared inventory is not counted as completed progress.</p>
-    <div id="compareStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+    <div id="compareStatusFilters" class="notice" style="display:flex;gap:18px;flex-wrap:nowrap;align-items:center;margin-bottom:12px">
       <b>Compare:</b>
       <label><input type="checkbox" class="compareStatusFilter" value="maxed" checked> MAXED</label>
       <label><input type="checkbox" class="compareStatusFilter" value="progress" checked> IN PROGRESS</label>
       <label><input type="checkbox" class="compareStatusFilter" value="notStarted" checked> NOT STARTED</label>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <div style="display:flex;gap:8px;flex-wrap:nowrap;margin-bottom:12px">
       <button type="button" id="compareProgressSelectAll">Select All</button>
       <button type="button" id="compareProgressClear">Clear All</button>
       <button type="button" id="compareProgressRun" class="primary" style="width:auto;margin-top:0">Compare Selected</button>
@@ -572,7 +716,7 @@ html.ios-safari{
         <div class="two"><div><label>Elite Star I (110)</label><input id="bs1" type="number" min="0" value="0"></div><div><label>Elite Star II (420)</label><input id="bs2" type="number" min="0" value="0"></div></div>
         <label>Elite Star III (960)</label><input id="bs3" type="number" min="0" value="0">
       </div>
-      <div class="notice" id="starRarityNotice"><b>Legendary Stars:</b> Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.</div>
+      <div class="notice" id="starRarityNotice"><b>Legendary Stars:</b> Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers from S2 onward. Original Legendary Officers cannot use SRV.</div>
       <div id="srvStarFlow">
         <label>Star Readiness Vouchers (SRV) Held</label><input id="srvHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
         <div class="stat"><span>Exclusive Stars from held SRV</span><b id="exclusiveFromSrv">0</b></div>
@@ -606,10 +750,13 @@ html.ios-safari{
       <label>Universal Legendary Badges Held</label><input id="universalBadgeHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
       <label>Universal Epic Badges Held</label><input id="universalEpicBadgeHeld" type="number" min="0" step="1" value="0">
       <label>Universal Elite Badges Held</label><input id="universalEliteBadgeHeld" type="number" min="0" step="1" value="0">
-      <label>Legendary Officer Badge Selection Chests Held</label><input id="legendaryBadgeChestHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <label>Legendary Officer Badge Chests Held</label><input id="legendaryBadgeChestHeld" type="number" min="0" step="1" inputmode="numeric" value="0">
+      <label>Legendary Officer Badge Selection Chests Held</label>
+      <input type="number" id="legendarySelectionChestHeld" min="0" step="1" value="0">
+      <div class="notice">Each <b>Legendary Officer Badge Selection Chest</b> gives <b>1 specific Legendary Officer Badge</b> for an Officer currently available in the chest. It does not convert to a Universal Legendary Badge or ORV.</div>
       <div class="notice">
         Each Selection Chest can be used as either <b>1 Universal Legendary Badge</b> or
-        <b><span id="selectionChestOrvValue">0</span> Officer Readiness Vouchers</b>.
+        <b><span id="selectionChestOrvValue">600</span> Officer Readiness Vouchers</b>.
         The ORV value follows the highest ORV-per-badge cost in the latest published season.
       </div>
       <label>Use Selection Chests as</label>
@@ -683,7 +830,7 @@ html.ios-safari{
         <div><label>Universal Legendary Badges available</label><input id="multiUniversal" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
       </div>
       <div class="two">
-        <div><label>Legendary Officer Badge Selection Chests</label><input id="multiChests" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
+        <div><label>Legendary Officer Badge Chests</label><input id="multiChests" type="number" min="0" step="1" inputmode="numeric" value="0"></div><div><label>Legendary Officer Badge Selection Chests</label><input id="multiSelectionChests" type="number" min="0" step="1" value="0"></div>
         <div><label>Chest strategy</label><select id="multiChestMode"><option value="optimise">Optimise automatically</option><option value="badge">Use as Universal Badges</option><option value="orv">Convert to ORV (600 each)</option></select></div>
       </div>
 
@@ -696,7 +843,7 @@ html.ios-safari{
 
       <div class="table-wrap" style="margin-top:10px">
         <table>
-          <thead><tr><th>Priority</th><th>Officer</th><th>Badges Needed</th><th>ORV / Badge</th><th>Allocated</th><th>Status</th><th>Order</th></tr></thead>
+          <thead><tr><th>Priority</th><th>Officer</th><th>Badges Needed</th><th>Held</th><th>ORV / Badge</th><th>Shared Allocated</th><th>Status</th><th>Order</th></tr></thead>
           <tbody id="multiPlannerRows"></tbody>
         </table>
       </div>
@@ -725,7 +872,99 @@ html.ios-safari{
   <section id="help" class="view">
     <article class="card">
       <h2>❓ Help & Instructions</h2>
-      <div id="helpLanguageBody"></div>
+
+<div class="card" id="whatsNewV4329" style="margin-bottom:16px">
+  <h3 style="margin-top:0">✨ What’s New — v4.3.50 LIVE</h3>
+  <div class="notice">
+    <b>v4.3.50 LIVE adds rarity-specific Stars and Universal Badges, Legendary-only SRV/ORV, and confirmed Legendary/Epic/Elite promotion and Training totals.</b>
+  </div>
+
+  <h4>📊 Officer Progress</h4>
+  <p>Officers are automatically classified as <b>MAXED</b>, <b>IN PROGRESS</b>, or <b>NOT STARTED</b>. The main Progress filters and Compare Officer Progress filters work independently.</p>
+  <p><b>New in v4.3.50 LIVE:</b> Officer Rarity now supports <b>Legendary (Gold)</b>, <b>Epic (Purple)</b> and <b>Elite (Blue)</b>. Training costs are 5 / 25 / 100 badges per point respectively. Epic and Elite Original Officers are included, with multi-role filtering. Skill Strand unlocking remains identical for every rarity.</p>
+
+  <h4>🔎 Compare Officer Progress</h4>
+  <p>Compare saved Officers in Season order. You can compare Not Started and In Progress Officers even when the main Officer Progress table is filtered differently.</p>
+
+  <h4>✏️ Edit Officer Progress</h4>
+  <p>The Officer tab now has <b>Edit Officer Progress</b>, allowing you to enter the key Officer-specific values in one place: Current Star Level, Current Officer Level, Officer Unlocked, Skill Strands and Training Level.</p>
+
+  <h4>⭐ MAX Officer</h4>
+  <p>Use <b>MAX Officer</b> to set the selected Officer to <b>5★, Level 70, Unlocked, all four Skill Strands at Level 5, and Training Level 180</b>.</p>
+
+  <h4>✅ Automatic Unlock</h4>
+  <p>Setting an Officer above Level 0 automatically selects <b>Officer unlocked</b>, reducing the chance of missing the unlock status.</p>
+
+  <h4>🎚 Exact Training Level</h4>
+  <p>Training can now be entered as an exact number from <b>0–180</b> as well as using the slider.</p>
+
+  <h4>🧩 Four Independent Skill Strands</h4>
+  <p>Each Officer has four independent Skill Strands. Strand availability follows Current Star Level: <b>0★ = Strand 1</b>, <b>1★ = Strands 1–2</b>, <b>2★ = Strands 1–3</b>, and <b>3★+ = all four strands</b>. Level 1 is free when each strand unlocks, and available strands can be advanced separately to Level 5.</p>
+
+  <p>The 16 paid skill increases share one badge-cost sequence, regardless of which strand is increased:</p>
+  <div class="notice"><b>10, 10, 15, 15, 30, 30, 40, 40, 45, 45, 50, 50, 75, 75, 80, 80</b></div>
+  <p>All 16 paid skill increases cost <b>690 Officer Badges</b> in total.</p>
+
+  <h4>ℹ️ Skill Cost Information</h4>
+  <p>The Development screen now shows <b>Next Cost</b>, <b>badges used / 690</b>, and <b>badges remaining</b>. Select the <b>i</b> button to view the full cost sequence and current strand information.</p>
+
+  <h4>🎨 Skill Progress Colours</h4>
+  <p><b>Gold</b> means that skill level has been reached. <b>Black/dark</b> means an available skill level has not yet been reached. <b>Grey</b> means the strand is not yet available at the Officer’s current Star Level. Locked strands show the Star requirement.</p>
+
+  <h4>💾 Improved Saving & Synchronisation</h4>
+  <p>Progress saved through Edit Officer Progress is written back to the Officer profile so the Officer, Stars, Develop, XP and Progress views stay synchronised.</p>
+</div>
+
+      <div class="notice"><b>Recommended workflow:</b> work through Officer → Stars → Development → XP → Planner, then use <b>Save Progress</b>. Use <b>Backup & Restore</b> in Settings before major changes or when you want a portable copy of locally saved app data.</div>
+
+      <h3>1. Officer</h3>
+      <p>Use <b>Search</b>, <b>Season</b> and <b>Officer Type / Role</b> filters to narrow the Officer list. Select the Officer you want to calculate. A matching portrait is displayed automatically when its file is available in the <b>officer-portraits</b> folder.</p>
+      <p>The selected Officer determines the cost of an Officer Badge in <b>Officer Readiness Vouchers (ORV)</b> and the cost of an Exclusive Star in <b>Star Readiness Vouchers (SRV)</b>.</p>
+      <p>The <b>Officer Upgrade Summary</b> shows the remaining Officer Badges, Officer Stars and Officer XP for the currently selected Officer.</p>
+      <p><b>Original Officers:</b> Officer Readiness Vouchers (ORV) and Star Readiness Vouchers (SRV) cannot be used for Original Officers.</p>
+
+      <h3>2. Stars</h3>
+      <p>Set the Officer's current and target Star level. The Stars tab automatically follows the selected Officer rarity: Legendary, Epic or Elite Star I / II / III. <b>Star Readiness Vouchers (SRV)</b> are shown only for Legendary Officers and cannot be used by Epic or Elite Officers.</p>
+
+      <h3>3. Development</h3>
+      <p>Enter unlock status, the four independent Skill Strand levels and Training Level. Then enter Officer Badges Held, <b>Universal Legendary Badges Held</b>, <b>Legendary Officer Badge Chests Held</b> and <b>Officer Readiness Vouchers (ORV) Held</b>.</p>
+      <p>Each <b>Universal Legendary Badge</b> is worth <b>1 Officer Badge</b> for a Legendary Officer.</p>
+      <p>Each <b>Legendary Officer Badge Selection Chest</b> can be used as <b>either</b> 1 Universal Legendary Badge <b>or</b> converted to the latest-Season Officer Readiness Voucher (ORV) value. A chest cannot count as both. With the current S7 database the benchmark is <b>600 ORV per chest</b>.</p>
+
+      <h3>4. XP</h3>
+      <p>Enter current and target Officer Level, then enter the number of Officer XP Books held in each denomination. The app calculates XP held, XP required and the remaining shortfall.</p>
+
+      <h3>5. Planner & Resource Optimiser</h3>
+      <p>Use Planner after entering Stars, Development and XP. Select a goal such as Max Officer, Next Star, Reach 5★, Max Skills or Max Training to see requirements, resources held and shortfalls.</p>
+      <p>The <b>Resource Optimiser</b> lets you select a second Officer in <b>Compare with Officer</b>. It compares the Officer Readiness Voucher (ORV) cost per Officer Badge for the two Officers.</p>
+      <p><b>How to interpret the recommendation:</b> where both Officers can use ORV, the optimiser recommends favouring ORV on the Officer with the <b>lower ORV cost per badge</b> and favouring shared <b>Universal Legendary Badges / Legendary Officer Badge Chests</b> on the Officer with the <b>higher ORV cost per badge</b>. This protects the more expensive Officer from unnecessary ORV spending.</p>
+      <p>The optimiser is <b>preview only</b>. It does not automatically spend, allocate or change your saved resources.</p>
+
+      <h3>5a. Multi-Officer Upgrade Planner</h3>
+      <p>The Multi-Officer Planner lets you create a priority list of several Officers, set the Officer Badges still needed for each, and preview how shared ORV, Universal Legendary Badges and Legendary Officer Badge Chests could cover the plan.</p>
+      <p>Use <b>Use current held resources</b> to copy the resources currently entered in Development. Plans are preview-only and do not spend or alter the normal calculator data. Named plans can be saved locally in the browser and loaded again later.</p>
+
+      <h3>6. Save Progress</h3>
+      <p><b>MAX Officer:</b> use the ⭐ MAX Officer button to set the selected Officer to 5 Stars, Level 70, Unlocked, all 4 Skill Strands at Level 5 and Training Level 180. The Officer profile is saved immediately. Shared inventory is not spent or changed.</p>
+      <p>Use <b>Save Progress</b> after entering or changing calculator information. Progress is stored locally in the browser on the current device. Save Progress does not publish your personal data to other users.</p>
+
+      <h3>7. Database</h3>
+      <p>The Database Manager controls the Officer master list. Use it to add or edit Officers and export the database. <b>Export CSV</b> exports the Officer database; it is different from Save Progress and App Backup.</p>
+      <p>To publish new or edited Officers for everyone, update the published <b>officers.json</b> and <b>officers.csv</b> files in the GitHub repository.</p>
+
+      <h3>7a. Recurring Release Calendar</h3>
+      <p>The <b>Releases</b> tab shows the recurring August → July annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.</p>
+
+      <h3>8. Settings, Backup & Restore</h3>
+      <p>Settings contains the app name, portrait and landscape backgrounds, update controls and <b>Backup & Restore</b>.</p>
+      <p><b>Export App Backup</b> creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. <b>Restore App Backup</b> loads a previously exported JSON backup and reloads the app.</p>
+      <p><b>Check for Updates</b> compares the installed version with the published version. <b>Refresh Latest Version</b> refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.</p>
+
+      <h3>Terminology</h3>
+      <p><b>ORV</b> = Officer Readiness Voucher<br>
+      <b>SRV</b> = Star Readiness Voucher<br>
+      <b>Universal Legendary Badge</b> = 1 Officer Badge for a Legendary Officer<br>
+      <b>Exclusive Star</b> = 110 Officer Star value</p>
     </article>
   </section>
 
@@ -781,7 +1020,23 @@ html.ios-safari{
  </article>
 </section>
 
-
+<section id="inventory" class="view">
+<div class="card"><h2>📦 Central Inventory</h2>
+<p>Enter resources once and press <b>Save Inventory</b>. The saved inventory is then used throughout the app.</p>
+<div id="inventorySavedStatus" class="notice">Inventory not yet saved.</div>
+<div class="grid2"><div><label>Officer Readiness Vouchers (ORV)</label><input id="invOrv" type="number" min="0" value="0"></div><div><label>Star Readiness Vouchers (SRV)</label><input id="invSrv" type="number" min="0" value="0"></div><div><label>Universal Legendary Badges</label><input id="invUniversalLegendary" type="number" min="0" value="0"></div><div><label>Universal Epic Badges</label><input id="invUniversalEpic" type="number" min="0" value="0"></div><div><label>Universal Elite Badges</label><input id="invUniversalElite" type="number" min="0" value="0"></div><div><label>Legendary Officer Badge Chests</label><input id="invLegendaryBadgeChests" type="number" min="0" value="0"></div><div><label>Legendary Officer Badge Selection Chests</label><input id="invLegendarySelectionChests" type="number" min="0" value="0"></div><div><label>Legendary Star I</label><input id="invLegStar1" type="number" min="0" value="0"></div><div><label>Legendary Star II</label><input id="invLegStar2" type="number" min="0" value="0"></div><div><label>Legendary Star III</label><input id="invLegStar3" type="number" min="0" value="0"></div><div><label>Epic Star I</label><input id="invEpicStar1" type="number" min="0" value="0"></div><div><label>Epic Star II</label><input id="invEpicStar2" type="number" min="0" value="0"></div><div><label>Epic Star III</label><input id="invEpicStar3" type="number" min="0" value="0"></div><div><label>Elite Star I</label><input id="invEliteStar1" type="number" min="0" value="0"></div><div><label>Elite Star II</label><input id="invEliteStar2" type="number" min="0" value="0"></div><div><label>Elite Star III</label><input id="invEliteStar3" type="number" min="0" value="0"></div></div>
+<h3>Officer XP Books</h3><div class="grid4"><div><label>50 XP Book</label><input id="invXp50" type="number" min="0" value="0"></div><div><label>100 XP Book</label><input id="invXp100" type="number" min="0" value="0"></div><div><label>500 XP Book</label><input id="invXp500" type="number" min="0" value="0"></div><div><label>1,000 XP Book</label><input id="invXp1000" type="number" min="0" value="0"></div><div><label>5,000 XP Book</label><input id="invXp5000" type="number" min="0" value="0"></div><div><label>10,000 XP Book</label><input id="invXp10000" type="number" min="0" value="0"></div><div><label>20,000 XP Book</label><input id="invXp20000" type="number" min="0" value="0"></div><div><label>50,000 XP Book</label><input id="invXp50000" type="number" min="0" value="0"></div></div>
+<h3>Individual Officer Badges</h3>
+<p class="notice">Enter badge quantities for any <b>Elite, Epic or Legendary Officer</b>, then press <b>Save Inventory</b>. Every Officer is listed even when the player currently holds 0 badges. Each value is stored separately for that Officer and is used throughout the app.</p>
+<div class="inv-badge-rarity-filter" role="group" aria-label="Officer badge rarity filter">
+<button type="button" class="inv-rarity-btn active" data-rarity="All">All</button>
+<button type="button" class="inv-rarity-btn" data-rarity="Elite">Elite</button>
+<button type="button" class="inv-rarity-btn" data-rarity="Epic">Epic</button>
+<button type="button" class="inv-rarity-btn" data-rarity="Legendary">Legendary</button>
+</div><div id="invOfficerBadgeGrid" class="inv-officer-badge-grid"><label class="inv-officer-badge-row" data-rarity="Elite"><span>Marjorie</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Marjorie" aria-label="Marjorie Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Elite"><span>Jeanne</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Jeanne" aria-label="Jeanne Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Dorothea</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Dorothea" aria-label="Dorothea Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Abigail</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Abigail" aria-label="Abigail Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Monica</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Monica" aria-label="Monica Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Linda</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Linda" aria-label="Linda Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Riven</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Riven" aria-label="Riven Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Maria</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Maria" aria-label="Maria Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Evelyn</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Evelyn" aria-label="Evelyn Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Epic"><span>Helena</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Helena" aria-label="Helena Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Katherine</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Katherine" aria-label="Katherine Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Grace</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Grace" aria-label="Grace Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Chloe</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Chloe" aria-label="Chloe Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Ling</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Ling" aria-label="Ling Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Jessica</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Jessica" aria-label="Jessica Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Lilith</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Lilith" aria-label="Lilith Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Angel</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Angel" aria-label="Angel Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Sakura</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Sakura" aria-label="Sakura Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Loubna</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Loubna" aria-label="Loubna Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Angelica</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Angelica" aria-label="Angelica Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Ophelia</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Ophelia" aria-label="Ophelia Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>Doireann</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="Doireann" aria-label="Doireann Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S2 Lady Pandora</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S2 Lady Pandora" aria-label="S2 Lady Pandora Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S2 Amanda</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S2 Amanda" aria-label="S2 Amanda Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S2 Diana</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S2 Diana" aria-label="S2 Diana Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S2 Natalia</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S2 Natalia" aria-label="S2 Natalia Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Su</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Su" aria-label="S3 Su Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Erica</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Erica" aria-label="S3 Erica Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Aurora</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Aurora" aria-label="S3 Aurora Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Ada</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Ada" aria-label="S3 Ada Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Hannah</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Hannah" aria-label="S3 Hannah Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Christina</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Christina" aria-label="S3 Christina Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Sophia</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Sophia" aria-label="S3 Sophia Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S3 Oliva</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S3 Oliva" aria-label="S3 Oliva Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Melina</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Melina" aria-label="S4 Melina Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Jane</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Jane" aria-label="S4 Jane Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Anna</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Anna" aria-label="S4 Anna Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Yuki</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Yuki" aria-label="S4 Yuki Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Eunice</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Eunice" aria-label="S4 Eunice Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Derya</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Derya" aria-label="S4 Derya Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Hardwin</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Hardwin" aria-label="S4 Hardwin Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S4 Erin</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S4 Erin" aria-label="S4 Erin Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Feng</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Feng" aria-label="S5 Feng Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Halina</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Halina" aria-label="S5 Halina Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Eva</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Eva" aria-label="S5 Eva Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Elsa</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Elsa" aria-label="S5 Elsa Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Camile</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Camile" aria-label="S5 Camile Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Betty</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Betty" aria-label="S5 Betty Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Miyeon</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Miyeon" aria-label="S5 Miyeon Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S5 Julia</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S5 Julia" aria-label="S5 Julia Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Regina</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Regina" aria-label="S6 Regina Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Veronica</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Veronica" aria-label="S6 Veronica Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Silverhand</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Silverhand" aria-label="S6 Silverhand Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Red Queen</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Red Queen" aria-label="S6 Red Queen Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Samantha</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Samantha" aria-label="S6 Samantha Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Saoirse</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Saoirse" aria-label="S6 Saoirse Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Emily</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Emily" aria-label="S6 Emily Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S6 Zoya</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S6 Zoya" aria-label="S6 Zoya Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Roisin</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Roisin" aria-label="S7 Roisin Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Barbara</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Barbara" aria-label="S7 Barbara Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Romana</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Romana" aria-label="S7 Romana Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Liora</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Liora" aria-label="S7 Liora Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Stella</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Stella" aria-label="S7 Stella Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Klara</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Klara" aria-label="S7 Klara Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Code</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Code" aria-label="S7 Code Badges Held"></label><label class="inv-officer-badge-row" data-rarity="Legendary"><span>S7 Kamila</span><input class="inv-officer-badge-input" type="number" min="0" value="0" data-officer="S7 Kamila" aria-label="S7 Kamila Badges Held"></label></div>
+<div id="invOfficerList" class="notice">No individual Officer Badges entered.</div>
+<div class="inventory-save-actions"><button id="saveInventory" type="button">Save Inventory</button><button id="resetInventory" type="button">Reset Inventory</button></div>
+</div></section>
 <section id="settings" class="view">
 <article class="card">
   <h2>🌐 Language</h2>
@@ -818,7 +1073,7 @@ html.ios-safari{
         <button id="refreshLatest" class="primary">Refresh Latest Version</button>
       </div>
       <h3>About</h3>
-      <p class="notice"><b>KoW Companion <span id="aboutVersion"></span> TEST</b><br>Created by FireStorm (371)</p>
+      <p class="notice"><b>KoW Companion <span id="aboutVersion"></span> LIVE</b><br>Created by FireStorm (371)</p>
       <h3>Version Integrity</h3>
       <div id="versionIntegrity" class="notice">Checking build version consistency…</div>
 
@@ -840,6 +1095,7 @@ html.ios-safari{
   <button data-view="dashboard" class="active">🏠<span>Home</span></button>
   <button data-view="progress">📊<span>Progress</span></button>
   <button data-view="officer">👤<span>Officer</span></button>
+  <button data-view="inventory">📦<span>Inventory</span></button>
   <button data-view="stars">⭐<span>Stars</span></button>
   <button data-view="development">🏅<span>Develop</span></button>
   <button data-view="xp">📘<span>XP</span></button>
@@ -850,11 +1106,10 @@ html.ios-safari{
   <button data-view="help">📖<span>Help</span></button>
 </nav>
 
-
-<script src="lang/en.js?v=4.3.36"></script>
-<script src="lang/fr.js?v=4.3.36"></script>
-<script src="lang/de.js?v=4.3.36"></script>
-<script src="lang/it.js?v=4.3.36"></script>
+<script src="lang/en.js?v=4.3.55"></script>
+<script src="lang/fr.js?v=4.3.55"></script>
+<script src="lang/de.js?v=4.3.55"></script>
+<script src="lang/it.js?v=4.3.55"></script>
 <script type="module">
 const DEFAULT_OFFICERS=[{"name":"S7 Roisin","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Barbara","season":"S7","role":"Tank Destroyer","orv":600,"srv":300,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S7 Romana","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Liora","season":"S7","role":"Tank","orv":500,"srv":250,"notes":"Tank","rarity":"Legendary"},{"name":"S7 Stella","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Klara","season":"S7","role":"Infantry","orv":416,"srv":208,"notes":"Infantry","rarity":"Legendary"},{"name":"S7 Code","season":"S7","role":"Rally","orv":346,"srv":173,"notes":"Rally","rarity":"Legendary"},{"name":"S7 Kamila","season":"S7","role":"Garrison","orv":346,"srv":173,"notes":"Garrison","rarity":"Legendary"},{"name":"S6 Regina","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Veronica","season":"S6","role":"Tank Destroyer","orv":289,"srv":144,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S6 Silverhand","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Red Queen","season":"S6","role":"Tank","orv":240,"srv":120,"notes":"Tank","rarity":"Legendary"},{"name":"S6 Samantha","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Saoirse","season":"S6","role":"Infantry","orv":200,"srv":100,"notes":"Infantry","rarity":"Legendary"},{"name":"S6 Emily","season":"S6","role":"Rally","orv":167,"srv":84,"notes":"Rally","rarity":"Legendary"},{"name":"S6 Zoya","season":"S6","role":"Garrison","orv":167,"srv":84,"notes":"Garrison","rarity":"Legendary"},{"name":"S5 Feng","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Halina","season":"S5","role":"Tank Destroyer","orv":139,"srv":69,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S5 Eva","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Elsa","season":"S5","role":"Tank","orv":116,"srv":58,"notes":"Tank","rarity":"Legendary"},{"name":"S5 Camile","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Betty","season":"S5","role":"Infantry","orv":96,"srv":48,"notes":"Infantry","rarity":"Legendary"},{"name":"S5 Miyeon","season":"S5","role":"Rally","orv":80,"srv":40,"notes":"Rally","rarity":"Legendary"},{"name":"S5 Julia","season":"S5","role":"Garrison","orv":80,"srv":40,"notes":"Garrison","rarity":"Legendary"},{"name":"S4 Melina","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Jane","season":"S4","role":"Tank Destroyer","orv":67,"srv":34,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S4 Anna","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Yuki","season":"S4","role":"Tank","orv":56,"srv":28,"notes":"Tank","rarity":"Legendary"},{"name":"S4 Eunice","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Derya","season":"S4","role":"Infantry","orv":47,"srv":23,"notes":"Infantry","rarity":"Legendary"},{"name":"S4 Hardwin","season":"S4","role":"Rally","orv":39,"srv":20,"notes":"Rally","rarity":"Legendary"},{"name":"S4 Erin","season":"S4","role":"Garrison","orv":39,"srv":20,"notes":"Garrison","rarity":"Legendary"},{"name":"S3 Su","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Erica","season":"S3","role":"Tank Destroyer","orv":33,"srv":16,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S3 Aurora","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Ada","season":"S3","role":"Tank","orv":28,"srv":14,"notes":"Tank","rarity":"Legendary"},{"name":"S3 Hannah","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Christina","season":"S3","role":"Infantry","orv":23,"srv":11,"notes":"Infantry","rarity":"Legendary"},{"name":"S3 Sophia","season":"S3","role":"Rally","orv":23,"srv":11,"notes":"Rally","rarity":"Legendary"},{"name":"S3 Oliva","season":"S3","role":"Garrison","orv":23,"srv":11,"notes":"Garrison","rarity":"Legendary"},{"name":"S2 Lady Pandora","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"S2 Amanda","season":"S2","role":"Infantry","orv":20,"srv":10,"notes":"Infantry","rarity":"Legendary"},{"name":"S2 Diana","season":"S2","role":"Tank Destroyer","orv":20,"srv":10,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"S2 Natalia","season":"S2","role":"Tank","orv":20,"srv":10,"notes":"Tank","rarity":"Legendary"},{"name":"Katherine","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Grace","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Legendary"},{"name":"Chloe","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Ling","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Jessica","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Lilith","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Legendary"},{"name":"Angel","season":"Original","role":"Gatherer","orv":0,"srv":0,"notes":"Gatherer","rarity":"Legendary"},{"name":"Sakura","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Loubna","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Angelica","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Legendary"},{"name":"Ophelia","season":"Original","role":"Rally","orv":0,"srv":0,"notes":"Rally","rarity":"Legendary"},{"name":"Doireann","season":"Original","role":"Garrison","orv":0,"srv":0,"notes":"Garrison","rarity":"Legendary"},{"name":"Dorothea","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Abigail","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Monica","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Epic"},{"name":"Linda","season":"Original","role":"Tank","orv":0,"srv":0,"notes":"Tank","rarity":"Epic"},{"name":"Riven","season":"Original","role":"Infantry","orv":0,"srv":0,"notes":"Infantry","rarity":"Epic"},{"name":"Maria","season":"Original","role":"Tank Destroyer","orv":0,"srv":0,"notes":"Tank Destroyer","rarity":"Epic"},{"name":"Evelyn","season":"Original","role":"Infantry, Gatherer","orv":0,"srv":0,"notes":"Infantry, Gatherer","rarity":"Epic"},{"name":"Helena","season":"Original","role":"General","orv":0,"srv":0,"notes":"General","rarity":"Epic"},{"name":"Marjorie","season":"Original","role":"Tank, Gatherer","orv":0,"srv":0,"notes":"Tank, Gatherer","rarity":"Elite"},{"name":"Jeanne","season":"Original","role":"Tank Destroyer, Gatherer","orv":0,"srv":0,"notes":"Tank Destroyer, Gatherer","rarity":"Elite"}];
 const STAR_CUM=[0,500,1500,8000,33000,98000];
@@ -1218,7 +1473,7 @@ function updateStarRarityUI(o=currentOfficer()){
  const note=$('starRarityNotice');
  if(note){
   note.innerHTML=rarity==='Legendary'
-   ?'<b>Legendary Stars:</b> uses Legendary Star I / II / III. Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.'
+   ?'<b>Legendary Stars:</b> uses Legendary Star I / II / III. Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers from S2 onward. Original Legendary Officers cannot use SRV.'
    :`<b>${rarity} Stars:</b> uses ${rarity} Star I / II / III only. ${rarity} Officers cannot use Star Readiness Vouchers (SRV).`;
  }
 }
@@ -1316,18 +1571,6 @@ function renderPlanner(o,cs,starsUsed,legendaryHeld,srvHeld,badgesUsed,badgesHel
 }
 
 function validateDb(list=officers){const e=[],seen=new Set();list.forEach((o,i)=>{const k=(o.name||'').trim().toLowerCase(),orig=String(o.season||'').toLowerCase()==='original';if(!k)e.push(`Row ${i+1}: name required`);if(k&&seen.has(k))e.push(`Row ${i+1}: duplicate name`);if(k)seen.add(k);if(!Number.isInteger(+o.orv)||(orig?+o.orv<0:+o.orv<=0))e.push(`Row ${i+1}: invalid ORV`);if(!Number.isInteger(+o.srv)||(orig?+o.srv<0:+o.srv<=0))e.push(`Row ${i+1}: invalid SRV`)});return e}
-function dbDisplayNote(v){
- const l=(localStorage.getItem('kow_language')||'en').toLowerCase();
- if(l!=='fr')return v;
- const map={'Tank Destroyer':'Chasseur de chars','Tank':'Char','Infantry':'Infanterie','Rally':'Ralliement','Garrison':'Garnison','Gatherer':'Collecteur'};
- return String(v||'').split(',').map(x=>map[x.trim()]||x.trim()).join(', ');
-}
-function dbRawNote(v){
- const l=(localStorage.getItem('kow_language')||'en').toLowerCase();
- if(l!=='fr')return v;
- const map={'Chasseur de chars':'Tank Destroyer','Char':'Tank','Infanterie':'Infantry','Ralliement':'Rally','Garnison':'Garrison','Collecteur':'Gatherer'};
- return String(v||'').split(',').map(x=>map[x.trim()]||x.trim()).join(', ');
-}
 function renderDb(){
  const search=$('dbSearch');const filter=$('dbSeason');const tbody=$('dbRows');if(!search||!filter||!tbody)return;
  const q=String(search.value||'').trim().toLowerCase();
@@ -1337,8 +1580,8 @@ function renderDb(){
  filter.value=seasons.includes(requested)?requested:'';
  const season=filter.value;
  const rows=officers.map((o,i)=>({...normalizeOfficer(o),_i:i})).filter(o=>(!q||o.name.toLowerCase().includes(q))&&(!season||o.season===season));
- tbody.innerHTML=rows.map(o=>`<tr data-i="${o._i}"><td><input data-f="name" value="${esc(o.name)}"></td><td><input data-f="season" value="${esc(o.season)}"></td><td><input data-f="orv" type="number" min="1" step="1" value="${o.orv}"></td><td><input data-f="srv" type="number" min="1" step="1" value="${o.srv}"></td><td><input data-f="notes" value="${esc(dbDisplayNote(o.notes))}"></td><td class="actions"><button data-copy>${(localStorage.getItem('kow_language')||'en')==='fr'?'Copier':'Copy'}</button><button data-del>${(localStorage.getItem('kow_language')||'en')==='fr'?'Supprimer':'Delete'}</button></td></tr>`).join('');
- tbody.querySelectorAll('input').forEach(x=>x.oninput=e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;officers[i][f]=(f==='orv'||f==='srv')?Number(e.target.value):(f==='notes'?dbRawNote(e.target.value):e.target.value);$('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`});
+ tbody.innerHTML=rows.map(o=>`<tr data-i="${o._i}"><td><input data-f="name" value="${esc(o.name)}"></td><td><input data-f="season" value="${esc(o.season)}"></td><td><input data-f="orv" type="number" min="1" step="1" value="${o.orv}"></td><td><input data-f="srv" type="number" min="1" step="1" value="${o.srv}"></td><td><input data-f="notes" value="${esc(o.notes)}"></td><td class="actions"><button data-copy>Copy</button><button data-del>Delete</button></td></tr>`).join('');
+ tbody.querySelectorAll('input').forEach(x=>x.oninput=e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;officers[i][f]=(f==='orv'||f==='srv')?Number(e.target.value):e.target.value;$('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`});
  tbody.querySelectorAll('[data-copy]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;officers.splice(i+1,0,{...officers[i],name:officers[i].name+' Copy'});renderDb();renderOfficerOptions();calculate()});
  tbody.querySelectorAll('[data-del]').forEach(b=>b.onclick=e=>{const i=+e.target.closest('tr').dataset.i;if(officers.length>1)officers.splice(i,1);renderDb();renderOfficerOptions();calculate()});
  $('dbValidation').textContent=validateDb().join(' · ')||`${rows.length} officers shown · Database validation passed.`;
@@ -1499,11 +1742,15 @@ function maxSelectedOfficerProfile(){
  $('currentLevel').value=70;
  $('targetLevel').value=70;
 
- calculate();
  saveOfficerProfile(true);
-
+ // v4.3.50: update visible requirements immediately after MAX; no manual refresh required.
+ calculate();
+ if(typeof buildUpgradeSummary==='function')buildUpgradeSummary();
+ if(typeof renderHomeDashboard==='function')renderHomeDashboard();
+ if(typeof renderHome==='function')renderHome();
  if(typeof renderSavedOfficerProgress==='function')renderSavedOfficerProgress();
  if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
+ if(typeof renderProgressTable==='function')renderProgressTable();
 
  alert(`${label} is now saved as MAXED.`);
 }
@@ -1598,7 +1845,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='4.3.36';
+const APP_VERSION='v4.3.55';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -1812,6 +2059,7 @@ function renderMultiPlanner(){
     <td>${pos+1}</td>
     <td><select data-multi-officer>${multiOfficerOptions(row.officerIndex)}</select></td>
     <td><input data-multi-needed type="number" min="0" max="1600" step="1" value="${Math.max(0,Number(row.badgesNeeded)||0)}" style="min-width:90px"></td>
+    <td data-multi-held>—</td>
     <td>${o&&o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original'?fmt(o.orv):'N/A'}</td>
     <td data-multi-allocated>—</td><td data-multi-status>—</td>
     <td><button data-up title="Move up">↑</button> <button data-down title="Move down">↓</button> <button data-remove title="Remove">×</button></td>
@@ -1824,40 +2072,59 @@ function renderMultiPlanner(){
  tbody.querySelectorAll('[data-remove]').forEach((b,i)=>b.onclick=()=>{multiPlanOfficers.splice(i,1);renderMultiPlanner();calculateMultiPlanner()});
  calculateMultiPlanner();
 }
+
+// v4.3.50 Selection Chest eligibility is maintained explicitly by release pair.
+const LEGENDARY_SELECTION_CHEST_ELIGIBLE = new Set(["Katherine", "Grace", "Chloe", "Ling", "Jessica", "Lilith", "Angel", "Sakura", "Loubna", "Angelica", "Ophelia", "Doireann", "Natalia", "Sophia", "Edward", "Helene", "Nadia", "Vera", "Marsha", "Tanya", "Emily", "Zoya"]);
+function selectionChestEligibleOfficer(o){
+  return LEGENDARY_SELECTION_CHEST_ELIGIBLE.has(String(o?.name||o||'').trim());
+}
 function calculateMultiPlanner(){
  const rows=[...document.querySelectorAll('#multiPlannerRows tr')];
  if(!rows.length){$('multiPlannerSummary').innerHTML='Add Officers to build an upgrade plan.';return}
+ const inv=(typeof kowInvGet==='function'?kowInvGet():{}), heldMap=inv.officerBadges||{};
  let orv=Math.max(0,+$('multiOrv').value||0), universal=Math.max(0,+$('multiUniversal').value||0), chests=Math.max(0,+$('multiChests').value||0);
+ let selectionChests=Math.max(0,+($('multiSelectionChests')?.value||0));
  const mode=$('multiChestMode').value;
- // Current S7 benchmark: 600 ORV per Selection Chest.
- if(mode==='badge') universal+=chests;
- else if(mode==='orv') orv+=chests*600;
- else {
-   // Optimise: protect high-ORV Officers by treating chests as badges first.
-   universal+=chests;
- }
- let fully=0, partial=0, unfunded=0, totalNeed=0, totalAllocated=0;
+ if(mode==='badge') universal+=chests; else if(mode==='orv') orv+=chests*600; else universal+=chests;
+ let fully=0, maxedCount=0, partial=0, unfunded=0, totalNeed=0, totalHeld=0, totalShared=0;
  multiPlanOfficers.forEach((row,pos)=>{
-   const o=officers[row.officerIndex]||officers[0], needed=Math.max(0,+row.badgesNeeded||0);
-   totalNeed+=needed;
+   const o=officers[row.officerIndex]||officers[0];
+   // The Progress dashboard is the authoritative interpretation of each saved
+   // Officer profile. Use its badgeShort/maxed result in Planner as well.
+   const savedProgress=(typeof savedOfficerProgressData==='function'
+     ? savedOfficerProgressData().find(r=>String(r.name||'').trim()===String(o?.name||'').trim() &&
+       String(r.season||'').trim()===String(o?.season||'').trim())
+     : null);
+   const requestedNeeded=Math.max(0,+row.badgesNeeded||0);
+   const needed=savedProgress ? Math.min(requestedNeeded,Math.max(0,+savedProgress.badgeShort||0)) : requestedNeeded;
+   // Show the player's full matching held quantity even when the Officer is MAXED;
+   // it remains Inventory and is not consumed by this preview.
+   const heldInventory=Math.max(0,+heldMap[String(o?.name||'').trim()]||0);
+   const held=Math.min(needed,heldInventory);
+   const remaining=Math.max(0,needed-held);
+   totalNeed+=needed; totalHeld+=held;
    let allocated=0;
-   const eligible=o&&o.readinessEligible!==false&&String(o.season||'').toLowerCase()!=='original'&&+o.orv>0;
-   // For efficiency, use ORV first on lower-cost Officers; however priority order remains authoritative.
-   if(eligible){
-     const fromOrv=Math.min(needed,Math.floor(orv/o.orv));
-     allocated+=fromOrv; orv-=fromOrv*o.orv;
-   }
-   const fromUniversal=Math.min(needed-allocated,universal);
-   allocated+=fromUniversal; universal-=fromUniversal;
-   totalAllocated+=allocated;
-   const status=allocated>=needed?'Fully Funded':allocated>0?'Partially Funded':'Shortfall';
-   if(status==='Fully Funded')fully++; else if(status==='Partially Funded')partial++; else unfunded++;
-   const tr=rows[pos]; if(tr){
-     tr.querySelector('[data-multi-allocated]').textContent=fmt(allocated)+' / '+fmt(needed);
+   const isOriginal=String(o?.season||'').toLowerCase()==='original';
+   const eligible=o&&o.readinessEligible!==false&&!isOriginal&&+o.orv>0;
+   if(eligible){const fromOrv=Math.min(remaining,Math.floor(orv/o.orv));allocated+=fromOrv;orv-=fromOrv*o.orv;}
+   const fromSelection=selectionChestEligibleOfficer(o)?Math.min(remaining-allocated,selectionChests):0;
+   allocated+=fromSelection;selectionChests-=fromSelection;
+   const fromUniversal=Math.min(remaining-allocated,universal);allocated+=fromUniversal;universal-=fromUniversal;
+   totalShared+=allocated;
+   const covered=held+allocated;
+   const remainingAfterAll=Math.max(0,needed-covered);
+   // Held Officer Badges reduce the requirement, but do not by themselves mean
+   // that shared resources have partially funded the Officer.
+   const status=savedProgress?.maxed?'MAXED':remainingAfterAll===0?'Fully Funded':allocated>0?'Partially Funded':'Shortfall';
+   if(status==='MAXED')maxedCount++;else if(status==='Fully Funded')fully++;else if(status==='Partially Funded')partial++;else unfunded++;
+   const tr=rows[pos];if(tr){
+     tr.querySelector('[data-multi-held]').textContent=fmt(heldInventory);
+     tr.querySelector('[data-multi-allocated]').textContent=fmt(allocated)+' / '+fmt(remaining);
      tr.querySelector('[data-multi-status]').textContent=status;
    }
  });
- $('multiPlannerSummary').innerHTML=`<b>Plan result:</b> ${fully} fully funded · ${partial} partially funded · ${unfunded} shortfall<br><span class="muted">${fmt(totalAllocated)} of ${fmt(totalNeed)} required badges covered. Remaining shared resources: ${fmt(orv)} ORV · ${fmt(universal)} Universal Badges.</span>`;
+ const totalCovered=totalHeld+totalShared;
+ $('multiPlannerSummary').innerHTML=`<b>Plan result:</b> ${maxedCount} MAXED · ${fully} fully funded · ${partial} partially funded · ${unfunded} shortfall<br><span class="muted">${fmt(totalCovered)} of ${fmt(totalNeed)} required badges covered: ${fmt(totalHeld)} Individual Officer Badges held + ${fmt(totalShared)} shared badges allocated. ${fmt(Math.max(0,totalNeed-totalCovered))} badges remain unfunded. Remaining shared resources: ${fmt(orv)} ORV · ${fmt(universal)} Universal Badges · ${fmt(selectionChests)} Selection Chests.</span>`;
 }
 function getMultiPlans(){try{return JSON.parse(localStorage.getItem('kow_multi_plans_v430')||'{}')}catch{return {}}}
 function refreshMultiSavedPlans(selectName=''){
@@ -2123,7 +2390,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
 
 
  if($('multiAddOfficer'))$('multiAddOfficer').onclick=()=>{multiPlanOfficers.push({officerIndex:0,badgesNeeded:1600});renderMultiPlanner()};
- if($('multiUseCurrent'))$('multiUseCurrent').onclick=()=>{$('multiOrv').value=$('orvHeld').value||0;$('multiUniversal').value=$('universalBadgeHeld').value||0;$('multiChests').value=$('legendaryBadgeChestHeld').value||0;calculateMultiPlanner()};
+ if($('multiUseCurrent'))$('multiUseCurrent').onclick=()=>{const x=(typeof kowInvGet==='function'?kowInvGet():{});$('multiOrv').value=x.invOrv||0;$('multiUniversal').value=x.invUniversalLegendary||0;$('multiChests').value=x.invLegendaryBadgeChests||0;if($('multiSelectionChests'))$('multiSelectionChests').value=x.invLegendarySelectionChests||0;calculateMultiPlanner()};
  if($('multiSavePlan'))$('multiSavePlan').onclick=saveMultiPlan;
  if($('multiDeletePlan'))$('multiDeletePlan').onclick=deleteMultiPlan;
  if($('multiSavedPlans'))$('multiSavedPlans').onchange=e=>loadMultiPlan(e.target.value);
@@ -2150,7 +2417,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
   ['kow_app_name_v4','kow_bg_v4','kow_bg_portrait_v401','kow_bg_landscape_v401'].forEach(k=>localStorage.removeItem(k));
-  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.36';
+  $('appName').value='GODS OF WAR 371';$('appTitle').textContent='GODS OF WAR 371';document.title='KoW Companion v4.3.55';
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
@@ -2182,7 +2449,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{docume
 
  loadProgress();
 
- // v4.3.36 feature wiring
+ // v4.3.50 feature wiring
  populateCompareOfficers();
  const compareSelect=$('compareOfficerSelect');
  if(compareSelect){
@@ -2601,8 +2868,194 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div class="notice">Officer-specific progress only. Shared resources remain on Stars, Develop and XP.</div>
  </article>
 </div>
-
 <script>
+const KOW_INV_KEY='kow_central_inventory_v1',KOW_INV_IDS=['invOrv', 'invSrv', 'invUniversalLegendary', 'invUniversalEpic', 'invUniversalElite', 'invLegendaryBadgeChests', 'invLegendarySelectionChests', 'invLegStar1', 'invLegStar2', 'invLegStar3', 'invEpicStar1', 'invEpicStar2', 'invEpicStar3', 'invEliteStar1', 'invEliteStar2', 'invEliteStar3', 'invXp50', 'invXp100', 'invXp500', 'invXp1000', 'invXp5000', 'invXp10000', 'invXp20000', 'invXp50000'];
+function kowInvGet(){try{return JSON.parse(localStorage.getItem(KOW_INV_KEY)||'{}')}catch(e){return {}}}
+function kowInvField(id,v){const e=document.getElementById(id);if(e){e.value=Math.max(0,+v||0);e.dispatchEvent(new Event('input',{bubbles:true}));}}
+function kowInvList(m){const e=document.getElementById('invOfficerList');if(!e)return;const a=Object.entries(m||{}).filter(x=>+x[1]>0);e.innerHTML=a.length?a.map(x=>'<div><b>'+x[0]+'</b>: '+x[1]+'</div>').join(''):'No individual Officer Badges entered.';}
+function kowInvLoad(){const x=kowInvGet();KOW_INV_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=+x[id]||0});const s=document.getElementById('inventorySavedStatus');if(s)s.textContent=x.savedAt?'Last saved: '+new Date(x.savedAt).toLocaleString():'Inventory not yet saved.';kowInvList(x.officerBadges);return x;}
+function kowInvApply(x){
+ [['orvHeld','invOrv'],['multiOrv','invOrv'],['srvHeld','invSrv'],['universalLegendaryHeld','invUniversalLegendary'],['multiUniversal','invUniversalLegendary'],['legendaryBadgeChestHeld','invLegendaryBadgeChests'],['multiChests','invLegendaryBadgeChests'],['legendarySelectionChestHeld','invLegendarySelectionChests'],['multiSelectionChests','invLegendarySelectionChests']].forEach(a=>kowInvField(a[0],x[a[1]]));
+ [50,100,500,1000,5000,10000,20000,50000].forEach(v=>kowInvField('xp'+v,x['invXp'+v]));
+ const sel=document.getElementById('officerSelect');if(sel&&x.officerBadges)kowInvField('officerBadgesHeld',x.officerBadges[sel.value]||0);
+ try{calculate()}catch(e){}
+}
+function kowInvSave(){const old=kowInvGet(),x={officerBadges:old.officerBadges||{},savedAt:new Date().toISOString()};KOW_INV_IDS.forEach(id=>x[id]=Math.max(0,+document.getElementById(id)?.value||0));localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvApply(x);kowInvLoad();}
+document.addEventListener('click',e=>{
+ if(e.target?.id==='saveInventory')kowInvSave();
+ if(e.target?.id==='resetInventory'&&confirm('Reset Central Inventory?')){localStorage.removeItem(KOW_INV_KEY);kowInvLoad();kowInvApply({});}
+ if(e.target?.id==='invSetOfficer'){const n=document.getElementById('invOfficerName')?.value;if(!n)return;const x=kowInvGet();x.officerBadges=x.officerBadges||{};x.officerBadges[n]=Math.max(0,+document.getElementById('invOfficerQty').value||0);x.savedAt=new Date().toISOString();localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvList(x.officerBadges);kowInvApply(x);}
+});
+document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('invOfficerName'),b=document.getElementById('officerSelect');if(a&&b)a.innerHTML=b.innerHTML;const x=kowInvLoad();if(x.savedAt)kowInvApply(x);});
+</script>
+<script>
+function kowPopulateInventoryOfficers(){
+ const target=document.getElementById('invOfficerName');
+ if(!target) return;
+ let names=[];
+ const candidates=['officerSelect','compareOfficer1','compareOfficer2','plannerOfficer'];
+ for(const id of candidates){
+   const s=document.getElementById(id);
+   if(s && s.options && s.options.length){
+     names=[...s.options].map(o=>({value:o.value,text:o.textContent.trim()}))
+       .filter(o=>o.value && o.text && !/select/i.test(o.text));
+     if(names.length) break;
+   }
+ }
+ if(!names.length && typeof officers!=='undefined' && Array.isArray(officers)){
+   names=officers.map(o=>({value:o.id||o.name,text:((o.season||'')+' '+(o.name||'')).trim()})).filter(o=>o.value);
+ }
+ if(!names.length){
+   document.querySelectorAll('select option').forEach(o=>{
+     const t=o.textContent.trim(),v=o.value;
+     if(v && /^(Original|S[2-7])\s/i.test(t)) names.push({value:v,text:t});
+   });
+ }
+ const seen=new Set();
+ names=names.filter(o=>{const k=o.value+'|'+o.text;if(seen.has(k))return false;seen.add(k);return true;});
+ if(names.length){
+   target.innerHTML='<option value="">Select Officer</option>'+names.map(o=>'<option value="'+String(o.value).replace(/"/g,'&quot;')+'">'+o.text+'</option>').join('');
+ }
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(kowPopulateInventoryOfficers,150));
+document.addEventListener('click',e=>{if(e.target?.dataset?.view==='inventory')setTimeout(kowPopulateInventoryOfficers,50);});
+</script>
+<script>
+function kowOrderCentralInventory(){
+ const marker=[...document.querySelectorAll('h1,h2,h3')].find(e=>/central inventory|inventory/i.test(e.textContent||''));
+ if(!marker) return;
+ const root=marker.closest('section,.card,.panel,main,div') || document;
+ const wanted=[
+  'Legendary Officer Badge Chest',
+  'Legendary Officer Badge Selection Chest',
+  'Officer Readiness Voucher',
+  'Star Readiness Voucher',
+  'Legendary Officer Badge (Universal)',
+  'Epic Officer Badge (Universal)',
+  'Elite Officer Badge (Universal)',
+  'Elite Star I','Elite Star II','Elite Star III',
+  'Epic Star I','Epic Star II','Epic Star III',
+  'Legendary Star I','Legendary Star II','Legendary Star III'
+ ];
+ const labels=[...root.querySelectorAll('label')];
+ const blockFor=l=>l.closest('.field,.form-group,.inventory-field,.input-group') || l.parentElement;
+ let blocks=wanted.map(txt=>{
+   let l=labels.find(x=>(x.textContent||'').trim().toLowerCase().startsWith(txt.toLowerCase()));
+   return l && blockFor(l);
+ }).filter(Boolean);
+ if(blocks.length<2) return;
+ const parent=blocks[0].parentElement;
+ if(!blocks.every(b=>b.parentElement===parent)) return;
+ const anchor=blocks[0];
+ wanted.forEach(txt=>{
+   const l=labels.find(x=>(x.textContent||'').trim().toLowerCase().startsWith(txt.toLowerCase()));
+   const b=l&&blockFor(l); if(b&&b.parentElement===parent) parent.insertBefore(b,anchor);
+ });
+ // The insert-before loop reverses; re-append in exact required order at the first position.
+ const ordered=wanted.map(txt=>{
+   const l=labels.find(x=>(x.textContent||'').trim().toLowerCase().startsWith(txt.toLowerCase()));
+   return l&&blockFor(l);
+ }).filter(Boolean);
+ const ref=ordered[0];
+ ordered.slice().reverse().forEach(b=>parent.insertBefore(b,ref));
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(kowOrderCentralInventory,250));
+document.addEventListener('click',e=>{if(e.target?.dataset?.view==='inventory')setTimeout(kowOrderCentralInventory,80);});
+</script>
+
+<script id="v4344-officer-dropdown-fix">
+(function(){
+ const canonicalOptions = document.getElementById('invOfficerName') ?
+   document.getElementById('invOfficerName').innerHTML : '';
+ window.kowPopulateInventoryOfficers=function(){
+   const s=document.getElementById('invOfficerName');
+   if(s && s.options.length<=1 && canonicalOptions) s.innerHTML=canonicalOptions;
+ };
+ document.addEventListener('DOMContentLoaded',function(){
+   setTimeout(window.kowPopulateInventoryOfficers,50);
+ });
+ document.addEventListener('click',function(e){
+   if(e.target && e.target.dataset && e.target.dataset.view==='inventory')
+     setTimeout(window.kowPopulateInventoryOfficers,30);
+ });
+})();
+</script>
+
+
+<script id="v4345-officer-badge-grid-fix">
+(function(){
+  function invGet(){
+    try { return JSON.parse(localStorage.getItem(KOW_INV_KEY) || '{}'); }
+    catch(e){ return {}; }
+  }
+
+  function populateOfficerBadgeInputs(map){
+    document.querySelectorAll('.inv-officer-badge-input').forEach(function(input){
+      input.value = Math.max(0, Number((map || {})[input.dataset.officer]) || 0);
+    });
+  }
+
+  window.kowInvList = function(map){
+    populateOfficerBadgeInputs(map || {});
+    const status = document.getElementById('invOfficerList');
+    if(!status) return;
+    const entries = Object.entries(map || {}).filter(function(x){ return Number(x[1]) > 0; });
+    status.textContent = entries.length
+      ? entries.length + ' Officer badge entr' + (entries.length === 1 ? 'y' : 'ies') + ' saved.'
+      : 'No individual Officer Badges entered.';
+  };
+
+  window.kowInvSave = function(){
+    const old = invGet();
+    const x = { officerBadges: {}, savedAt: new Date().toISOString() };
+
+    KOW_INV_IDS.forEach(function(id){
+      const el = document.getElementById(id);
+      x[id] = Math.max(0, Number(el && el.value) || 0);
+    });
+
+    document.querySelectorAll('.inv-officer-badge-input').forEach(function(input){
+      const qty = Math.max(0, Number(input.value) || 0);
+      // Keep zero values out of storage but ensure every Officer has its own independent input.
+      if(qty > 0) x.officerBadges[input.dataset.officer] = qty;
+    });
+
+    localStorage.setItem(KOW_INV_KEY, JSON.stringify(x));
+    kowInvApply(x);
+    kowInvLoad();
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const x = invGet();
+    populateOfficerBadgeInputs(x.officerBadges || {});
+  });
+
+  // When the Inventory view is opened again, always reload its saved Officer-specific values.
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.dataset && e.target.dataset.view === 'inventory'){
+      setTimeout(function(){
+        const x = invGet();
+        populateOfficerBadgeInputs(x.officerBadges || {});
+      }, 30);
+    }
+  });
+})();
+</script>
+
+<script id="v4348-rarity-filter-js">
+document.addEventListener("click",function(e){
+ const b=e.target.closest(".inv-rarity-btn"); if(!b)return;
+ document.querySelectorAll(".inv-rarity-btn").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+ const want=b.dataset.rarity;
+ document.querySelectorAll("#invOfficerBadgeGrid .inv-officer-badge-row").forEach(row=>{
+   const rarity=row.dataset.rarity||"";
+   row.style.display=(want==="All"||rarity===want)?"":"none";
+ });
+});
+</script>
+
+<script id="multilingual-v4355-runtime">
+
 (function(){
   const I18N={
     en:window.KOW_I18N_EN||{}, fr:window.KOW_I18N_FR||{},
@@ -2671,7 +3124,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     m=base.match(/^Remaining badge shortfall:\s*([\d,]+)$/);
     if(m) return l==='fr'?`Manque de Badges restant : ${m[1]}`:l==='de'?`Verbleibendes Abzeichendefizit: ${m[1]}`:`Carenza Badge rimanente: ${m[1]}`;
     if(base==='Preview only — resources are not spent.') return l==='fr'?'Aperçu uniquement — les ressources ne sont pas dépensées.':l==='de'?'Nur Vorschau — Ressourcen werden nicht ausgegeben.':'Solo anteprima — le risorse non vengono spese.';
-    if(base==='Legendary Stars: uses Legendary Star I / II / III. Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.') return l==='fr'?'Étoiles légendaires : utilise Étoile légendaire I / II / III. Les Bons de préparation d’Étoile (SRV) sont disponibles uniquement pour les Officiers saisonniers Légendaires éligibles.':l==='de'?'Legendäre Sterne: verwendet Legendärer Stern I / II / III. Sternbereitschaftsgutscheine (SRV) sind nur für berechtigte legendäre Saison-Offiziere verfügbar.':'Stelle leggendarie: usa Stella leggendaria I / II / III. I Buoni preparazione Stella (SRV) sono disponibili solo per gli Ufficiali stagionali Leggendari idonei.';
     m=base.match(/^(.+?) can be maxed with the resources currently entered in the app\.$/);
     if(m) return l==='fr'?`${m[1]} peut être maximisé avec les ressources actuellement saisies dans l’application.`:l==='de'?`${m[1]} kann mit den aktuell in der App eingegebenen Ressourcen maximiert werden.`:`${m[1]} può essere massimizzato con le risorse attualmente inserite nell’app.`;
     m=base.match(/^Priority: XP — ([\d,]+) more XP is required\.$/);
@@ -2701,8 +3153,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(m) return `Mois actuel : ${m[1]}`;
       m=base.match(/^Next scheduled release:\s*(.+)$/);
       if(m) return `Prochaine sortie prévue : ${m[1]}`;
-      m=base.match(/^Planning estimate using (.+?)% growth per Officer release from the latest known ([\d,]+) ORV \/ ([\d,]+) SRV release\. For ([\d,]+) badges and ([\d,]+) Star value \(([\d,]+) Exclusive Stars\), plan for approximately ([\d,]+) ORV and ([\d,]+) SRV\. Forecast only — replace with confirmed costs when released\.$/);
-      if(m) return `Estimation de planification avec une hausse de ${m[1]} % par sortie d’Officier à partir de la dernière sortie connue à ${m[2]} ORV / ${m[3]} SRV. Pour ${m[4]} badges et une valeur d’Étoiles de ${m[5]} (${m[6]} Étoiles exclusives), prévoyez environ ${m[7]} ORV et ${m[8]} SRV. Prévision uniquement — remplacez ces valeurs par les coûts confirmés lors de leur publication.`;
       m=base.match(/^Planning estimate using\s+(.+)$/);
       if(m) return `Estimation de planification utilisant ${m[1]}`;
       if(base.startsWith('Strands unlock with the Officer’s Current Star Level:')){
@@ -2716,93 +3166,6 @@ document.addEventListener('DOMContentLoaded',()=>{
           .replace('Epic Promotion sequence:','Séquence de promotion Épique :')
           .replace('Elite Promotion sequence:','Séquence de promotion Élite :');
       }
-    }
-
-
-    // French Bleed Fix 3 — remaining dynamic UI strings.
-    if(l==='fr'){
-      let x;
-      x=base.match(/^READY TO MAX — (.+)$/);
-      if(x) return `PRÊT À MAXIMISER — ${x[1]}`;
-      x=base.match(/^(\d+) saved Officers?$/);
-      if(x) return `${x[1]} Officier${x[1]==='1'?'':'s'} enregistré${x[1]==='1'?'':'s'}`;
-      x=base.match(/^(\d+) MAXED$/);
-      if(x) return `${x[1]} MAXIMISÉ${x[1]==='1'?'':'S'}`;
-      x=base.match(/^Highest progress:\s*(.+)$/);
-      if(x) return `Progression la plus élevée : ${x[1]}`;
-      x=base.match(/^Showing\s+(\d+)$/);
-      if(x) return `${x[1]} affichés`;
-      if(base==='MAXED') return 'MAXIMISÉ';
-      if(base==='IN PROGRESS') return 'EN COURS';
-      if(base==='NOT STARTED') return 'NON COMMENCÉ';
-      if(base==='No saved Officer profiles yet. Use Save Officer Progress to add Officers to this overview.')
-        return 'Aucun profil d’Officier enregistré. Utilisez Enregistrer la progression de l’Officier pour ajouter des Officiers à cette vue.';
-      if(base==='No saved Officers match the selected status filters.')
-        return 'Aucun Officier enregistré ne correspond aux filtres d’état sélectionnés.';
-      if(base==='Fully Funded') return 'Entièrement financé';
-      if(base==='Partially Funded') return 'Partiellement financé';
-      if(base==='Shortfall') return 'Manquant';
-      if(base==='Fully funded') return 'Entièrement financé';
-      if(base==='YES') return 'OUI';
-      if(base==='NO') return 'NON';
-      if(base==='Current Upgrades') return 'Améliorations actuelles';
-      if(base==='Select Officer') return 'Sélectionner un Officier';
-      if(base==='Copy') return 'Copier';
-      if(base==='Delete') return 'Supprimer';
-      if(base==='Tank Destroyer') return 'Chasseur de chars';
-      if(base==='Tank') return 'Char';
-      if(base==='Infantry') return 'Infanterie';
-      if(base==='Rally') return 'Ralliement';
-      if(base==='Garrison') return 'Garnison';
-      if(base==='Gatherer') return 'Collecteur';
-      if(base==='Help & Instructions') return 'Aide et instructions';
-      if(base==='Header, Settings and About all report v4.3.36.')
-        return 'L’en-tête, les Paramètres et la section À propos indiquent tous v4.3.36.';
-      if(base==='Current month:') return 'Mois actuel :';
-      if(base==='Next scheduled release:') return 'Prochaine sortie prévue :';
-      if(base==='CURRENT') return 'ACTUEL';
-      if(base==='NEXT') return 'SUIVANT';
-      if(base==='No scheduled release') return 'Aucune sortie prévue';
-      if(base==='New Dogs') return 'Nouveaux chiens';
-      if(base==='New Ships') return 'Nouveaux navires';
-      if(base==='Guns: Field · Jets: Fighter') return 'Armes : Terrain · Jets : Chasseur';
-      if(base==='Guns: Rally / Garrison · Jets: Bomber') return 'Armes : Ralliement / Garnison · Jets : Bombardier';
-      if(base==='Officers: Rally / Garrison') return 'Officiers : Ralliement / Garnison';
-      if(base==='Officers: Infantry') return 'Officiers : Infanterie';
-      if(base==='Officers: Tanks') return 'Officiers : Chars';
-      if(base==='Officers: Tank Destroyers') return 'Officiers : Chasseurs de chars';
-      x=base.match(/^([A-Za-z]+) • CURRENT$/);
-      if(x){
-        const mm={January:'Janvier',February:'Février',March:'Mars',April:'Avril',May:'Mai',June:'Juin',July:'Juillet',August:'Août',September:'Septembre',October:'Octobre',November:'Novembre',December:'Décembre'};
-        return `${mm[x[1]]||x[1]} • ACTUEL`;
-      }
-      x=base.match(/^([A-Za-z]+) • NEXT$/);
-      if(x){
-        const mm={January:'Janvier',February:'Février',March:'Mars',April:'Avril',May:'Mai',June:'Juin',July:'Juillet',August:'Août',September:'Septembre',October:'Octobre',November:'Novembre',December:'Décembre'};
-        return `${mm[x[1]]||x[1]} • SUIVANT`;
-      }
-      x=base.match(/^Plan result:\s*(\d+) fully funded · (\d+) partially funded · (\d+) shortfall$/);
-      if(x) return `Résultat du plan : ${x[1]} entièrement financé · ${x[2]} partiellement financé · ${x[3]} manquant`;
-      x=base.match(/^([\d,]+) of ([\d,]+) required badges covered\. Remaining shared resources: ([\d,]+) ORV · ([\d,]+) Universal Badges\.$/);
-      if(x) return `${x[1]} sur ${x[2]} badges requis couverts. Ressources partagées restantes : ${x[3]} ORV · ${x[4]} Badges universels.`;
-      x=base.match(/^([\d,]+) Officer Badges still required$/);
-      if(x) return `${x[1]} Badges d’Officier encore requis`;
-      x=base.match(/^([\d,]+) Officer Star value still required$/);
-      if(x) return `${x[1]} de valeur d’Étoiles d’Officier encore requis`;
-      x=base.match(/^([\d,]+) XP still required$/);
-      if(x) return `${x[1]} XP encore requis`;
-      x=base.match(/^Still required:\s*(.+)$/);
-      if(x) return `Encore requis : ${x[1].replace('Development','Développement').replace('Stars','Étoiles')}`;
-      x=base.match(/^Next:\s*(.+)$/);
-      if(x) return `Suivant : ${x[1]}`;
-      x=base.match(/^Priority: Development — ([\d,]+) more Officer Badges are required\.$/);
-      if(x) return `Priorité : Développement — ${x[1]} Badges d’Officier supplémentaires sont requis.`;
-      x=base.match(/^Priority: Stars — ([\d,]+) more Officer Star value is required\.$/);
-      if(x) return `Priorité : Étoiles — ${x[1]} de valeur d’Étoiles d’Officier supplémentaire est requise.`;
-      if(base==='The ORV value follows the highest ORV-per-badge cost in the latest published season.')
-        return 'La valeur ORV suit le coût ORV par badge le plus élevé de la dernière saison publiée.';
-      if(base==='Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers.')
-        return 'Les Bons de préparation d’Étoile (SRV) sont disponibles uniquement pour les Officiers saisonniers Légendaires éligibles.';
     }
 
     return base;
@@ -2842,11 +3205,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     translateAttributes(root,l);
   }
 
-  function translateElement(el){
-    if(!el)return;
-    walk(el,lang);
-  }
-
   function renderHelp(l){
     const box=document.getElementById('helpLanguageBody');
     if(box)box.innerHTML=HELP[l]||HELP.en||'';
@@ -2865,22 +3223,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.kowApplyLanguage=applyLanguage;
-  window.kowTranslateNow=function(){ if(!busy) applyLanguage(lang); };
-
-  function wrapRenderer(name){
-    const original=window[name];
-    if(typeof original!=='function' || original.__kowWrapped)return;
-    const wrapped=function(){
-      const result=original.apply(this,arguments);
-      setTimeout(function(){ if(!busy) applyLanguage(lang); },0);
-      return result;
-    };
-    wrapped.__kowWrapped=true;
-    window[name]=wrapped;
-  }
-  ['renderDb','renderReleases','renderMultiPlanner','calculateMultiPlanner',
-   'updateFutureOfficerForecast','renderSavedOfficerProgress','updateSmartDashboard',
-   'renderSkillStrands','calculate'].forEach(wrapRenderer);
 
   document.addEventListener('DOMContentLoaded',()=>{
     const sel=document.getElementById('appLanguage');
@@ -2888,12 +3230,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     applyLanguage(lang);
   });
 
-  // v4.3.36 stable multilingual refresh.
+  // v4.3.55 stable multilingual refresh.
   // No MutationObserver: prevents translation recursion and blank-page freezes.
   let translateTimer=null;
 
   function frenchQaRefresh(){
-    if(lang!=='fr') return;
+    if(getLang()!=='fr') return;
     ['officerSummary','optimizerResult','plannerResult','releaseForecast','releaseCalendar','dashboardStatus','skillsInfo'].forEach(function(id){
       var el=document.getElementById(id);
       if(el) translateElement(el);
@@ -2913,7 +3255,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.addEventListener('change',scheduleLanguageRefresh,true);
 
 })();
-</script>
 
+</script>
 </body>
 </html>
