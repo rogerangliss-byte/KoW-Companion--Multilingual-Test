@@ -1,3 +1,6 @@
+## Guida v4.3.58 — Pianificazione avanzata
+Inizia da **Inventario**, poi salva i progressi degli **Ufficiali**, verifica **Progressi**, consulta **Uscite** e apri il **Pianificatore avanzato**. Il filtro Sessione/Stagione (Originale, S2–S7) funziona insieme al Tipo Ufficiale. Esempio: **S6 + Carro**. Una sessione futura specifica come **Aprile — Carri** mostra solo **S8 Carro — PREVISTO**. Gli Ufficiali MAX sono esclusi. Le previsioni ORV/SRV restano stime fino alla pubblicazione dei costi reali. Il Pianificatore non spende né modifica le risorse.
+
 # Novità v4.3.58 LIVE — Pianificazione avanzata
 v4.3.58 aggiunge Pianificazione Multi-Ufficiale, previsioni per Ufficiali futuri e filtri mirati per Sessione / Stagione / Tipo. Le sessioni ricorrenti sono Ottobre, Gennaio, Aprile e Luglio. Una selezione specifica, ad esempio **Aprile — Carri — S8**, mostra solo lo scenario S8 Carro PROIETTATO. È possibile combinare Stagione e Tipo, ad esempio **S6 + Carro**. Gli Ufficiali MAX sono esclusi dalle raccomandazioni. Le previsioni ORV/SRV future restano indicate come **PREVISIONE** finché i costi reali non vengono pubblicati.
 
