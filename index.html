@@ -381,6 +381,77 @@ html.ios-safari{
 
 /* FIX9 planner bottom clearance */
 #view-planner{padding-bottom:140px}
+
+/* v4.3.59 Multilingual TEST 1 — English LIVE alignment */
+
+/* Guided Workflow: same icon/button presentation and tablet behaviour as English v4.3.59. */
+#guidedWorkflowSteps button{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+}
+@media (min-width:600px) and (max-width:1100px){
+  #guidedWorkflowCard #guidedWorkflowSteps{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px!important;overflow:visible!important;padding:4px 0 8px!important;
+  }
+  #guidedWorkflowCard #guidedWorkflowSteps button{
+    width:100%!important;min-width:0!important;max-width:none!important;
+    min-height:48px!important;padding:10px 12px!important;white-space:normal!important;
+    line-height:1.15!important;text-align:center!important;justify-content:center!important;
+  }
+}
+@media (max-width:599px){
+  #guidedWorkflowCard #guidedWorkflowSteps{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px!important;overflow:visible!important;
+  }
+  #guidedWorkflowCard #guidedWorkflowSteps button{
+    width:100%!important;min-width:0!important;white-space:normal!important;
+  }
+}
+
+/* Advanced Planner include-options alignment. */
+#multiPlannerOptions{
+  display:flex!important;align-items:center!important;gap:16px!important;flex-wrap:wrap!important;
+}
+#multiPlannerOptions label{
+  display:inline-flex!important;align-items:center!important;gap:7px!important;
+  white-space:nowrap!important;margin:0!important;
+}
+
+/* Help / README portrait tablet containment fix from final English v4.3.59. */
+@media (orientation:portrait) and (max-width:1100px){
+  #help,#help .card,#help>article.card{
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    box-sizing:border-box!important;overflow-x:hidden!important;
+  }
+  #help p,#help li,#help h2,#help h3,#help h4,#help .notice{
+    max-width:100%!important;overflow-wrap:anywhere!important;
+  }
+  #help table{
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    table-layout:fixed!important;box-sizing:border-box!important;
+  }
+  #help table th,#help table td{
+    min-width:0!important;box-sizing:border-box!important;white-space:normal!important;
+    overflow-wrap:anywhere!important;padding:7px 4px!important;vertical-align:top!important;
+  }
+  #help table th:nth-child(1),#help table td:nth-child(1){width:45%!important;text-align:left!important}
+  #help table th:nth-child(2),#help table td:nth-child(2){width:17%!important;text-align:right!important}
+  #help table th:nth-child(3),#help table td:nth-child(3){width:18%!important;text-align:right!important}
+  #help table th:nth-child(4),#help table td:nth-child(4){width:20%!important;text-align:right!important;font-variant-numeric:tabular-nums}
+}
+@media (orientation:portrait) and (max-width:700px){
+  #help>article.card{padding-left:12px!important;padding-right:12px!important}
+  #help table{font-size:.78rem!important}
+  #help table th,#help table td{padding:6px 2px!important}
+}
+
+/* Backup actions: equal size, distinct colours. */
+.v459-backup-actions{display:grid!important;grid-template-columns:1fr 1fr;gap:10px!important}
+.v459-export,.v459-restore{width:100%!important;min-height:44px!important;font-weight:750!important}
+.v459-export{background:linear-gradient(180deg,#6f5216,#5a4110)!important;border-color:#d5a72f!important;color:#fff!important}
+.v459-restore{background:linear-gradient(180deg,#6a2a23,#4b1d19)!important;border-color:#a65b4d!important;color:#fff!important}
+
 </style>
 <script>
 (function(){
@@ -550,7 +621,7 @@ nav.bottom-nav::-webkit-scrollbar,
 </style>
 
 </head>
-<body>
+<body><div id="multi459TestBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 1 — NOT LIVE</div>
 <header class="topbar">
   <div>
     <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
@@ -1308,38 +1379,10 @@ nav.bottom-nav::-webkit-scrollbar,
           <h3>Backup & Restore</h3>
       <p class="notice">Export all locally saved KoW Companion browser data, or restore a previous JSON backup.</p>
       <div class="two">
-        <button id="backupAppData" class="primary">⬇ Export App Backup</button>
+        <button id="backupAppData" class="primary v459-export">⬇ Export App Backup</button>
         <label class="button-like">⬆ Restore App Backup<input id="restoreAppData" type="file" accept=".json,application/json" hidden></label>
       </div>
       <div id="backupStatus" class="notice" style="margin-top:10px">No backup created yet.</div>
-</article>
-  
-<article class="card" id="languageQaCard">
-  <h2>🧪 Language QA / Translation Test</h2>
-  <p class="muted">Run a translation audit before a multilingual release. This test does not change Officer or Inventory data.</p>
-  <div class="two">
-    <div><label>Language to test</label>
-      <select id="languageQaTarget">
-        <option value="all">All Languages</option>
-        <option value="en">English</option><option value="fr">Français</option>
-        <option value="de">Deutsch</option><option value="it">Italiano</option>
-      </select>
-    </div>
-    <div><label>Test scope</label>
-      <select id="languageQaScope">
-        <option value="full">Full app</option>
-        <option value="planner">Advanced Planner</option>
-        <option value="releases">Releases</option>
-        <option value="help">Help / What's New</option>
-      </select>
-    </div>
-  </div>
-  <div class="two">
-    <button type="button" class="primary" id="runLanguageQa">▶ Run Language Test</button>
-    <button type="button" id="downloadLanguageQa" disabled>⬇ Download Language Test Report</button>
-  </div>
-  <div id="languageQaSummary" class="notice" style="margin-top:10px">No language test has been run yet.</div>
-  <div id="languageQaResults" style="margin-top:10px;max-height:420px;overflow:auto"></div>
 </article>
 </section>
 </main>
@@ -2099,7 +2142,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='4.3.58';
+const APP_VERSION='4.3.59';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -4149,81 +4192,5 @@ document.addEventListener('change',e=>{if(e.target?.id==='appLanguage')setTimeou
 window.kowV4358Translate3=()=>apply(document.body);
 })();
 </script>
-
-<script id="v4358-language-qa">
-(function(){
-'use strict';
-let lastReport=null;
-const LANGS=['en','fr','de','it'];
-const NAMES={en:'English',fr:'French',de:'German',it:'Italian'};
-const ALLOWED=new Set(['XP','ORV','SRV','MAX','S2','S3','S4','S5','S6','S7','S8','English','Français','Deutsch','Italiano','FireStorm','KoW Companion']);
-function dict(l){return (window.KOW_LANG&&window.KOW_LANG[l])||window['KOW_LANG_'+l]||{};}
-function flatten(o,p='',r={}){
- if(!o||typeof o!=='object')return r;
- Object.keys(o).forEach(k=>{const v=o[k],q=p?p+'.'+k:k;if(v&&typeof v==='object')flatten(v,q,r);else r[q]=v;});
- return r;
-}
-function scopeRoot(scope){
- if(scope==='planner')return document.getElementById('planner');
- if(scope==='releases')return document.getElementById('releases');
- if(scope==='help')return document.getElementById('help');
- return document.querySelector('main')||document.body;
-}
-function visibleStrings(root){
- const arr=[]; const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
- let n; while(n=walker.nextNode()){
-   if(['SCRIPT','STYLE','OPTION'].includes(n.parentElement?.tagName))continue;
-   const s=(n.nodeValue||'').replace(/\s+/g,' ').trim();
-   if(s.length>=3)arr.push(s);
- }
- root.querySelectorAll('button,label,option,input[placeholder],select').forEach(el=>{
-   const s=(el.placeholder||el.textContent||'').replace(/\s+/g,' ').trim(); if(s.length>=3)arr.push(s);
- });
- return [...new Set(arr)];
-}
-function englishResiduals(strings,l){
- if(l==='en')return [];
- const markers=['Advanced Planner','Advanced Multi-Officer Planning','Planning session','Saved Officers','All Officer sessions','Officer Session','Future Officer','Projected','Resource Requirement','Show all','Collapse','Inventory detected','Recommendation','Releases','What’s New','Help & Instructions','Analyse Planning Session','Refresh Recommendation','Include Not Started','Include Original Officers'];
- return strings.filter(s=>markers.some(m=>s.toLowerCase().includes(m.toLowerCase()))&&!ALLOWED.has(s));
-}
-async function testLanguage(l,scope){
- const before=localStorage.getItem('kow_language')||localStorage.getItem('appLanguage')||'en';
- if(typeof window.kowApplyLanguage==='function')window.kowApplyLanguage(l);
- const sel=document.getElementById('appLanguage'); if(sel){sel.value=l;sel.dispatchEvent(new Event('change',{bubbles:true}));}
- await new Promise(r=>setTimeout(r,180));
- const switched=(document.documentElement.lang||'').slice(0,2)===l || (sel&&sel.value===l);
- const en=flatten(dict('en')), tr=flatten(dict(l));
- const missing=l==='en'?[]:Object.keys(en).filter(k=>!(k in tr)||tr[k]===null||tr[k]==='');
- const strings=visibleStrings(scopeRoot(scope));
- const residual=englishResiduals(strings,l);
- const status=(!switched||missing.length>0||residual.length>0)?(switched?'WARNING':'FAIL'):'PASS';
- return {language:l,name:NAMES[l],scope,status,switched,missingKeys:missing,residualEnglish:residual,visibleStringCount:strings.length};
-}
-async function run(){
- const target=document.getElementById('languageQaTarget').value,scope=document.getElementById('languageQaScope').value;
- const langs=target==='all'?LANGS:[target], results=[];
- for(const l of langs)results.push(await testLanguage(l,scope));
- // Always verify return to English after an All Languages run.
- if(target==='all'&&typeof window.kowApplyLanguage==='function')window.kowApplyLanguage('en');
- const fail=results.filter(x=>x.status==='FAIL').length,warn=results.filter(x=>x.status==='WARNING').length;
- const overall=fail?'FAIL':warn?'WARNING':'PASS';
- lastReport={appVersion:'4.3.58',build:'Multilingual TEST Language QA',generated:new Date().toISOString(),scope,overall,results};
- const sum=document.getElementById('languageQaSummary');
- sum.innerHTML='<b>'+overall+'</b> — '+results.length+' language test(s): '+(results.length-fail-warn)+' PASS, '+warn+' WARNING, '+fail+' FAIL.';
- document.getElementById('languageQaResults').innerHTML=results.map(x=>'<div class="result-box"><b>'+x.name+' — '+x.status+'</b><br>Switch test: '+(x.switched?'PASS':'FAIL')+' · Missing translation keys: '+x.missingKeys.length+' · Residual English flags: '+x.residualEnglish.length+(x.missingKeys.length?'<br><small>Missing: '+x.missingKeys.slice(0,30).join(', ')+'</small>':'')+(x.residualEnglish.length?'<br><small>Residual English: '+x.residualEnglish.slice(0,30).join(' | ')+'</small>':'')+'</div>').join('');
- document.getElementById('downloadLanguageQa').disabled=false;
-}
-function download(){
- if(!lastReport)return;
- const blob=new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json;charset=utf-8'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='KoW-Language-QA-v4.3.58-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-document.addEventListener('click',e=>{
- if(e.target?.id==='runLanguageQa')run();
- if(e.target?.id==='downloadLanguageQa')download();
-});
-})();
-</script>
-
 </body>
 </html>

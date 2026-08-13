@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.58-test-translation-fix3';
+const CACHE='kow-multilingual-v4.3.59-test1';
 const ASSETS=[
   './',
   './index.html',
