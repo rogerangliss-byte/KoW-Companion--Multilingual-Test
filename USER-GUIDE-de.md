@@ -1,3 +1,9 @@
+# Neu in v4.3.58 LIVE — Erweiterte Planung
+v4.3.58 ergänzt Multi-Offizier-Planung, Prognosen für zukünftige Offiziere und gezielte Filter nach Session / Saison / Typ. Wiederkehrende Sessions sind Oktober, Januar, April und Juli. Eine genaue Auswahl wie **April — Panzer — S8** zeigt nur das PROGNOSTIZIERTE S8-Panzer-Szenario. Saison und Typ lassen sich kombinieren, z. B. **S6 + Panzer**. MAX-Offiziere werden aus Empfehlungen ausgeschlossen. Zukünftige ORV/SRV-Kosten bleiben als **PROGNOSE** gekennzeichnet, bis echte Kosten veröffentlicht sind.
+
+Der Planner verwendet gespeicherten Fortschritt, gemeinsames Inventar und XP-Bücher. Saved Officers und All Officer Sessions lesen die tatsächlich gespeicherten Profile; Show all / Collapse steuert lange Berichte. Releases führt direkt zum erweiterten Planner.
+
+
 # KoW Companion Benutzerleitfaden v4.3.36
 
 Empfohlener Ablauf:

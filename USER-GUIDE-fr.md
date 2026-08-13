@@ -1,3 +1,9 @@
+# Nouveautés v4.3.58 LIVE — Planification avancée
+v4.3.58 ajoute la planification multi-Officiers, les prévisions d'Officiers futurs et des filtres ciblés Session / Saison / Type. Les sessions récurrentes sont Octobre, Janvier, Avril et Juillet. Une sélection précise, par exemple **Avril — Chars — S8**, affiche uniquement le scénario Char S8 PROJETÉ. Saison et Type peuvent être combinés, par exemple **S6 + Char**. Les Officiers MAX sont exclus des recommandations. Les futurs coûts ORV/SRV restent clairement marqués **PRÉVISION** jusqu'à publication des coûts réels.
+
+Le Planner utilise la progression sauvegardée, l'Inventaire partagé et les Livres XP. Saved Officers et All Officer Sessions utilisent les profils réellement sauvegardés; Show all / Collapse facilite les rapports longs. Releases ouvre directement le Planner avancé.
+
+
 # Guide utilisateur KoW Companion v4.3.36
 
 Flux conseillé :
