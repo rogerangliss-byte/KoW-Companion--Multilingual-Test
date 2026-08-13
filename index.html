@@ -620,8 +620,84 @@ nav.bottom-nav::-webkit-scrollbar,
 }
 </style>
 
+<style id="v459-test2-button-fix">
+
+/* v4.3.59 MULTILINGUAL TEST 2 — restore approved English LIVE button styling */
+#guidedWorkflowCard #guidedWorkflowSteps button,
+#home .smart-shortcuts button,
+#home .smart-shortcuts .btn,
+#home button[data-go],
+#inventory button,
+#planner button,
+#database button,
+#settings button{
+  appearance:none!important;
+  border:1px solid #8d6a12!important;
+  border-radius:11px!important;
+  background:#171712!important;
+  color:#f3cf61!important;
+  font:inherit!important;
+  font-weight:700!important;
+  padding:10px 14px!important;
+  min-height:42px!important;
+  line-height:1.15!important;
+  box-shadow:none!important;
+}
+
+/* Primary gold actions */
+#inventory button[id*="save" i],
+#planner button[id*="analyse" i],
+#database button[id*="save" i],
+#database button[id*="add" i],
+#database button[id*="export" i],
+#database button[id*="import" i],
+#database button[id*="restore" i],
+#settings .v459-export{
+  background:linear-gradient(180deg,#806018,#684b10)!important;
+  border-color:#c7961c!important;
+  color:#fff!important;
+}
+
+/* Secondary/destructive/restorative controls remain distinct but app-styled. */
+#inventory button[id*="reset" i],
+#planner button[id*="refresh" i],
+#settings .v459-restore{
+  background:#171712!important;
+  border-color:#8d6a12!important;
+  color:#f3cf61!important;
+}
+
+/* Home workflow gets the exact compact gold-on-dark look and icons. */
+#guidedWorkflowCard #guidedWorkflowSteps button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:7px!important;white-space:nowrap!important;
+}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(1)::before{content:"📦 "}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(2)::before{content:"👤 "}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(3)::before{content:"⭐ "}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(4)::before{content:"🏅 "}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(5)::before{content:"📘 "}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(6)::before{content:"🎯 "}
+
+/* Do not duplicate icons if literal icons were inserted by TEST 1. */
+#guidedWorkflowCard #guidedWorkflowSteps button{font-size:0!important}
+#guidedWorkflowCard #guidedWorkflowSteps button::before{font-size:16px!important}
+#guidedWorkflowCard #guidedWorkflowSteps button::after{font-size:16px!important}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(1)::after{content:"1. Inventory"}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(2)::after{content:"2. Officer"}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(3)::after{content:"3. Stars"}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(4)::after{content:"4. Development"}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(5)::after{content:"5. XP"}
+#guidedWorkflowCard #guidedWorkflowSteps button:nth-child(6)::after{content:"6. Planner"}
+
+/* Preserve responsive tablet layout already approved. */
+@media (min-width:600px) and (max-width:1100px){
+ #guidedWorkflowCard #guidedWorkflowSteps button{width:100%!important;min-width:0!important;white-space:normal!important}
+}
+
+</style>
 </head>
-<body><div id="multi459TestBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 1 — NOT LIVE</div>
+<body><div id="multi459TestBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 2 — NOT LIVE</div>
 <header class="topbar">
   <div>
     <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
