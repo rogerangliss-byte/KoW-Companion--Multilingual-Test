@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test6-language-safe-nav';
+const CACHE='kow-multilingual-v4.3.59-test7-language-selector';
 const ASSETS=[
   './',
   './index.html',
