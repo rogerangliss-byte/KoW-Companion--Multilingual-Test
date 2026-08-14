@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test4-clean-master';
+const CACHE='kow-multilingual-v4.3.59-test5-bottom-nav-exact';
 const ASSETS=[
   './',
   './index.html',
