@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test15-exact-source-key';
+const CACHE='kow-multilingual-v4.3.59-test16-structural-planning';
 const ASSETS=[
   './',
   './index.html',
