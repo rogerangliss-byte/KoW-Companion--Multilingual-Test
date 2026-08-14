@@ -1254,7 +1254,7 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 /* Modal cancel/close controls should not look browser-default. */
 #quickProgressCancel,#quickProgressClose,#skillCostInfoClose{background:rgba(213,167,47,.08)!important;border:1px solid rgba(213,167,47,.50)!important;color:var(--gold2)!important;cursor:pointer}
 </style></head>
-<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 12 — ADVANCED PLANNING SOURCE TRANSLATION — NOT LIVE</div>
+<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 13 — QA FINAL RENDERED STATE — NOT LIVE</div>
 <header class="topbar">
 <div>
 <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
@@ -2018,10 +2018,10 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 <button data-view="settings">⚙️<span>Settings</span></button>
 <button data-view="help">📖<span>Help</span></button>
 </nav>
-<script src="lang/en.js?v=4.3.59-test12"></script>
-<script src="lang/fr.js?v=4.3.59-test12"></script>
-<script src="lang/de.js?v=4.3.59-test12"></script>
-<script src="lang/it.js?v=4.3.59-test12"></script>
+<script src="lang/en.js?v=4.3.59-test13"></script>
+<script src="lang/fr.js?v=4.3.59-test13"></script>
+<script src="lang/de.js?v=4.3.59-test13"></script>
+<script src="lang/it.js?v=4.3.59-test13"></script>
 
 <script id="v4359-test12-advanced-planning-source">
 (function(){
@@ -4906,9 +4906,35 @@ function flat(o,p='',r={}){if(!o||typeof o!=='object')return r;Object.keys(o).fo
 function root(s){return s==='home'?document.getElementById('home'):s==='planner'?document.getElementById('planner'):s==='releases'?document.getElementById('releases'):s==='help'?document.getElementById('help'):(document.querySelector('main')||document.body)}
 function strings(r){let a=[],w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT),n;while(n=w.nextNode()){if(['SCRIPT','STYLE'].includes(n.parentElement?.tagName))continue;if(n.parentElement?.closest&&n.parentElement.closest('#appLanguage'))continue;let s=(n.nodeValue||'').replace(/\s+/g,' ').trim();if(s.length>=3)a.push(s)};return [...new Set(a)]}
 function residual(a,l){if(l==='en')return[];let m=['Future Officer Targets','Saved Planning Scenarios','Calculate Target','Save Planning Scenario','Advanced Multi-Officer Planning','Planning session','Officer Session / Season','Future Officer Type','Analyse Planning Session','Refresh Recommendation','Projected S8 Resource Requirement','Future Officer Cost Forecast','Guided Workflow','Inventory Readiness','Officer Readiness','Export App Backup','Restore App Backup'];return a.filter(s=>m.some(x=>s.toLowerCase().includes(x.toLowerCase())))}
-async function apply(l){let s=document.getElementById('appLanguage');if(s){s.value=l;s.dispatchEvent(new Event('change',{bubbles:true}))}if(typeof window.kowApplyLanguage==='function')window.kowApplyLanguage(l);await new Promise(r=>setTimeout(r,250))}
-async function test(l,scope){await apply(l);let s=document.getElementById('appLanguage'),sw=(s&&s.value===l)||(document.documentElement.lang||'').slice(0,2)===l,en=flat(d('en')),tr=flat(d(l)),miss=l==='en'?[]:Object.keys(en).filter(k=>!(k in tr)||tr[k]===''||tr[k]==null),res=residual(strings(root(scope)),l),status=!sw?'FAIL':(miss.length||res.length?'WARNING':'PASS');return{language:l,name:N[l],scope,status,switched:sw,missingKeys:miss,residualEnglish:res}}
-async function run(){let t=document.getElementById('languageQaTarget').value,scope=document.getElementById('languageQaScope').value,langs=t==='all'?L:[t],r=[];for(let l of langs)r.push(await test(l,scope));if(t==='all')await apply('en');let f=r.filter(x=>x.status==='FAIL').length,w=r.filter(x=>x.status==='WARNING').length,o=f?'FAIL':w?'WARNING':'PASS';last={appVersion:'4.3.59',build:'Multilingual TEST 12 advanced planning source translation',generated:new Date().toISOString(),scope,overall:o,results:r};document.getElementById('languageQaSummary').innerHTML='<b>'+o+'</b> — '+r.length+' language test(s): '+(r.length-f-w)+' PASS, '+w+' WARNING, '+f+' FAIL.';document.getElementById('languageQaResults').innerHTML=r.map(x=>'<div class="result-box"><b>'+x.name+' — '+x.status+'</b><br>Switch: '+(x.switched?'PASS':'FAIL')+' · Missing keys: '+x.missingKeys.length+' · Residual English: '+x.residualEnglish.length+(x.residualEnglish.length?'<br><small>'+x.residualEnglish.slice(0,30).join(' | ')+'</small>':'')+'</div>').join('');document.getElementById('downloadLanguageQa').disabled=false}
+async function apply(l){
+ let s=document.getElementById('appLanguage');
+ if(s){s.value=l;s.dispatchEvent(new Event('change',{bubbles:true}))}
+ await new Promise(r=>setTimeout(r,350));
+}
+async function test(l,scope){
+ await apply(l);
+ /* TEST 13: wait for the final rendered language state, including dynamic planning content. */
+ await new Promise(r=>setTimeout(r,450));
+ if(typeof window.kowRestoreBottomNavStructure==='function')window.kowRestoreBottomNavStructure();
+ if(typeof window.kowAdvancedPlanningInfo==='function'){
+   const rr=root(scope), prefix='Advanced Planning now uses only genuinely saved Officer profiles for current candidates.';
+   if(rr){
+     const w=document.createTreeWalker(rr,NodeFilter.SHOW_TEXT);let n;
+     while(n=w.nextNode()){
+       if(l!=='en'&&(n.nodeValue||'').trim().startsWith(prefix))n.nodeValue=window.kowAdvancedPlanningInfo();
+     }
+   }
+ }
+ await new Promise(r=>setTimeout(r,80));
+ let s=document.getElementById('appLanguage'),
+ sw=(s&&s.value===l)||(document.documentElement.lang||'').slice(0,2)===l,
+ en=flat(d('en')),tr=flat(d(l)),
+ miss=l==='en'?[]:Object.keys(en).filter(k=>!(k in tr)||tr[k]===''||tr[k]==null),
+ res=residual(strings(root(scope)),l),
+ status=!sw?'FAIL':(miss.length||res.length?'WARNING':'PASS');
+ return{language:l,name:N[l],scope,status,switched:sw,missingKeys:miss,residualEnglish:res}
+}
+async function run(){let t=document.getElementById('languageQaTarget').value,scope=document.getElementById('languageQaScope').value,langs=t==='all'?L:[t],r=[];for(let l of langs)r.push(await test(l,scope));if(t==='all')await apply('en');let f=r.filter(x=>x.status==='FAIL').length,w=r.filter(x=>x.status==='WARNING').length,o=f?'FAIL':w?'WARNING':'PASS';last={appVersion:'4.3.59',build:'Multilingual TEST 13 QA final rendered state',generated:new Date().toISOString(),scope,overall:o,results:r};document.getElementById('languageQaSummary').innerHTML='<b>'+o+'</b> — '+r.length+' language test(s): '+(r.length-f-w)+' PASS, '+w+' WARNING, '+f+' FAIL.';document.getElementById('languageQaResults').innerHTML=r.map(x=>'<div class="result-box"><b>'+x.name+' — '+x.status+'</b><br>Switch: '+(x.switched?'PASS':'FAIL')+' · Missing keys: '+x.missingKeys.length+' · Residual English: '+x.residualEnglish.length+(x.residualEnglish.length?'<br><small>'+x.residualEnglish.slice(0,30).join(' | ')+'</small>':'')+'</div>').join('');document.getElementById('downloadLanguageQa').disabled=false}
 function dl(){if(!last)return;let b=new Blob([JSON.stringify(last,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='KoW-Language-QA-v4.3.59-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 document.addEventListener('click',e=>{if(e.target?.id==='runLanguageQa')run();if(e.target?.id==='downloadLanguageQa')dl()});
 })();
