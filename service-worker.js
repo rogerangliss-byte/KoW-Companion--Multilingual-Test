@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test14-dictionary-key-fix';
+const CACHE='kow-multilingual-v4.3.59-test15-exact-source-key';
 const ASSETS=[
   './',
   './index.html',
