@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test11-final-language';
+const CACHE='kow-multilingual-v4.3.59-test12-advanced-planning-source';
 const ASSETS=[
   './',
   './index.html',
