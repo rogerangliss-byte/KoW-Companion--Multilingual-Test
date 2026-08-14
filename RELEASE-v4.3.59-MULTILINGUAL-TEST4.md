@@ -1,11 +1,12 @@
 # KoW Companion Multilingual v4.3.59 TEST 4
 
-Exact English LIVE visual-master alignment.
-
-- Complete CSS presentation layer taken directly from approved English v4.3.59 LIVE FINAL.
-- Multilingual HTML, translation runtime and translated Help/User Guides retained.
-- Previous TEST2/TEST3 visual override layers removed.
-- English LIVE remains the visual master for buttons, cards, inputs, navigation and responsive layout.
-- No calculation or Officer/resource logic intentionally changed.
-
-Verify language switching and compare visual presentation directly with English LIVE.
+## Clean rebuild
+- Rebuilt again from the English v4.3.59 LIVE master, not from TEST 2 or TEST 3.
+- Exactly one Settings section.
+- Exactly one App Language selector.
+- Exact English Settings content retained, including Backup & Restore.
+- Multilingual Language selector added once.
+- TEST-only Language QA added once.
+- Existing French/German/Italian translation runtime retained.
+- Restore App Backup now preserves a valid current language when importing a backup that contains no valid multilingual language key.
+- No backup file can alter the HTML/CSS/nav design because only localStorage data is restored.

@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test3-settings-repaired';
+const CACHE='kow-multilingual-v4.3.59-test4-clean-master';
 const ASSETS=[
   './',
   './index.html',
