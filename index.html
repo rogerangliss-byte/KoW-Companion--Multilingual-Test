@@ -739,8 +739,79 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 /* Modal cancel/close controls should not look browser-default. */
 #quickProgressCancel,#quickProgressClose,#skillCostInfoClose{background:rgba(213,167,47,.08)!important;border:1px solid rgba(213,167,47,.50)!important;color:var(--gold2)!important;cursor:pointer}
 </style>
+<style id="v4359-settings-english-design">
+
+/* v4.3.59 Multilingual TEST 2
+   Settings-only alignment with English LIVE.
+   Language + QA remain additional native-looking Settings cards. */
+#settings{
+  width:100%;
+}
+#settings > article.card,
+#settings > .card{
+  box-sizing:border-box;
+  width:100%;
+}
+
+/* Multilingual additions use the same card geometry/typography as English Settings. */
+#settings article:has(#appLanguage),
+#settings #languageQaCard{
+  border-radius:14px;
+}
+#settings article:has(#appLanguage) h2,
+#settings #languageQaCard h2{
+  margin-top:0;
+}
+
+/* Language selector should look exactly like normal English Settings controls. */
+#settings #appLanguage,
+#settings #languageQaTarget,
+#settings #languageQaScope{
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* QA actions follow the same English action hierarchy rather than browser defaults. */
+#settings #runLanguageQa,
+#settings #downloadLanguageQa{
+  width:100%;
+  min-height:44px;
+}
+#settings #downloadLanguageQa:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+/* Keep QA output contained inside the standard Settings card on phones/tablets. */
+#settings #languageQaResults{
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+#settings #languageQaResults .result-box{
+  box-sizing:border-box;
+  max-width:100%;
+}
+
+/* Tablet/portrait: mirror English Settings single-column behaviour. */
+@media (max-width:900px){
+  #settings article:has(#appLanguage) .two,
+  #settings #languageQaCard .two{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* Narrow portrait: prevent multilingual-only controls becoming wider than English cards. */
+@media (max-width:600px){
+  #settings article:has(#appLanguage),
+  #settings #languageQaCard{
+    padding-left:14px;
+    padding-right:14px;
+  }
+}
+
+</style>
 </head>
-<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 REBUILT FROM ENGLISH MASTER — NOT LIVE</div>
+<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 2 — SETTINGS ALIGNMENT + QA — NOT LIVE</div>
 <header class="topbar">
   <div>
     <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
@@ -1548,6 +1619,7 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
   
 
 <article class="card" id="languageQaCard">
+<div class="muted" style="margin-bottom:8px">Settings alignment test build — English Live design + Multilingual QA.</div>
 <h2>🧪 Language QA / Translation Test</h2>
 <p class="muted">Run a translation audit against the rebuilt v4.3.59 interface. This does not change Officer or Inventory data.</p>
 <div class="two"><div><label>Language to test</label><select id="languageQaTarget"><option value="all">All Languages</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option></select></div>

@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.3.59-test-rebuilt';
+const CACHE='kow-multilingual-v4.3.59-test2-settings-alignment';
 const ASSETS=[
   './',
   './index.html',
