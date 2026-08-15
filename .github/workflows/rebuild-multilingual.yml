@@ -49,15 +49,30 @@ jobs:
           [ -f english-live/officers-default.json ] && cp english-live/officers-default.json ./officers-default.json || true
           rm -f qa-v440.js lang/v440-language-qa.js lang/v440-release-sync.js lang/it.js
 
-      - name: Repair language source syntax
+      - name: Repair and normalise language sources
         shell: python
         run: |
           from pathlib import Path
-          for name in ('lang/fr.js','lang/de.js'):
+          replacements={
+            'lang/fr.js':[
+              ('"Audit not run yet.": "Audit pas encore exécuté."\n\n  "Planification avancée','"Audit not run yet.": "Audit pas encore exécuté.",\n\n  "Planification avancée'),
+              ('"ORV / Badge": "ORV / Badge",','"ORV / Badge": "ORV / Badge d’Officier",')
+            ],
+            'lang/de.js':[
+              ('"Audit not run yet.": "Prüfung noch nicht ausgeführt."\n\n  "for Unlock','"Audit not run yet.": "Prüfung noch nicht ausgeführt.",\n\n  "for Unlock'),
+              ('"Status": "Status",','"Status": "Zustand",')
+            ],
+            'lang/it-base-v4357.js':[
+              ('"Home": "Home",','"Home": "Pagina iniziale",'),
+              ('"Database": "Database",','"Database": "Banca dati",'),
+              ('"ORV / Badge": "ORV / Badge",','"ORV / Badge": "ORV / Distintivo",')
+            ]
+          }
+          for name,pairs in replacements.items():
               p=Path(name)
               s=p.read_text(encoding='utf-8')
-              s=s.replace('"Audit not run yet.": "Audit pas encore exécuté."\n\n  "Planification avancée', '"Audit not run yet.": "Audit pas encore exécuté.",\n\n  "Planification avancée')
-              s=s.replace('"Audit not run yet.": "Prüfung noch nicht ausgeführt."\n\n  "for Unlock', '"Audit not run yet.": "Prüfung noch nicht ausgeführt.",\n\n  "for Unlock')
+              for old,new in pairs:
+                  s=s.replace(old,new)
               p.write_text(s,encoding='utf-8')
 
       - name: Inject clean multilingual UI
@@ -142,12 +157,16 @@ jobs:
           }
           fs.writeFileSync('LANGUAGE-QA-STATIC.json',JSON.stringify(out,null,2)+'\n');
           console.log(JSON.stringify(out,null,2));
+          const failed=Object.entries(out.languages).filter(([k,v])=>v.status!=='PASS');
+          if(failed.length) process.exitCode=2;
 
       - name: Remove temporary English Live checkout
+        if: always()
         shell: bash
         run: rm -rf english-live
 
       - name: Commit rebuilt Multilingual Test
+        if: success()
         shell: bash
         run: |
           set -euo pipefail
