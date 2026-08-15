@@ -114,6 +114,35 @@ jobs:
           ! grep -q 'qa-v440.js' index.html
           echo 'Clean multilingual architecture and language syntax verified.'
 
+      - name: Generate static language QA
+        shell: node {0}
+        run: |
+          const fs=require('fs'),vm=require('vm');
+          function load(path,varName){
+            const ctx={window:{}};
+            vm.createContext(ctx);
+            vm.runInContext(fs.readFileSync(path,'utf8'),ctx,{filename:path});
+            return ctx.window[varName]||{};
+          }
+          const dicts={
+            en:load('lang/en.js','KOW_I18N_EN'),
+            fr:load('lang/fr.js','KOW_I18N_FR'),
+            de:load('lang/de.js','KOW_I18N_DE'),
+            it:load('lang/it-base-v4357.js','KOW_I18N_IT')
+          };
+          const source=Object.keys(dicts.en).sort();
+          const allowedSame=new Set(['XP','ORV','SRV','MAXED','IN PROGRESS','NOT STARTED','CURRENT','NEXT']);
+          const out={qa:'clean6-static',sourceKeys:source.length,languages:{}};
+          for(const lang of ['en','fr','de','it']){
+            if(lang==='en'){out.languages.en={status:'PASS',missing:[],sameAsEnglish:[]};continue;}
+            const d=dicts[lang];
+            const missing=source.filter(k=>!Object.prototype.hasOwnProperty.call(d,k));
+            const same=source.filter(k=>Object.prototype.hasOwnProperty.call(d,k)&&d[k]===k&&/[A-Za-z]/.test(k)&&!allowedSame.has(k));
+            out.languages[lang]={status:(missing.length||same.length)?'WARNING':'PASS',missing,sameAsEnglish:same};
+          }
+          fs.writeFileSync('LANGUAGE-QA-STATIC.json',JSON.stringify(out,null,2)+'\n');
+          console.log(JSON.stringify(out,null,2));
+
       - name: Remove temporary English Live checkout
         shell: bash
         run: rm -rf english-live
