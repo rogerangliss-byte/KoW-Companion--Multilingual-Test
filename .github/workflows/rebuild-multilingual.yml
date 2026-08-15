@@ -8,6 +8,9 @@ on:
       - '.github/workflows/rebuild-multilingual.yml'
       - 'lang/clean-i18n.js'
       - 'lang/clean-qa.js'
+      - 'lang/fr.js'
+      - 'lang/de.js'
+      - 'lang/it-base-v4357.js'
 
 permissions:
   contents: write
@@ -46,6 +49,17 @@ jobs:
           [ -f english-live/officers-default.json ] && cp english-live/officers-default.json ./officers-default.json || true
           rm -f qa-v440.js lang/v440-language-qa.js lang/v440-release-sync.js lang/it.js
 
+      - name: Repair language source syntax
+        shell: python
+        run: |
+          from pathlib import Path
+          for name in ('lang/fr.js','lang/de.js'):
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              s=s.replace('"Audit not run yet.": "Audit pas encore exécuté."\n\n  "Planification avancée', '"Audit not run yet.": "Audit pas encore exécuté.",\n\n  "Planification avancée')
+              s=s.replace('"Audit not run yet.": "Prüfung noch nicht ausgeführt."\n\n  "for Unlock', '"Audit not run yet.": "Prüfung noch nicht ausgeführt.",\n\n  "for Unlock')
+              p.write_text(s,encoding='utf-8')
+
       - name: Inject clean multilingual UI
         shell: python
         run: |
@@ -61,7 +75,7 @@ jobs:
           if marker not in s:
               raise SystemExit('Settings marker not found')
           s=s.replace(marker,marker+lang_ui,1)
-          scripts='''\n<script src="./lang/en.js?v=440-clean5"></script>\n<script src="./lang/fr.js?v=440-clean5"></script>\n<script src="./lang/de.js?v=440-clean5"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean5"></script>\n<script src="./lang/clean-i18n.js?v=440-clean5"></script>\n<script src="./lang/clean-qa.js?v=440-clean5"></script>\n'''
+          scripts='''\n<script src="./lang/en.js?v=440-clean6"></script>\n<script src="./lang/fr.js?v=440-clean6"></script>\n<script src="./lang/de.js?v=440-clean6"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean6"></script>\n<script src="./lang/clean-i18n.js?v=440-clean6"></script>\n<script src="./lang/clean-qa.js?v=440-clean6"></script>\n'''
           s=s.replace('</body>',scripts+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
 
@@ -75,7 +89,7 @@ jobs:
           self.addEventListener('fetch',event=>{if(event.request.method==='GET')event.respondWith(fetch(event.request,{cache:'no-store'}));});
           EOF
 
-      - name: Verify clean architecture
+      - name: Verify clean architecture and language syntax
         shell: bash
         run: |
           set -euo pipefail
@@ -84,15 +98,21 @@ jobs:
           test -f lang/it-base-v4357.js
           test -f lang/clean-i18n.js
           test -f lang/clean-qa.js
+          node --check lang/en.js
+          node --check lang/fr.js
+          node --check lang/de.js
+          node --check lang/it-base-v4357.js
+          node --check lang/clean-i18n.js
+          node --check lang/clean-qa.js
           grep -q 'CLEAN ENGLISH LIVE REBUILD' index.html
           grep -q 'id="appLanguage"' index.html
-          grep -q 'lang/clean-i18n.js?v=440-clean5' index.html
-          grep -q 'lang/clean-qa.js?v=440-clean5' index.html
+          grep -q 'lang/clean-i18n.js?v=440-clean6' index.html
+          grep -q 'lang/clean-qa.js?v=440-clean6' index.html
           grep -q 'Download Language QA Report' lang/clean-qa.js
           ! grep -q 'clean-language-qa.js' lang/clean-i18n.js
           ! grep -q 'v440-language-qa.js' index.html
           ! grep -q 'qa-v440.js' index.html
-          echo 'Clean multilingual architecture verified.'
+          echo 'Clean multilingual architecture and language syntax verified.'
 
       - name: Remove temporary English Live checkout
         shell: bash
