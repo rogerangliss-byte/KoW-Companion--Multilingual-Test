@@ -1,0 +1,103 @@
+name: Rebuild Multilingual Test from English Live
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rebuild-multilingual.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Multilingual Test
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout English Live baseline
+        uses: actions/checkout@v4
+        with:
+          repository: rogerangliss-byte/KoW-Companion
+          ref: main
+          path: english-live
+
+      - name: Replace app core with English Live
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp english-live/index.html ./index.html
+          cp english-live/manifest.json ./manifest.json
+          cp english-live/icon.svg ./icon.svg
+          cp english-live/background-portrait.jpg ./background-portrait.jpg
+          cp english-live/background-landscape.jpg ./background-landscape.jpg
+          cp english-live/officers.csv ./officers.csv
+          cp english-live/officers.json ./officers.json
+          cp english-live/USER-GUIDE.md ./USER-GUIDE.md
+          rm -rf officer-portraits
+          cp -a english-live/officer-portraits ./officer-portraits
+          [ -f english-live/officers-default.csv ] && cp english-live/officers-default.csv ./officers-default.csv || true
+          [ -f english-live/officers-default.json ] && cp english-live/officers-default.json ./officers-default.json || true
+          rm -f qa-v440.js lang/v440-language-qa.js lang/v440-release-sync.js lang/it.js
+
+      - name: Inject clean multilingual UI
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('<title>KoW Companion v4.4.0</title>','<title>KoW Companion v4.4.0 TEST</title>')
+          s=s.replace('v4.4.0 LIVE','v4.4.0 TEST')
+          banner='''\n<div id="multilingualTestBanner" style="position:sticky;top:0;z-index:99999;background:#a40000;color:#fff;font-weight:800;text-align:center;padding:5px 8px;border-bottom:1px solid #ff7777">MULTILINGUAL TEST — v4.4.0 TEST — CLEAN ENGLISH LIVE REBUILD — NOT LIVE</div>\n'''
+          s=s.replace('<body>','<body>'+banner,1)
+          lang_ui='''\n      <h3>🌐 Language</h3>\n      <p class="notice">Choose the language used by the app interface. Officer names and game data are not translated.</p>\n      <label for="appLanguage">App language</label>\n      <select id="appLanguage">\n        <option value="en">English</option>\n        <option value="fr">Français</option>\n        <option value="de">Deutsch</option>\n        <option value="it">Italiano</option>\n      </select>\n      <div class="notice">Your language choice is saved automatically on this device.</div>\n'''
+          marker='<h2>⚙ Settings</h2>'
+          if marker not in s:
+              raise SystemExit('Settings marker not found')
+          s=s.replace(marker,marker+lang_ui,1)
+          scripts='''\n<script src="./lang/en.js?v=440-clean1"></script>\n<script src="./lang/fr.js?v=440-clean1"></script>\n<script src="./lang/de.js?v=440-clean1"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean1"></script>\n<script src="./lang/clean-i18n.js?v=440-clean1"></script>\n'''
+          s=s.replace('</body>',scripts+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
+
+      - name: Install recovery service worker
+        shell: bash
+        run: |
+          cat > service-worker.js <<'EOF'
+          const PREFIX='kow-';
+          self.addEventListener('install',()=>self.skipWaiting());
+          self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+          self.addEventListener('fetch',event=>{if(event.request.method==='GET')event.respondWith(fetch(event.request,{cache:'no-store'}));});
+          EOF
+
+      - name: Verify clean architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'CLEAN ENGLISH LIVE REBUILD' index.html
+          grep -q 'id="appLanguage"' index.html
+          grep -q 'lang/clean-i18n.js' index.html
+          ! grep -q 'v440-language-qa.js' index.html
+          ! grep -q 'qa-v440.js' index.html
+          grep -q "APP_VERSION='4.4.0'" index.html
+          test -f lang/fr.js
+          test -f lang/de.js
+          test -f lang/it-base-v4357.js
+          test -f lang/clean-i18n.js
+
+      - name: Commit rebuilt Multilingual Test
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'FireStorm Build Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No rebuild changes to commit.'
+          else
+            git commit -m 'Fresh multilingual v4.4.0 TEST rebuild from English Live'
+            git push origin main
+          fi
