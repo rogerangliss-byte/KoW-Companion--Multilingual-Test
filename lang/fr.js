@@ -109,7 +109,7 @@ window.KOW_I18N_FR = {
   "Delete Saved Plan": "Supprimer le plan enregistré",
   "Priority": "Priorité",
   "Badges Needed": "Badges nécessaires",
-  "ORV / Badge": "ORV / Badge",
+  "ORV / Badge": "ORV / Badge d’Officier",
   "Allocated": "Alloué",
   "Status": "Statut",
   "Order": "Ordre",

@@ -110,7 +110,7 @@ window.KOW_I18N_DE = {
   "Badges Needed": "Benötigte Abzeichen",
   "ORV / Badge": "ORV / Abzeichen",
   "Allocated": "Zugewiesen",
-  "Status": "Status",
+  "Status": "Zustand",
   "Order": "Reihenfolge",
   "Fully Funded": "Vollständig gedeckt",
   "Partially Funded": "Teilweise gedeckt",

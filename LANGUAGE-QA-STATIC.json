@@ -8,27 +8,19 @@
       "sameAsEnglish": []
     },
     "fr": {
-      "status": "WARNING",
+      "status": "PASS",
       "missing": [],
-      "sameAsEnglish": [
-        "ORV / Badge"
-      ]
+      "sameAsEnglish": []
     },
     "de": {
-      "status": "WARNING",
+      "status": "PASS",
       "missing": [],
-      "sameAsEnglish": [
-        "Status"
-      ]
+      "sameAsEnglish": []
     },
     "it": {
-      "status": "WARNING",
+      "status": "PASS",
       "missing": [],
-      "sameAsEnglish": [
-        "Database",
-        "Home",
-        "ORV / Badge"
-      ]
+      "sameAsEnglish": []
     }
   }
 }
