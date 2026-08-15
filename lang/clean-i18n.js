@@ -79,7 +79,7 @@ function setupSelector(){
 function loadQa(){
  if(document.getElementById('kowCleanQaScript'))return;
  const s=document.createElement('script');
- s.id='kowCleanQaScript';s.src='./lang/clean-language-qa.js?v=440-clean2';s.defer=true;
+ s.id='kowCleanQaScript';s.src='./lang/clean-qa.js?v=440-clean4';s.defer=true;
  document.head.appendChild(s);
 }
 function apply(){
