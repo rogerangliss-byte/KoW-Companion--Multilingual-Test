@@ -51,12 +51,18 @@ function translateTree(root=document.body){
 function translateBackupControls(){
  const l=lang(),t=BACKUP[l]||BACKUP.en;
  const exp=document.getElementById('backupAppData');
- if(exp) exp.textContent='⬇ '+t.exp;
+ const expText='⬇ '+t.exp;
+ if(exp&&exp.textContent!==expText) exp.textContent=expText;
  const res=document.getElementById('restoreAppDataLabel');
  if(res){
    const input=document.getElementById('restoreAppData');
-   for(const node of [...res.childNodes]) if(node.nodeType===Node.TEXT_NODE) node.remove();
-   res.insertBefore(document.createTextNode('⬆ '+t.res),res.firstChild);
+   const resText='⬆ '+t.res;
+   const textNodes=[...res.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE);
+   const current=textNodes.map(node=>node.nodeValue||'').join('').trim();
+   if(current!==resText){
+     textNodes.forEach(node=>node.remove());
+     res.insertBefore(document.createTextNode(resText),res.firstChild);
+   }
    if(input&&!res.contains(input))res.appendChild(input);
  }
 }
@@ -104,19 +110,21 @@ function startObserver(){
  if(observer)observer.disconnect();
  observer=new MutationObserver(muts=>{
    if(busy)return;
-   let touched=false;
+   let touched=false,backupTouched=false;
    for(const m of muts){
+     const target=m.target?.nodeType===3?m.target.parentElement:m.target;
+     if(target?.closest?.('#backupActions')) backupTouched=true;
      if(m.type==='childList'&&m.addedNodes.length){
        touched=true;
        m.addedNodes.forEach(n=>{if(n.nodeType===1)translateTree(n);else if(n.parentElement)translateTree(n.parentElement);});
      }
    }
-   if(touched)translateBackupControls();
+   if(touched||backupTouched)translateBackupControls();
  });
- observer.observe(document.body,{subtree:true,childList:true});
+ observer.observe(document.body,{subtree:true,childList:true,characterData:true});
 }
 document.addEventListener('DOMContentLoaded',()=>{applyAll();startObserver();setTimeout(applyAll,150);setTimeout(applyAll,500);});
-document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){setTimeout(applyAll,40);setTimeout(applyAll,200);}},true);
+document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){[40,120,240,360,500].forEach(ms=>setTimeout(applyAll,ms));}},true);
 document.addEventListener('click',e=>{
  if(e.target?.id==='runLanguageTest'||e.target?.id==='runTranslationAudit'||e.target?.id==='runLanguageQa')setTimeout(()=>{applyAll();renderResult();},120);
  if(e.target?.closest?.('[data-view="help"]'))setTimeout(renderHelp,50);
