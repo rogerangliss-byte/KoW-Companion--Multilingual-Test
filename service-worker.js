@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.4.0-test6-language-source-complete';
+const CACHE='kow-multilingual-v4.4.0-test6-final-seven-source-fix';
 const ASSETS=[
   './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
   './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
