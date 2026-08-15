@@ -1,0 +1,34 @@
+{
+  "qa": "clean6-static",
+  "sourceKeys": 145,
+  "languages": {
+    "en": {
+      "status": "PASS",
+      "missing": [],
+      "sameAsEnglish": []
+    },
+    "fr": {
+      "status": "WARNING",
+      "missing": [],
+      "sameAsEnglish": [
+        "ORV / Badge"
+      ]
+    },
+    "de": {
+      "status": "WARNING",
+      "missing": [],
+      "sameAsEnglish": [
+        "Status"
+      ]
+    },
+    "it": {
+      "status": "WARNING",
+      "missing": [],
+      "sameAsEnglish": [
+        "Database",
+        "Home",
+        "ORV / Badge"
+      ]
+    }
+  }
+}
