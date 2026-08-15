@@ -92,7 +92,10 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 window.KOW_CLEAN_I18N={
  apply,current,translateNode,purgeLegacyLanguageState,
- getCanonicalKeys:()=>Array.from(canonical).sort((a,b)=>a.localeCompare(b)),
+ // QA audits the declared English translation surface only. Runtime values,
+ // Officer names, saved user data and the QA panel itself are intentionally
+ // excluded so the missing-key count is stable and cannot self-inflate.
+ getCanonicalKeys:()=>Object.keys(dicts().en).sort((a,b)=>a.localeCompare(b)),
  getDictionaries:dicts
 };
 })();
