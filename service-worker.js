@@ -1,30 +1,15 @@
-const CACHE='kow-multilingual-v4.4.0-test10-cache-recovery';
-const ASSETS=[
-  './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
-  './officers.csv','./officers.json',
-  './lang/en.js','./lang/fr.js','./lang/de.js','./lang/it.js','./lang/it-base-v4357.js','./lang/v440-release-sync.js','./lang/v440-language-qa.js',
-  './USER-GUIDE.md','./USER-GUIDE-fr.md','./USER-GUIDE-de.md','./USER-GUIDE-it.md','./qa-v440.js'
-];
-self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
-  self.skipWaiting();
-});
+const CACHE_PREFIX='kow-';
+self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
     caches.keys()
-      .then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key))))
+      .then(keys=>Promise.all(keys.filter(k=>k.startsWith(CACHE_PREFIX)).map(k=>caches.delete(k))))
       .then(()=>self.clients.claim())
   );
 });
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   event.respondWith(
-    fetch(event.request,{cache:'no-store'})
-      .then(response=>{
-        const copy=response.clone();
-        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
-        return response;
-      })
-      .catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html')))
+    fetch(event.request,{cache:'no-store'}).catch(()=>new Response('Offline — reconnect to load KoW Companion.',{status:503,headers:{'Content-Type':'text/plain'}}))
   );
 });
