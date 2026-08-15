@@ -76,18 +76,11 @@ function setupSelector(){
   location.reload();
  });
 }
-function loadQa(){
- if(document.getElementById('kowCleanQaScript'))return;
- const s=document.createElement('script');
- s.id='kowCleanQaScript';s.src='./lang/clean-qa.js?v=440-clean4';s.defer=true;
- document.head.appendChild(s);
-}
 function apply(){
  purgeLegacyLanguageState();
  document.documentElement.lang=current();
  setupSelector();
  translateNode(document.body);
- loadQa();
 }
 document.addEventListener('DOMContentLoaded',()=>{
  apply();
