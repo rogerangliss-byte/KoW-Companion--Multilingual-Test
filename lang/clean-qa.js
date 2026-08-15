@@ -1,8 +1,8 @@
 /* KoW Companion v4.4.0 TEST — read-only multilingual QA. */
 (function(){
 'use strict';
-function dictionaries(){return {en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}};}
-function canonical(){return Array.from(window.KOW_CLEAN_I18N?.canonicalStrings?.()||[]);}
+function dictionaries(){return window.KOW_CLEAN_I18N?.getDictionaries?.()||{en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}};}
+function canonical(){return Array.from(window.KOW_CLEAN_I18N?.getCanonicalKeys?.()||[]);}
 function missingFor(lang){
   if(lang==='en') return [];
   const d=dictionaries()[lang]||{};
@@ -45,4 +45,5 @@ function render(){
 }
 document.addEventListener('DOMContentLoaded',()=>setTimeout(render,0));
 window.addEventListener('load',render);
+if(document.readyState!=='loading')setTimeout(render,0);
 })();
