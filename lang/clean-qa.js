@@ -8,6 +8,47 @@ function missingFor(lang){
   const d=dictionaries()[lang]||{};
   return canonical().filter(k=>k && !Object.prototype.hasOwnProperty.call(d,k));
 }
+function qaData(choice='all'){
+  const langs=choice==='all'?['en','fr','de','it']:[choice];
+  const names={en:'English',fr:'French',de:'German',it:'Italian'};
+  return langs.map(l=>{
+    const missing=missingFor(l);
+    return {lang:l,name:names[l],status:missing.length?'WARNING':'PASS',missing};
+  });
+}
+function buildReport(choice='all'){
+  const rows=qaData(choice);
+  const now=new Date();
+  const lines=[
+    'KoW Companion v4.4.0 TEST — Language QA Report',
+    'Clean multilingual runtime / exact-key audit',
+    'Generated: '+now.toISOString(),
+    '',
+    'SUMMARY'
+  ];
+  rows.forEach(r=>lines.push(`${r.name}: ${r.status} — ${r.missing.length} missing keys`));
+  rows.forEach(r=>{
+    lines.push('',`=== ${r.name.toUpperCase()} — ${r.status} ===`);
+    if(!r.missing.length){lines.push('No missing keys detected.');return;}
+    lines.push(`Missing keys: ${r.missing.length}`,'');
+    r.missing.forEach((k,i)=>lines.push(`${i+1}. ${k}`));
+  });
+  return lines.join('\n');
+}
+function downloadReport(){
+  const choice=document.getElementById('cleanQaLanguage')?.value||'all';
+  const text=buildReport(choice);
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+  a.href=url;
+  a.download=`KoW-Language-QA-v4.4.0-${choice}-${stamp}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 function render(){
   if(document.getElementById('cleanLanguageQaCard')) return;
   const settings=document.getElementById('settings');
@@ -28,22 +69,21 @@ function render(){
       <option value="it">Italiano</option>
     </select>
     <button id="cleanQaRun" class="primary" type="button">▶ Run Full Language QA</button>
+    <button id="cleanQaDownload" class="primary" type="button" style="margin-top:10px">⬇ Download Language QA Report</button>
     <div id="cleanQaResult" class="notice">No language test has been run yet.</div>`;
   settings.appendChild(card);
   document.getElementById('cleanQaRun').addEventListener('click',()=>{
     const choice=document.getElementById('cleanQaLanguage').value;
-    const langs=choice==='all'?['en','fr','de','it']:[choice];
-    const names={en:'English',fr:'French',de:'German',it:'Italian'};
-    const rows=langs.map(l=>{
-      const miss=missingFor(l);
-      const status=miss.length?'WARNING':'PASS';
-      const detail=miss.length?`<details><summary>${miss.length} missing keys</summary><div style="white-space:pre-wrap;margin-top:8px">${miss.slice(0,100).map(x=>'• '+x).join('\n')}</div></details>`:'No missing keys detected.';
-      return `<div style="margin:10px 0"><b>${names[l]} — ${status}</b><div>${detail}</div></div>`;
+    const rows=qaData(choice).map(r=>{
+      const detail=r.missing.length?`<details><summary>${r.missing.length} missing keys</summary><div style="white-space:pre-wrap;margin-top:8px">${r.missing.slice(0,100).map(x=>'• '+x).join('\n')}</div></details>`:'No missing keys detected.';
+      return `<div style="margin:10px 0"><b>${r.name} — ${r.status}</b><div>${detail}</div></div>`;
     }).join('');
     document.getElementById('cleanQaResult').innerHTML=rows;
   });
+  document.getElementById('cleanQaDownload').addEventListener('click',downloadReport);
 }
 document.addEventListener('DOMContentLoaded',()=>setTimeout(render,0));
 window.addEventListener('load',render);
 if(document.readyState!=='loading')setTimeout(render,0);
+window.KOW_CLEAN_QA={qaData,buildReport,downloadReport};
 })();
