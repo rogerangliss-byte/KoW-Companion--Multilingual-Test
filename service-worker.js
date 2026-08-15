@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.4.0-test1-readiness-language-qa';
+const CACHE='kow-multilingual-v4.4.0-test2-selected-language-guide';
 const ASSETS=[
   './',
   './index.html',
@@ -8,7 +8,11 @@ const ASSETS=[
   './background-landscape.jpg',
   './officers.csv',
   './officers.json',
-  './USER-GUIDE.md'
+  './USER-GUIDE.md',
+  './USER-GUIDE-fr.md',
+  './USER-GUIDE-de.md',
+  './USER-GUIDE-it.md',
+  './qa-v440.js'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
