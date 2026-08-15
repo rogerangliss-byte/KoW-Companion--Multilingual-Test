@@ -88,6 +88,10 @@ jobs:
           test -f lang/it-base-v4357.js
           test -f lang/clean-i18n.js
 
+      - name: Remove temporary English Live checkout
+        shell: bash
+        run: rm -rf english-live
+
       - name: Commit rebuilt Multilingual Test
         shell: bash
         run: |
