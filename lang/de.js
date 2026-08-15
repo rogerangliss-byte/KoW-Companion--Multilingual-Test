@@ -330,7 +330,7 @@ window.KOW_I18N_DE = {
   "Automatically checks language-file coverage and the currently rendered interface for untranslated English. Officer names, abbreviations, numbers and approved game terms are excluded.": "Prüft automatisch die Sprachdatei-Abdeckung und die aktuell angezeigte Oberfläche auf unübersetztes Englisch. Offiziersnamen, Abkürzungen, Zahlen und freigegebene Spielbegriffe sind ausgeschlossen.",
   "Run Translation Audit": "Übersetzungsprüfung starten",
   "Export Audit Report": "Prüfbericht exportieren",
-  "Audit not run yet.": "Prüfung noch nicht ausgeführt."
+  "Audit not run yet.": "Prüfung noch nicht ausgeführt.",
 
   "for Unlock, Next Star, 5★, Skills, Training, Level 70 XP and Offizier MAX. Guided Workflow steps are clickable and take you directly to each stage.": "für Freischalten, Nächster Stern, 5★, Fähigkeiten, Training, Stufe-70-XP und Offizier MAX. Die Schritte des geführten Arbeitsablaufs sind anklickbar und führen direkt zur jeweiligen Stufe.",
   "The Home screen now guides users through the recommended Inventory-first workflow and shows the next suggested step. A new Inventory Readiness panel summarises saved badge resources, Star value, XP and individual Offiziersabzeichen. Übersichtsseite shortcut buttons take you directly to the relevant calculator.": "Die Startseite führt Benutzer jetzt durch den empfohlenen Arbeitsablauf, beginnend mit dem Inventar, und zeigt den nächsten vorgeschlagenen Schritt an. Ein neues Inventarbereitschaft-Feld fasst gespeicherte Abzeichenressourcen, Sternwert, XP und individuelle Offiziersabzeichen zusammen. Die Schaltflächen der Übersichtsseite führen direkt zum entsprechenden Rechner.",
