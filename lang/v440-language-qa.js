@@ -10,6 +10,12 @@ const QA={
  de:{title:'🌐 Sprach-QA',target:'Zielsprache',scope:'Testumfang',full:'Gesamte App',run:'Sprachtest ausführen',download:'Sprachtestbericht herunterladen',none:'Es wurde noch kein Sprachtest ausgeführt.',pass:'BESTANDEN',fail:'FEHLER',v440:'v4.4.0-Erweiterungen',coverage:'Übersetzungsabdeckung',help:'Hilfe / Versionshinweise',version:'Version / TEST-Kennzeichnung'},
  it:{title:'🌐 QA lingua',target:'Lingua di destinazione',scope:'Ambito del test',full:'App completa',run:'Esegui test lingua',download:'Scarica rapporto test lingua',none:'Non è stato ancora eseguito alcun test lingua.',pass:'SUPERATO',fail:'ERRORE',v440:'Aggiunte v4.4.0',coverage:'Copertura traduzioni',help:'Aiuto / note di rilascio',version:'Versione / identificazione TEST'}
 };
+const BACKUP={
+ en:{exp:'Export App Backup',res:'Restore App Backup'},
+ fr:{exp:'Exporter la sauvegarde de l’application',res:'Restaurer la sauvegarde de l’application'},
+ de:{exp:'App-Sicherung exportieren',res:'App-Sicherung wiederherstellen'},
+ it:{exp:'Esporta backup app',res:'Ripristina backup app'}
+};
 let busy=false,observer=null;
 function lang(){
  const raw=(document.getElementById('appLanguage')?.value||localStorage.getItem('kow_language')||localStorage.getItem('appLanguage')||document.documentElement.lang||'en').slice(0,2).toLowerCase();
@@ -41,6 +47,18 @@ function translateTree(root=document.body){
      for(const a of ['placeholder','title','aria-label'])if(el.hasAttribute(a)){const v=el.getAttribute(a),t=translateText(v,d);if(t!==v)el.setAttribute(a,t);}
    });
  }finally{busy=false;}
+}
+function translateBackupControls(){
+ const l=lang(),t=BACKUP[l]||BACKUP.en;
+ const exp=document.getElementById('backupAppData');
+ if(exp) exp.textContent='⬇ '+t.exp;
+ const res=document.getElementById('restoreAppDataLabel');
+ if(res){
+   const input=document.getElementById('restoreAppData');
+   for(const node of [...res.childNodes]) if(node.nodeType===Node.TEXT_NODE) node.remove();
+   res.insertBefore(document.createTextNode('⬆ '+t.res),res.firstChild);
+   if(input&&!res.contains(input))res.appendChild(input);
+ }
 }
 function renderHelp(){
  const box=document.getElementById('helpLanguageBody');if(!box)return;
@@ -79,26 +97,30 @@ function applyAll(){
  document.documentElement.lang=lang();
  renderHelp();
  translateTree(document.body);
+ translateBackupControls();
  translateQaLabels();
 }
 function startObserver(){
  if(observer)observer.disconnect();
  observer=new MutationObserver(muts=>{
    if(busy)return;
+   let touched=false;
    for(const m of muts){
      if(m.type==='childList'&&m.addedNodes.length){
+       touched=true;
        m.addedNodes.forEach(n=>{if(n.nodeType===1)translateTree(n);else if(n.parentElement)translateTree(n.parentElement);});
      }
    }
+   if(touched)translateBackupControls();
  });
  observer.observe(document.body,{subtree:true,childList:true});
 }
 document.addEventListener('DOMContentLoaded',()=>{applyAll();startObserver();setTimeout(applyAll,150);setTimeout(applyAll,500);});
-document.addEventListener('change',e=>{if(e.target?.id==='appLanguage')setTimeout(applyAll,40);},true);
+document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){setTimeout(applyAll,40);setTimeout(applyAll,200);}},true);
 document.addEventListener('click',e=>{
  if(e.target?.id==='runLanguageTest'||e.target?.id==='runTranslationAudit'||e.target?.id==='runLanguageQa')setTimeout(()=>{applyAll();renderResult();},120);
  if(e.target?.closest?.('[data-view="help"]'))setTimeout(renderHelp,50);
 },true);
 window.addEventListener('pageshow',()=>setTimeout(applyAll,50));
-window.kowV440LanguageQA={apply:applyAll,checks,renderResult,renderHelp,translateTree,QA};
+window.kowV440LanguageQA={apply:applyAll,checks,renderResult,renderHelp,translateTree,translateBackupControls,QA};
 })();
