@@ -1,8 +1,8 @@
-const CACHE='kow-multilingual-v4.4.0-test6-final-seven-source-fix';
+const CACHE='kow-multilingual-v4.4.0-test7-canonical-language-runtime';
 const ASSETS=[
   './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
   './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
-  './lang/en.js','./lang/fr.js','./lang/de.js','./lang/it.js','./lang/v440-release-sync.js','./lang/v440-language-qa.js',
+  './lang/en.js','./lang/fr.js','./lang/de.js','./lang/it.js','./lang/it-base-v4357.js','./lang/v440-release-sync.js','./lang/v440-language-qa.js',
   './USER-GUIDE.md','./USER-GUIDE-fr.md','./USER-GUIDE-de.md','./USER-GUIDE-it.md','./qa-v440.js'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
