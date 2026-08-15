@@ -1,10 +1,30 @@
-const CACHE='kow-multilingual-v4.4.0-test9-backup-control-runtime';
+const CACHE='kow-multilingual-v4.4.0-test10-cache-recovery';
 const ASSETS=[
   './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
-  './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
+  './officers.csv','./officers.json',
   './lang/en.js','./lang/fr.js','./lang/de.js','./lang/it.js','./lang/it-base-v4357.js','./lang/v440-release-sync.js','./lang/v440-language-qa.js',
   './USER-GUIDE.md','./USER-GUIDE-fr.md','./USER-GUIDE-de.md','./USER-GUIDE-it.md','./qa-v440.js'
 ];
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
-self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
-self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response;}).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))));});
+self.addEventListener('install',event=>{
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
+  self.skipWaiting();
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil(
+    caches.keys()
+      .then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key))))
+      .then(()=>self.clients.claim())
+  );
+});
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET')return;
+  event.respondWith(
+    fetch(event.request,{cache:'no-store'})
+      .then(response=>{
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
+        return response;
+      })
+      .catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html')))
+  );
+});
