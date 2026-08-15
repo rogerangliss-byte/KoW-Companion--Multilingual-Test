@@ -1,4 +1,4 @@
-# KoW Companion v4.4.0 MULTILINGUAL TEST 
+# KoW Companion v4.4.0 MULTILINGUAL TEST
 
 Test environment for KoW Companion v4.4.0 multilingual validation.
 
@@ -10,17 +10,12 @@ English, French, German and Italian.
 - Badge, Star and XP readiness for saved planning scenarios.
 - Priority Target and Suggested Next Action guidance.
 - Open in Planner shortcut.
-- Existing language selector/persistence retained.
-- Existing Language QA / Translation Test retained.
-- v4.4 translation coverage added for all four languages.
-- What’s New updated for v4.4.0.
+- Language selector and persistence.
+- Full rendered-content Language QA covering Interface, Help / What’s New, README and version consistency.
+- v4.4.0 translation coverage for English, French, German and Italian.
 
-## v4.4.0 Multilingual Test Status
-- Proven multilingual foundation retained.
-- v4.4.0 multilingual Help and release-sync extension committed.
-- Clean v4.4.0 Language QA extension committed for English, French, German and Italian.
-- Confirmed progression documentation: Legendary 1,600 badges; Epic 4,950 badges; Elite 18,450 badges.
-- Confirmed Skill Strand unlocking: 0★ = Strand 1, 1★ = Strands 1–2, 2★ = Strands 1–3, 3★+ = all four strands; Level 1 is free when a strand becomes available.
-- Final loader integration and final Language QA pass remain required before READY TO TEST.
+## QA acceptance rule
+A Full app PASS is only valid when the selected language switches correctly and the rendered Interface, Help / What’s New, README and version consistency all pass. Stale v4.3.x documentation, residual English in tested areas, malformed repeated-character content, empty Help content or a version mismatch must produce FAIL.
 
-TEST environment only — not Multilingual Live until approved.
+## Status
+Multilingual TEST only. The build must receive a clean Full app QA result before promotion to Multilingual Live.
