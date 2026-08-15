@@ -45,7 +45,20 @@ function sanitiseRepeatedCharacters(root=document.body){
    if(!node||node.nodeType!==Node.TEXT_NODE||!node.parentElement)return;
    if(['SCRIPT','STYLE','NOSCRIPT','TEXTAREA','PRE','CODE'].includes(node.parentElement.tagName))return;
    const raw=node.nodeValue||'';
-   const clean=raw.replace(/([A-Za-zÀ-ÿ])\1{7,}/g,'$1');
+   let clean=raw;
+   /* Legacy v4.3.58 Italian substring translation used Original -> Originale.
+      Because "Originale/Originali" still begins with "Original", its MutationObserver
+      repeatedly reapplied the replacement and produced Originaleeee....  Normalise the
+      rendered Italian word to lower-case so that old case-sensitive rule can no longer
+      match it, then apply the generic corruption guard. */
+   if(lang()==='it'){
+     clean=clean
+       .replace(/\bOriginale+i\b/g,'originali')
+       .replace(/\bOriginali\b/g,'originali')
+       .replace(/\bOriginale+\b/g,'originale')
+       .replace(/\bOriginal\b/g,'originale');
+   }
+   clean=clean.replace(/([A-Za-zÀ-ÿ])\1{7,}/g,'$1');
    if(clean!==raw)node.nodeValue=clean;
  };
  if(root.nodeType===Node.TEXT_NODE){process(root);return;}
@@ -169,8 +182,8 @@ function startObserver(){
  });
  observer.observe(document.body,{subtree:true,childList:true,characterData:true});
 }
-document.addEventListener('DOMContentLoaded',()=>{applyAll();startObserver();setTimeout(applyAll,150);setTimeout(applyAll,500);});
-document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){[40,120,240,360,500].forEach(ms=>setTimeout(applyAll,ms));}},true);
+document.addEventListener('DOMContentLoaded',()=>{applyAll();startObserver();setTimeout(applyAll,150);setTimeout(applyAll,500);setTimeout(applyAll,900);});
+document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){[40,120,240,360,500,800].forEach(ms=>setTimeout(applyAll,ms));}},true);
 document.addEventListener('click',e=>{
  if(e.target?.id==='runLanguageTest'||e.target?.id==='runTranslationAudit'||e.target?.id==='runLanguageQa')setTimeout(()=>{applyAll();renderResult();},120);
  if(e.target?.closest?.('[data-view="help"]'))setTimeout(renderHelp,50);
