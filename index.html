@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
 <meta content="#111111" name="theme-color"/>
-<title>KoW Companion v4.3.59</title>
+<title>KoW Companion v4.4.0 TEST</title>
 <link href="./manifest.json" rel="manifest"/>
 <style>
 :root{
@@ -1253,8 +1253,26 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 #settings input[type=file]::file-selector-button{font-weight:600}
 /* Modal cancel/close controls should not look browser-default. */
 #quickProgressCancel,#quickProgressClose,#skillCostInfoClose{background:rgba(213,167,47,.08)!important;border:1px solid rgba(213,167,47,.50)!important;color:var(--gold2)!important;cursor:pointer}
-</style></head>
-<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.3.59 TEST 16 — STRUCTURAL ADVANCED PLANNING LANGUAGE FIX — NOT LIVE</div>
+</style>
+<style id="v440-multilingual-readiness-style">
+#v440PlanningReadinessCard{margin-top:12px}
+.v440-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.v440-summary>div{padding:12px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(0,0,0,.28)}
+.v440-summary span{display:block;color:var(--muted);font-size:.76rem}
+.v440-summary b{display:block;color:var(--gold2);margin-top:5px;overflow-wrap:anywhere}
+.v440-scenario-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.v440-scenario-card{padding:14px;border:1px solid rgba(213,167,47,.28);border-radius:14px;background:rgba(0,0,0,.28)}
+.v440-scenario-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.v440-scenario-title small{display:block;color:var(--muted);margin-top:4px}.v440-scenario-title strong{font-size:1.6rem;color:var(--gold2)}
+.v440-readiness-row{margin:10px 0}.v440-readiness-head{display:flex;justify-content:space-between;gap:10px}.v440-readiness-head span{color:var(--gold2);font-weight:700}
+.v440-readiness-track{height:9px;margin:5px 0;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden}.v440-readiness-track span{display:block;height:100%;background:linear-gradient(90deg,#73500d,var(--gold2));border-radius:999px}
+.v440-readiness-row small{color:var(--muted)}.v440-open-scenario{width:100%;margin-top:10px;min-height:42px}
+#v440QaCoverage{margin-top:12px}
+@media(max-width:760px){.v440-summary,.v440-scenario-grid{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body><div id="multi459RebuiltBanner" style="position:sticky;top:0;z-index:9999;background:#8b0000;color:#fff;text-align:center;font-weight:800;padding:6px">MULTILINGUAL TEST — v4.4.0 TEST 1 — PLANNING READINESS + LANGUAGE QA — NOT LIVE</div>
 <header class="topbar">
 <div>
 <h1 id="appTitle">⚔ GODS OF WAR 371</h1>
@@ -1543,6 +1561,13 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 <h3 style="margin-top:14px">Saved Planning Scenarios</h3>
 <div class="muted" id="savedScenarioList">No planning scenarios saved yet.</div>
 </article>
+
+<article class="card" id="v440PlanningReadinessCard">
+  <div class="eyebrow">v4.4.0 TEST</div>
+  <h2 data-v440-i18n="dashTitle">📈 Planning Readiness Dashboard</h2>
+  <p class="muted" data-v440-i18n="dashIntro">Turns saved future-Officer scenarios into a release-readiness view and highlights the next resource to prioritise.</p>
+  <div id="v440PlanningReadiness"><div class="notice" data-v440-i18n="dashEmpty">Save a Planning Scenario above to see readiness percentages and a suggested next action.</div></div>
+</article>
 <article class="card">
 <h2>🎯 Goals Planner</h2>
 <label>Goal</label>
@@ -1657,6 +1682,19 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 </article>
 </section>
 <section class="view" id="help">
+
+<div class="card" id="whatsNewV440" style="margin-bottom:16px">
+  <h3 style="margin-top:0" data-v440-i18n="whatsTitle">✨ What’s New — v4.4.0 TEST</h3>
+  <div class="notice"><b data-v440-i18n="whatsLead">v4.4.0 adds the Planning Readiness Dashboard with saved-target readiness, priority targeting and next-action guidance.</b></div>
+  <ul>
+    <li data-v440-i18n="whats1">Badge, Star and XP readiness for every saved future planning scenario.</li>
+    <li data-v440-i18n="whats2">Overall readiness uses the limiting resource so shortages are obvious.</li>
+    <li data-v440-i18n="whats3">Priority Target highlights the saved scenario needing the most attention.</li>
+    <li data-v440-i18n="whats4">Suggested Next Action identifies the next resource to save.</li>
+    <li data-v440-i18n="whats5">English, French, German and Italian coverage is included in the v4.4 language QA extension.</li>
+  </ul>
+</div>
+
 <article class="card">
 <h2>❓ Help &amp; Instructions</h2>
 <div class="card" id="whatsNewV4329" style="margin-bottom:16px">
@@ -2761,7 +2799,7 @@ function loadProgress(){
 }
 
 
-const APP_VERSION='4.3.59';
+const APP_VERSION='4.4.0';
 function syncVersionUI(){
  const v='v'+APP_VERSION;
  if($('headerVersion'))$('headerVersion').textContent=v;
@@ -5064,5 +5102,6 @@ document.addEventListener('change',e=>{if(e.target?.id==='appLanguage'){render()
 window.kowRenderAdvancedPlanningInfo=render;
 })();
 </script>
+\n<script id="v440-multilingual-readiness-runtime">\n(function(){\n'use strict';\nconst KEY='kow_v4359_planning_scenarios';\nconst T={\n en:{dashTitle:'📈 Planning Readiness Dashboard',dashIntro:'Turns saved future-Officer scenarios into a release-readiness view and highlights the next resource to prioritise.',dashEmpty:'Save a Planning Scenario above to see readiness percentages and a suggested next action.',saved:'Saved targets',average:'Average readiness',priority:'Priority target',badges:'Badges',stars:'Stars',xp:'XP',short:'short',ready:'ready',next:'Suggested next action',saveBadges:'Save {n} badge equivalents',saveStars:'Build {n} more Star value',saveXp:'Save {n} XP',allReady:'Resources ready — maintain your reserve.',open:'Open in Planner',projected:'projected Officer',projectedPlural:'projected Officers',whatsTitle:'✨ What’s New — v4.4.0 TEST',whatsLead:'v4.4.0 adds the Planning Readiness Dashboard with saved-target readiness, priority targeting and next-action guidance.',whats1:'Badge, Star and XP readiness for every saved future planning scenario.',whats2:'Overall readiness uses the limiting resource so shortages are obvious.',whats3:'Priority Target highlights the saved scenario needing the most attention.',whats4:'Suggested Next Action identifies the next resource to save.',whats5:'English, French, German and Italian coverage is included in the v4.4 language QA extension.',qaTitle:'v4.4 Translation Coverage',qaPass:'PASS — all v4.4 dashboard translation keys are present for English, French, German and Italian.',qaFail:'FAIL — one or more v4.4 translation keys are missing.'},\n fr:{dashTitle:'📈 Tableau de préparation à la planification',dashIntro:'Transforme les scénarios futurs d’Officiers enregistrés en vue de préparation et met en évidence la prochaine ressource à prioriser.',dashEmpty:'Enregistrez un scénario de planification ci-dessus pour voir les pourcentages de préparation et l’action suivante suggérée.',saved:'Objectifs enregistrés',average:'Préparation moyenne',priority:'Objectif prioritaire',badges:'Insignes',stars:'Étoiles',xp:'XP',short:'manque',ready:'prêt',next:'Action suivante suggérée',saveBadges:'Économisez {n} équivalents d’insignes',saveStars:'Accumulez encore {n} de valeur d’étoiles',saveXp:'Économisez {n} XP',allReady:'Ressources prêtes — maintenez votre réserve.',open:'Ouvrir dans le Planificateur',projected:'Officier projeté',projectedPlural:'Officiers projetés',whatsTitle:'✨ Nouveautés — v4.4.0 TEST',whatsLead:'v4.4.0 ajoute le Tableau de préparation à la planification avec préparation des objectifs enregistrés, priorité et conseils sur l’action suivante.',whats1:'Préparation Insignes, Étoiles et XP pour chaque scénario futur enregistré.',whats2:'La préparation globale utilise la ressource limitante afin de rendre les pénuries évidentes.',whats3:'Objectif prioritaire met en évidence le scénario enregistré qui demande le plus d’attention.',whats4:'Action suivante suggérée indique la prochaine ressource à économiser.',whats5:'La couverture anglais, français, allemand et italien est incluse dans l’extension QA v4.4.',qaTitle:'Couverture de traduction v4.4',qaPass:'RÉUSSI — toutes les clés de traduction du tableau v4.4 sont présentes en anglais, français, allemand et italien.',qaFail:'ÉCHEC — une ou plusieurs clés de traduction v4.4 sont manquantes.'},\n de:{dashTitle:'📈 Planungsbereitschafts-Dashboard',dashIntro:'Wandelt gespeicherte zukünftige Offiziersszenarien in eine Bereitschaftsansicht um und hebt die nächste zu priorisierende Ressource hervor.',dashEmpty:'Speichere oben ein Planungsszenario, um Bereitschaftsprozente und die empfohlene nächste Aktion zu sehen.',saved:'Gespeicherte Ziele',average:'Durchschnittliche Bereitschaft',priority:'Prioritätsziel',badges:'Abzeichen',stars:'Sterne',xp:'XP',short:'Fehlmenge',ready:'bereit',next:'Empfohlene nächste Aktion',saveBadges:'Spare {n} Abzeichen-Äquivalente',saveStars:'Baue weitere {n} Sternwert auf',saveXp:'Spare {n} XP',allReady:'Ressourcen bereit — Reserve beibehalten.',open:'Im Planer öffnen',projected:'prognostizierter Offizier',projectedPlural:'prognostizierte Offiziere',whatsTitle:'✨ Neu in v4.4.0 TEST',whatsLead:'v4.4.0 ergänzt das Planungsbereitschafts-Dashboard mit Zielbereitschaft, Priorisierung und Empfehlungen für die nächste Aktion.',whats1:'Abzeichen-, Stern- und XP-Bereitschaft für jedes gespeicherte Zukunftsszenario.',whats2:'Die Gesamtbereitschaft verwendet die knappste Ressource, damit Engpässe sofort sichtbar sind.',whats3:'Prioritätsziel hebt das gespeicherte Szenario mit dem größten Handlungsbedarf hervor.',whats4:'Empfohlene nächste Aktion zeigt, welche Ressource als Nächstes gespart werden sollte.',whats5:'Englisch, Französisch, Deutsch und Italienisch sind in der v4.4-Sprach-QA-Erweiterung enthalten.',qaTitle:'v4.4 Übersetzungsabdeckung',qaPass:'BESTANDEN — alle v4.4-Dashboard-Übersetzungsschlüssel sind für Englisch, Französisch, Deutsch und Italienisch vorhanden.',qaFail:'FEHLER — mindestens ein v4.4-Übersetzungsschlüssel fehlt.'},\n it:{dashTitle:'📈 Dashboard di preparazione alla pianificazione',dashIntro:'Trasforma gli scenari futuri degli Ufficiali salvati in una vista di preparazione e mette in evidenza la prossima risorsa da prioritizzare.',dashEmpty:'Salva uno Scenario di Pianificazione qui sopra per vedere le percentuali di preparazione e la prossima azione suggerita.',saved:'Obiettivi salvati',average:'Preparazione media',priority:'Obiettivo prioritario',badges:'Distintivi',stars:'Stelle',xp:'XP',short:'mancano',ready:'pronto',next:'Prossima azione suggerita',saveBadges:'Risparmia {n} equivalenti distintivo',saveStars:'Accumula altri {n} di valore Stelle',saveXp:'Risparmia {n} XP',allReady:'Risorse pronte — mantieni la riserva.',open:'Apri nel Pianificatore',projected:'Ufficiale previsto',projectedPlural:'Ufficiali previsti',whatsTitle:'✨ Novità — v4.4.0 TEST',whatsLead:'v4.4.0 aggiunge il Dashboard di preparazione alla pianificazione con preparazione degli obiettivi salvati, priorità e guida alla prossima azione.',whats1:'Preparazione Distintivi, Stelle e XP per ogni scenario futuro salvato.',whats2:'La preparazione complessiva usa la risorsa limitante così le carenze sono evidenti.',whats3:'Obiettivo prioritario evidenzia lo scenario salvato che richiede più attenzione.',whats4:'Prossima azione suggerita identifica la prossima risorsa da risparmiare.',whats5:'La copertura inglese, francese, tedesca e italiana è inclusa nell’estensione QA v4.4.',qaTitle:'Copertura traduzioni v4.4',qaPass:'SUPERATO — tutte le chiavi di traduzione del dashboard v4.4 sono presenti per inglese, francese, tedesco e italiano.',qaFail:'ERRORE — mancano una o più chiavi di traduzione v4.4.'}\n};\nconst required=['dashTitle','dashIntro','dashEmpty','saved','average','priority','badges','stars','xp','short','ready','next','saveBadges','saveStars','saveXp','allReady','open','projected','projectedPlural','whatsTitle','whatsLead','whats1','whats2','whats3','whats4','whats5','qaTitle','qaPass','qaFail'];\nconst fmt=n=>Math.max(0,Math.round(Number(n)||0)).toLocaleString();\nconst clamp=n=>Math.max(0,Math.min(100,Number(n)||0));\nconst esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));\nfunction lang(){\n for(const s of document.querySelectorAll('select')){const id=((s.id||'')+' '+(s.name||'')).toLowerCase();const v=String(s.value||'').toLowerCase();if(id.includes('lang')&&['en','fr','de','it'].includes(v))return v;}\n const dl=(document.documentElement.lang||'').slice(0,2).toLowerCase();if(['en','fr','de','it'].includes(dl))return dl;\n for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';if(/lang/i.test(k)){const v=String(localStorage.getItem(k)||'').slice(0,2).toLowerCase();if(['en','fr','de','it'].includes(v))return v;}}\n return 'en';\n}\nfunction tr(){return T[lang()]||T.en}\nfunction load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}}\nfunction pct(s,key){const req=Number(s?.req?.[key])||0,held=Number(s?.held?.[key])||0;return req?clamp((held/req)*100):100}\nfunction bar(label,p,held,req,short){const x=tr();const detail=`${fmt(held)} / ${fmt(req)}${short?` · ${x.short} ${fmt(short)}`:` · ${x.ready}`}`;return `<div class="v440-readiness-row"><div class="v440-readiness-head"><b>${label}</b><span>${p.toFixed(0)}%</span></div><div class="v440-readiness-track"><span style="width:${p}%"></span></div><small>${detail}</small></div>`}\nfunction card(s,i){const x=tr(),bp=pct(s,'badges'),sp=pct(s,'stars'),xp=pct(s,'xp'),overall=Math.min(bp,sp,xp),held=s.held||{},req=s.req||{},short=s.short||{};const next=short.badges>0?x.saveBadges.replace('{n}',fmt(short.badges)):short.stars>0?x.saveStars.replace('{n}',fmt(short.stars)):short.xp>0?x.saveXp.replace('{n}',fmt(short.xp)):x.allReady;const c=Number(s.count||1);return `<article class="v440-scenario-card"><div class="v440-scenario-title"><div><b>${esc(s.name||'Saved scenario')}</b><small>${esc(s.year||'')} · ${c} ${c>1?x.projectedPlural:x.projected}</small></div><strong>${overall.toFixed(0)}%</strong></div>${bar(x.badges,bp,held.badges,req.badges,short.badges)}${bar(x.stars,sp,held.stars,req.stars,short.stars)}${bar(x.xp,xp,held.xp,req.xp,short.xp)}<div class="notice"><b>${x.next}:</b> ${esc(next)}</div><button type="button" class="app-action-secondary v440-open-scenario" data-v440-load="${i}">${x.open}</button></article>`}\nfunction translateStatic(){const x=tr();document.querySelectorAll('[data-v440-i18n]').forEach(el=>{const k=el.dataset.v440I18n;if(x[k])el.textContent=x[k]})}\nfunction render(){translateStatic();const root=document.getElementById('v440PlanningReadiness');if(!root)return;const list=load(),x=tr();if(!list.length){root.innerHTML=`<div class="notice">${x.dashEmpty}</div>`;return}const sorted=list.map((s,i)=>({s,i})).sort((a,b)=>(Number(a.s.overall)||0)-(Number(b.s.overall)||0));const avg=sorted.reduce((t,z)=>t+clamp(z.s.overall),0)/sorted.length;root.innerHTML=`<div class="v440-summary"><div><span>${x.saved}</span><b>${sorted.length}</b></div><div><span>${x.average}</span><b>${avg.toFixed(0)}%</b></div><div><span>${x.priority}</span><b>${esc(sorted[0].s.name||'Scenario')}</b></div></div><div class="v440-scenario-grid">${sorted.map(z=>card(z.s,z.i)).join('')}</div>`}\nfunction qa(){const ok=['en','fr','de','it'].every(l=>required.every(k=>typeof T[l][k]==='string'&&T[l][k].trim()));const x=tr();let host=[...document.querySelectorAll('article.card,.card')].find(el=>/Language QA|Translation Test|Test de traduction|Sprach|Traduz/i.test(el.textContent||''));if(!host)return;let box=document.getElementById('v440QaCoverage');if(!box){box=document.createElement('div');box.id='v440QaCoverage';box.className='notice';host.appendChild(box)}box.innerHTML=`<b>${x.qaTitle}</b><br>${ok?x.qaPass:x.qaFail}`;box.dataset.result=ok?'PASS':'FAIL'}\ndocument.addEventListener('DOMContentLoaded',()=>{render();setTimeout(qa,100)});\ndocument.addEventListener('change',e=>{if((e.target?.id||'').toLowerCase().includes('lang')||(e.target?.name||'').toLowerCase().includes('lang'))setTimeout(()=>{render();qa()},20)});\ndocument.addEventListener('click',e=>{if(e.target?.id==='saveScenario'||e.target?.dataset?.deleteScenario!==undefined)setTimeout(render,60);const idx=e.target?.dataset?.v440Load;if(idx!==undefined){const target=document.querySelector(`[data-load-scenario="${idx}"]`);if(target){target.click();document.getElementById('futurePlanningTargets')?.scrollIntoView({behavior:'smooth',block:'start'})}}if(/Run Language Test|Exécuter|Sprachtest|Test lingua/i.test(e.target?.textContent||''))setTimeout(qa,150)});\nwindow.addEventListener('storage',e=>{if(e.key===KEY)render()});\nwindow.kowRenderPlanningReadiness=render;window.kowV440LanguageQa=qa;\n})();\n</script>\n
 </body>
 </html>
