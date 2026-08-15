@@ -1,4 +1,4 @@
-// KoW Companion v4.3.57 language file: de
+// KoW Companion v4.4.0 TEST language file: de
 window.KOW_I18N_DE = {
   "Language": "Sprache",
   "Choose the language used by the app interface. Officer names and game data are not translated.": "Wähle die Sprache der App-Oberfläche. Offiziersnamen und Spieldaten werden nicht übersetzt.",

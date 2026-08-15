@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.4.0-test3-full-language-gate';
+const CACHE='kow-multilingual-v4.4.0-test5-source-language-sync';
 const ASSETS=[
   './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
   './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
