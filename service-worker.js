@@ -1,18 +1,8 @@
-const CACHE='kow-multilingual-v4.4.0-test2-selected-language-guide';
+const CACHE='kow-multilingual-v4.4.0-test3-full-language-gate';
 const ASSETS=[
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.svg',
-  './background-portrait.jpg',
-  './background-landscape.jpg',
-  './officers.csv',
-  './officers.json',
-  './USER-GUIDE.md',
-  './USER-GUIDE-fr.md',
-  './USER-GUIDE-de.md',
-  './USER-GUIDE-it.md',
-  './qa-v440.js'
+  './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
+  './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
+  './USER-GUIDE.md','./USER-GUIDE-fr.md','./USER-GUIDE-de.md','./USER-GUIDE-it.md','./qa-v440.js'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
