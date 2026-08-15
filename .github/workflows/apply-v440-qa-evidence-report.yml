@@ -1,0 +1,92 @@
+name: Apply v4.4.0 QA Evidence Report
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-v440-qa-evidence-report.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add strict QA evidence exporter
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='id="v440-strict-qa-evidence-export"'
+          if marker in s:
+              raise SystemExit('Strict QA evidence exporter already present')
+          script=r'''<script id="v440-strict-qa-evidence-export">
+          (function(){
+          'use strict';
+          const APP='4.4.0', LANGS=['en','fr','de','it'];
+          const NAMES={en:'English',fr:'French',de:'German',it:'Italian'};
+          const stale=/\bv4\.3\.(?:\d+)\b/i;
+          const malformed=/(.)\1{24,}/;
+          const englishSignals=/\b(?:Help & Instructions|What(?:’|'|)s New|Planning Readiness|Suggested Next Action|Open in Planner|Select Officer|Current readiness|Priority Target)\b/i;
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          function visibleText(){
+            return [...document.querySelectorAll('body *')].filter(e=>{
+              const st=getComputedStyle(e); return st.display!=='none'&&st.visibility!=='hidden'&&e.children.length===0;
+            }).map(e=>e.textContent||'').join('\n');
+          }
+          function check(name,pass,details){return {name,status:pass?'PASS':'FAIL',details:details||''};}
+          async function one(lang){
+            if(window.kowApplyLanguage) window.kowApplyLanguage(lang);
+            const sel=document.getElementById('appLanguage'); if(sel){sel.value=lang;sel.dispatchEvent(new Event('change',{bubbles:true}));}
+            await sleep(180);
+            const switched=(document.documentElement.lang||'').slice(0,2)===lang && (!sel||sel.value===lang);
+            const help=document.getElementById('helpLanguageBody');
+            const helpText=(help?.innerText||help?.textContent||'').trim();
+            const body=visibleText();
+            const interfacePass=switched && (lang==='en'||!englishSignals.test(body.replace(helpText,'')));
+            const helpPass=helpText.length>40 && !malformed.test(helpText) && !stale.test(helpText) && (lang==='en'||!englishSignals.test(helpText));
+            let readmeText='',readmeError='';
+            try{const r=await fetch('./README.md?qa='+Date.now(),{cache:'no-store'});readmeText=await r.text();if(!r.ok)readmeError='HTTP '+r.status;}catch(e){readmeError=String(e)}
+            const readmePass=!readmeError && /v4\.4\.0/i.test(readmeText) && !stale.test(readmeText) && !malformed.test(readmeText);
+            const versionText=(document.title+' '+body).match(/v?4\.\d+\.\d+/ig)||[];
+            const badVersions=versionText.filter(v=>!/^v?4\.4\.0$/i.test(v));
+            const versionPass=/v4\.4\.0/i.test(document.title) && badVersions.length===0;
+            const malformedPass=!malformed.test(body) && !malformed.test(helpText) && !malformed.test(readmeText);
+            const checks={
+              interface:check('Interface',interfacePass,switched?'Rendered language checked':'Language switch failed'),
+              helpWhatsNew:check('Help / What’s New',helpPass,helpText.length+' rendered characters checked'),
+              readme:check('README',readmePass,readmeError||'README v4.4.0 / stale-version / corruption checks'),
+              versionConsistency:check('Version consistency',versionPass,badVersions.length?'Unexpected visible versions: '+[...new Set(badVersions)].join(', '):'Visible version is v4.4.0'),
+              malformedContent:check('Malformed content',malformedPass,'Repeated-character corruption check')
+            };
+            const status=Object.values(checks).every(x=>x.status==='PASS')?'PASS':'FAIL';
+            return {language:lang,name:NAMES[lang],scope:'full',status,switched,checks};
+          }
+          async function strictReport(){
+            const original=(localStorage.getItem('appLanguage')||localStorage.getItem('kow_language')||'en').slice(0,2);
+            const results=[]; for(const l of LANGS) results.push(await one(l));
+            if(window.kowApplyLanguage)window.kowApplyLanguage(original);
+            return {appVersion:APP,build:'Multilingual TEST v4.4.0 strict rendered-content QA',generated:new Date().toISOString(),scope:'full',qaSchema:'v4.4.0-strict-evidence-1',overall:results.every(r=>r.status==='PASS')?'PASS':'FAIL',acceptanceRule:'Full app PASS requires Interface, Help / What’s New, README, Version consistency and Malformed content to PASS for every language.',results};
+          }
+          function download(obj){const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='KoW-Language-QA-v4.4.0-STRICT-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+          document.addEventListener('click',async e=>{
+            if(e.target?.id!=='exportTranslationAudit')return;
+            e.preventDefault();e.stopImmediatePropagation();
+            const btn=e.target,old=btn.textContent;btn.disabled=true;btn.textContent='Running strict QA…';
+            try{const report=await strictReport();window.__kowStrictQaReport=report;download(report);btn.textContent='Exported: '+report.overall;}
+            catch(err){console.error(err);btn.textContent='Strict QA ERROR';}
+            finally{btn.disabled=false;setTimeout(()=>btn.textContent=old,2500);}
+          },true);
+          window.kowRunStrictQaReport=strictReport;
+          })();
+          </script>'''
+          s=s.replace('</body>',script+'\n</body>')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch and remove one-shot workflow
+        run: |
+          git config user.name "FireStorm"
+          git config user.email "roger.angliss@gmail.com"
+          git add index.html
+          git rm .github/workflows/apply-v440-qa-evidence-report.yml
+          git commit -m "Make v4.4.0 QA export prove rendered-content checks"
+          git push
