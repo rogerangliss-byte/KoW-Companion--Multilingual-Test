@@ -1,0 +1,86 @@
+name: Fix v4.4.0 Language QA Accuracy
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-v440-language-qa-accuracy.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Strengthen Language QA interpretation
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          h=p.read_text(encoding='utf-8')
+
+          # Update QA wording/version metadata.
+          h=h.replace('Run a translation audit against the current v4.3.59 interface.', 'Run a translation and content-integrity audit against the current v4.4.0 interface.')
+          h=h.replace("last={appVersion:'4.3.59',build:'Multilingual TEST 16 structural Advanced Planning language fix'", "last={appVersion:'4.4.0',build:'Multilingual TEST v4.4.0 content-integrity QA'")
+          h=h.replace("a.download='KoW-Language-QA-v4.3.59-'", "a.download='KoW-Language-QA-v4.4.0-'")
+
+          # Add content-integrity interpretation. This catches stale docs, corruption and obvious language bleed
+          # in rendered content, not just missing translation dictionary keys.
+          marker="function residual(a,l){if(l==='en')return[];let m=['Future Officer Targets'"
+          if marker not in h:
+              raise SystemExit('Language QA residual function anchor not found')
+          start=h.index('function residual(a,l){')
+          end=h.index('\nasync function apply(l){', start)
+          residual_block=h[start:end]
+          if 'function integrity' not in h:
+              integrity=r'''\nfunction integrity(a,l){
+ let issues=[];
+ const joined=a.join(' | ');
+ // Current test build must not render obsolete release identifiers in Help/What's New or QA copy.
+ if(/v4\.3\.58|v4\.3\.59/.test(joined))issues.push('Stale version text detected (v4.3.58/v4.3.59)');
+ // Catch obvious text corruption such as a character repeated abnormally many times.
+ let rep=joined.match(/([A-Za-zÀ-ÿ])\1{19,}/);
+ if(rep)issues.push('Probable corrupted repeated-character text: '+rep[0].slice(0,32)+'…');
+ // Catch common mojibake/replacement characters.
+ if(/[�]|Ã.|Â./.test(joined))issues.push('Probable character-encoding corruption detected');
+ // Detect English bleed more broadly in non-English rendered Help/What's New content.
+ if(l!=='en'){
+   const bleed=['with saved Officer analysis','using recurring','selection for','filtering for','Combined Season + Type reports','Focused future-session reports','for one or two future Legendary Officers','Inventory-aware readiness','Top 10 compact results','enter and save the resources you currently hold','review the recurring release schedule','run Advanced Multi-Officer Planning'];
+   const hits=bleed.filter(x=>joined.toLowerCase().includes(x.toLowerCase()));
+   if(hits.length)issues.push('Residual English content: '+hits.slice(0,5).join(' | '));
+ }
+ return issues;
+}'''
+              h=h[:end]+integrity+h[end:]
+
+          old="status=!sw?'FAIL':(miss.length||res.length?'WARNING':'PASS');\n return{language:l,name:N[l],scope,status,switched:sw,missingKeys:miss,residualEnglish:res}"
+          new="integ=integrity(strings(root(scope)),l),\n status=!sw?'FAIL':(miss.length||res.length||integ.length?'WARNING':'PASS');\n return{language:l,name:N[l],scope,status,switched:sw,missingKeys:miss,residualEnglish:res,contentIntegrity:integ}"
+          if old not in h:
+              raise SystemExit('QA status/return anchor not found')
+          h=h.replace(old,new,1)
+
+          old_ui="' · Missing keys: '+x.missingKeys.length+' · Residual English: '+x.residualEnglish.length+(x.residualEnglish.length?'<br><small>'+x.residualEnglish.slice(0,30).join(' | ')+'</small>':'')+'</div>'"
+          new_ui="' · Missing keys: '+x.missingKeys.length+' · Residual English: '+x.residualEnglish.length+' · Content issues: '+(x.contentIntegrity||[]).length+((x.residualEnglish.length||(x.contentIntegrity||[]).length)?'<br><small>'+x.residualEnglish.slice(0,20).concat((x.contentIntegrity||[]).slice(0,20)).join(' | ')+'</small>':'')+'</div>'"
+          if old_ui not in h:
+              raise SystemExit('QA results UI anchor not found')
+          h=h.replace(old_ui,new_ui,1)
+
+          p.write_text(h,encoding='utf-8')
+
+          # Guard rails.
+          checks=[
+            'content-integrity audit against the current v4.4.0 interface' in h,
+            'function integrity(a,l)' in h,
+            'Stale version text detected' in h,
+            'Content issues:' in h,
+            "appVersion:'4.4.0'" in h,
+            "KoW-Language-QA-v4.4.0-" in h,
+          ]
+          if not all(checks): raise SystemExit('QA accuracy guard checks failed')
+          print('v4.4.0 QA accuracy patch PASS')
+          PY
+          git config user.name 'FireStorm'
+          git config user.email 'roger.angliss@gmail.com'
+          git add index.html
+          git commit -m 'Make v4.4.0 Language QA detect stale and corrupted content'
+          git push
