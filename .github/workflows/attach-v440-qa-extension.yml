@@ -1,0 +1,28 @@
+name: Attach v4.4.0 QA Extension
+on:
+  push:
+    paths:
+      - '.github/workflows/attach-v440-qa-extension.yml'
+permissions:
+  contents: write
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Attach QA script
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          h=p.read_text(encoding='utf-8')
+          tag='<script src="qa-v440.js"></script>'
+          if tag not in h:
+              h=h.replace('</body>', tag+'\n</body>', 1)
+          p.write_text(h,encoding='utf-8')
+          PY
+          git config user.name FireStorm
+          git config user.email roger.angliss@gmail.com
+          git add index.html
+          git commit -m 'Attach v4.4.0 content integrity QA extension'
+          git push
