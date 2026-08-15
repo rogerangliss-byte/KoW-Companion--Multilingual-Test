@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-v4.4.0-test7-canonical-language-runtime';
+const CACHE='kow-multilingual-v4.4.0-test8-canonical-runtime-final';
 const ASSETS=[
   './','./index.html','./manifest.json','./icon.svg','./background-portrait.jpg','./background-landscape.jpg',
   './officers.csv','./officers.json','./en.js','./fr.js','./de.js','./it.js',
