@@ -61,7 +61,7 @@ jobs:
           if marker not in s:
               raise SystemExit('Settings marker not found')
           s=s.replace(marker,marker+lang_ui,1)
-          scripts='''\n<script src="./lang/en.js?v=440-clean3"></script>\n<script src="./lang/fr.js?v=440-clean3"></script>\n<script src="./lang/de.js?v=440-clean3"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean3"></script>\n<script src="./lang/clean-i18n.js?v=440-clean3"></script>\n<script src="./lang/clean-qa.js?v=440-clean3"></script>\n'''
+          scripts='''\n<script src="./lang/en.js?v=440-clean5"></script>\n<script src="./lang/fr.js?v=440-clean5"></script>\n<script src="./lang/de.js?v=440-clean5"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean5"></script>\n<script src="./lang/clean-i18n.js?v=440-clean5"></script>\n<script src="./lang/clean-qa.js?v=440-clean5"></script>\n'''
           s=s.replace('</body>',scripts+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
 
@@ -86,8 +86,10 @@ jobs:
           test -f lang/clean-qa.js
           grep -q 'CLEAN ENGLISH LIVE REBUILD' index.html
           grep -q 'id="appLanguage"' index.html
-          grep -q 'lang/clean-i18n.js' index.html
-          grep -q 'lang/clean-qa.js' index.html
+          grep -q 'lang/clean-i18n.js?v=440-clean5' index.html
+          grep -q 'lang/clean-qa.js?v=440-clean5' index.html
+          grep -q 'Download Language QA Report' lang/clean-qa.js
+          ! grep -q 'clean-language-qa.js' lang/clean-i18n.js
           ! grep -q 'v440-language-qa.js' index.html
           ! grep -q 'qa-v440.js' index.html
           echo 'Clean multilingual architecture verified.'
