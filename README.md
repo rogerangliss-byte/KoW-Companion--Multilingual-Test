@@ -1,4 +1,4 @@
-# KoW Companion v4.4.0 MULTILINGUAL TEST
+# KoW Companion v4.4.0 MULTILINGUAL TEST 
 
 Test environment for KoW Companion v4.4.0 multilingual validation.
 
