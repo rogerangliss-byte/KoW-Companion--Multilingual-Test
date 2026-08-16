@@ -91,7 +91,7 @@ jobs:
           if marker not in s:
               raise SystemExit('Settings marker not found')
           s=s.replace(marker,marker+lang_ui,1)
-          scripts='''\n<script src="./lang/en.js?v=440-clean8"></script>\n<script src="./lang/fr.js?v=440-clean8"></script>\n<script src="./lang/de.js?v=440-clean8"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean8"></script>\n<script src="./lang/v440-runtime-language-overrides.js?v=440-clean8"></script>\n<script src="./lang/clean-i18n.js?v=440-clean8"></script>\n<script src="./lang/clean-qa.js?v=440-clean8"></script>\n'''
+          scripts='''\n<script src="./lang/en.js?v=440-clean11"></script>\n<script src="./lang/fr.js?v=440-clean11"></script>\n<script src="./lang/de.js?v=440-clean11"></script>\n<script src="./lang/it-base-v4357.js?v=440-clean11"></script>\n<script src="./lang/v440-runtime-language-overrides.js?v=440-clean11"></script>\n<script src="./lang/clean-i18n.js?v=440-clean11"></script>\n<script src="./lang/clean-qa.js?v=440-clean11"></script>\n'''
           s=s.replace('</body>',scripts+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
 
@@ -124,9 +124,9 @@ jobs:
           node --check lang/clean-qa.js
           grep -q 'CLEAN ENGLISH LIVE REBUILD' index.html
           grep -q 'id="appLanguage"' index.html
-          grep -q 'lang/v440-runtime-language-overrides.js?v=440-clean8' index.html
-          grep -q 'lang/clean-i18n.js?v=440-clean8' index.html
-          grep -q 'lang/clean-qa.js?v=440-clean8' index.html
+          grep -q 'lang/v440-runtime-language-overrides.js?v=440-clean11' index.html
+          grep -q 'lang/clean-i18n.js?v=440-clean11' index.html
+          grep -q 'lang/clean-qa.js?v=440-clean11' index.html
           grep -q 'Download Runtime QA Report' lang/clean-qa.js
           ! grep -q 'clean-language-qa.js' lang/clean-i18n.js
           ! grep -q 'v440-language-qa.js' index.html
@@ -145,7 +145,7 @@ jobs:
           const dicts={en:ctx.window.KOW_I18N_EN||{},fr:ctx.window.KOW_I18N_FR||{},de:ctx.window.KOW_I18N_DE||{},it:ctx.window.KOW_I18N_IT||{}};
           const source=Object.keys(dicts.en).sort();
           const allowedSame=new Set(['XP','ORV','SRV','MAXED','IN PROGRESS','NOT STARTED','CURRENT','NEXT']);
-          const out={qa:'clean8-static-dictionary-plus-runtime-overrides',sourceKeys:source.length,languages:{}};
+          const out={qa:'clean11-static-dictionary-plus-runtime-overrides',sourceKeys:source.length,languages:{}};
           for(const lang of ['en','fr','de','it']){
             if(lang==='en'){out.languages.en={status:'PASS',missing:[],sameAsEnglish:[]};continue;}
             const d=dicts[lang];
