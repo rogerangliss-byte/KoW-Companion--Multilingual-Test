@@ -1,6 +1,5 @@
-/* KoW Companion v4.4.0 TEST — clean multilingual runtime, clean11.
-   Stable in-place language switching. The active language is held in memory and
-   persisted once; the selector is never repeatedly overwritten after user input. */
+/* KoW Companion v4.4.0 TEST — clean multilingual runtime, clean12.
+   Stable in-place language switching plus explicit residual generated-text fixes. */
 (function(){
 'use strict';
 const KEY='kow_language_clean_v440';
@@ -14,6 +13,20 @@ let activeLang=normalise(safeGet(KEY)||'en');
 let applying=false,queued=false,phraseCache={};
 const textBase=new WeakMap(),textLast=new WeakMap(),attrBase=new WeakMap(),attrLast=new WeakMap();
 let helpEnglishHTML='';
+
+/* Residual generated strings identified by the authoritative browser QA on 2026-08-16.
+   These are kept here as exact source->target runtime translations because the English
+   Live core builds them dynamically across multiple text fragments. */
+const RESIDUAL={
+ fr:[
+  ['Guns: Field · Jets: Fighter','Armes : Terrain · Jets : Chasseur'],
+  ['officers shown','officiers affichés'],
+  ['20% growth per Officer release from the latest known 600 ORV / 300 SRV release. For 1,600 badges and 98,000 Star value (891 Exclusive Stars), plan for approximately','20 % de croissance par sortie d’Officier à partir de la dernière sortie connue à 600 ORV / 300 SRV. Pour 1 600 Badges et une valeur d’Étoiles de 98 000 (891 Étoiles exclusives), prévoyez environ']
+ ],
+ de:[['officers shown','Offiziere angezeigt']],
+ it:[['officers shown','Officieri visualizzati']]
+};
+
 function current(){return activeLang}
 function purgeLegacyLanguageState(){
  LEGACY_KEYS.forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});
@@ -39,18 +52,28 @@ function phraseTranslate(raw,lang,d){
  }
  return out;
 }
+function residualTranslate(raw,lang){
+ let out=String(raw??'');
+ for(const pair of RESIDUAL[lang]||[]){
+  if(out.includes(pair[0]))out=out.split(pair[0]).join(pair[1]);
+ }
+ return out;
+}
 function translateStructured(raw,d,lang=current()){
  const s=String(raw??'');if(lang==='en')return s;
- let out=exact(s,d);if(out!==s)return out;
+ let out=residualTranslate(s,lang);
+ if(out!==s)return out;
+ out=exact(s,d);if(out!==s)return residualTranslate(out,lang);
  const lead=s.match(/^(\s*)(.*?)(\s*)$/s);if(!lead)return s;
  const pre=lead[1],body=lead[2],post=lead[3];
  const part=x=>{const t=x.trim();if(!t)return x;const v=exact(t,d);return v===t?x:x.replace(t,v)};
- let m=body.match(/^(.+?)(\s+\d[\s\S]*)$/);if(m){const a=part(m[1]);if(a!==m[1])return pre+a+m[2]+post}
- m=body.match(/^(.+?)(:\s*[\d.,%+\-][\s\S]*)$/);if(m){const a=part(m[1]);if(a!==m[1])return pre+a+m[2]+post}
+ let m=body.match(/^(.+?)(\s+\d[\s\S]*)$/);if(m){const a=part(m[1]);if(a!==m[1])return residualTranslate(pre+a+m[2]+post,lang)}
+ m=body.match(/^(.+?)(:\s*[\d.,%+\-][\s\S]*)$/);if(m){const a=part(m[1]);if(a!==m[1])return residualTranslate(pre+a+m[2]+post,lang)}
  const pieces=body.split(/(\s+[—·]\s+|:\s+)/);let changed=false;
  for(let i=0;i<pieces.length;i+=2){const v=part(pieces[i]);if(v!==pieces[i]){pieces[i]=v;changed=true}}
- if(changed)return pre+pieces.join('')+post;
- out=phraseTranslate(body,lang,d);return out!==body?pre+out+post:s;
+ if(changed)return residualTranslate(pre+pieces.join('')+post,lang);
+ out=phraseTranslate(body,lang,d);
+ return residualTranslate(out!==body?pre+out+post:s,lang);
 }
 function canonicalText(n){
  const now=String(n.nodeValue??''),last=textLast.get(n);
@@ -63,92 +86,44 @@ function processTextNode(n,l,d){
  const base=canonicalText(n),next=l==='en'?base:translateStructured(base,d,l);
  textLast.set(n,next);if(n.nodeValue!==next)n.nodeValue=next;
 }
-function attrMaps(el){
- let b=attrBase.get(el),last=attrLast.get(el);
- if(!b){b={};attrBase.set(el,b)}if(!last){last={};attrLast.set(el,last)}return {b,last};
-}
+function attrMaps(el){let b=attrBase.get(el),last=attrLast.get(el);if(!b){b={};attrBase.set(el,b)}if(!last){last={};attrLast.set(el,last)}return {b,last}}
 function processAttributes(el,l,d){
- if(!el||el.nodeType!==1)return;
- const {b,last}=attrMaps(el);
- ['placeholder','title','aria-label'].forEach(a=>{
-  if(!el.hasAttribute(a))return;
-  const now=el.getAttribute(a);
-  if(!(a in b)||!(a in last)||now!==last[a])b[a]=now;
-  const next=l==='en'?b[a]:translateStructured(b[a],d,l);
-  last[a]=next;if(now!==next)el.setAttribute(a,next);
- });
+ if(!el||el.nodeType!==1)return;const {b,last}=attrMaps(el);
+ ['placeholder','title','aria-label'].forEach(a=>{if(!el.hasAttribute(a))return;const now=el.getAttribute(a);if(!(a in b)||!(a in last)||now!==last[a])b[a]=now;const next=l==='en'?b[a]:translateStructured(b[a],d,l);last[a]=next;if(now!==next)el.setAttribute(a,next)});
 }
 function applyLocalizedHelp(l=current(),d=dicts()[l]||{}){
  const article=document.querySelector('#help > article.card');if(!article)return;
  if(!helpEnglishHTML)helpEnglishHTML=article.innerHTML;
- if(l==='en'){
-  if(article.dataset.v440LocalizedHelp){article.innerHTML=helpEnglishHTML;delete article.dataset.v440LocalizedHelp}
-  return;
- }
- const html=window.KOW_HELP_HTML_V440?.[l];
- if(!html||article.dataset.v440LocalizedHelp===l)return;
- article.innerHTML=`<h2>${exact('❓ Help & Instructions',d)}</h2>${html}`;
- article.dataset.v440LocalizedHelp=l;
+ if(l==='en'){if(article.dataset.v440LocalizedHelp){article.innerHTML=helpEnglishHTML;delete article.dataset.v440LocalizedHelp}return}
+ const html=window.KOW_HELP_HTML_V440?.[l];if(!html||article.dataset.v440LocalizedHelp===l)return;
+ article.innerHTML=`<h2>${exact('❓ Help & Instructions',d)}</h2>${html}`;article.dataset.v440LocalizedHelp=l;
 }
 function translateNode(root=document.body,l=current()){
- if(!root||applying)return;
- const d=dicts()[l]||{};applying=true;
+ if(!root||applying)return;const d=dicts()[l]||{};applying=true;
  try{
   if(root===document.body||root.nodeType===9)applyLocalizedHelp(l,d);
   if(root.nodeType===3)processTextNode(root,l,d);
   else if(root.nodeType===1||root.nodeType===9){
    if(root.nodeType===1)processAttributes(root,l,d);
-   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
-   while((n=w.nextNode()))processTextNode(n,l,d);
+   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))processTextNode(n,l,d);
    root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el=>processAttributes(el,l,d));
   }
  }finally{applying=false}
 }
-function syncSelector(){
- const s=document.getElementById('appLanguage');
- if(s&&s.value!==activeLang)s.value=activeLang;
-}
-function forceApply(){
- document.documentElement.lang=activeLang;
- applyLocalizedHelp(activeLang,dicts()[activeLang]||{});
- translateNode(document.body,activeLang);
-}
+function syncSelector(){const s=document.getElementById('appLanguage');if(s&&s.value!==activeLang)s.value=activeLang}
+function forceApply(){document.documentElement.lang=activeLang;applyLocalizedHelp(activeLang,dicts()[activeLang]||{});translateNode(document.body,activeLang)}
 function setLanguage(next){
- next=normalise(next);
- activeLang=next;
- purgeLegacyLanguageState();
- safeSet(KEY,next);
- phraseCache={};
- document.documentElement.lang=next;
- syncSelector();
- applyLocalizedHelp(next,dicts()[next]||{});
- translateNode(document.body,next);
- requestAnimationFrame(()=>translateNode(document.body,next));
- setTimeout(()=>translateNode(document.body,next),120);
+ activeLang=normalise(next);purgeLegacyLanguageState();safeSet(KEY,activeLang);phraseCache={};document.documentElement.lang=activeLang;syncSelector();applyLocalizedHelp(activeLang,dicts()[activeLang]||{});translateNode(document.body,activeLang);requestAnimationFrame(()=>translateNode(document.body,activeLang));setTimeout(()=>translateNode(document.body,activeLang),120);
 }
 function translateAllSoon(){if(queued)return;queued=true;queueMicrotask(()=>{queued=false;forceApply()})}
 function start(){
  const help=document.querySelector('#help > article.card');if(help&&!helpEnglishHTML)helpEnglishHTML=help.innerHTML;
  purgeLegacyLanguageState();safeSet(KEY,activeLang);syncSelector();forceApply();
- document.addEventListener('change',e=>{
-  const s=e.target;
-  if(!s||s.id!=='appLanguage')return;
-  e.stopImmediatePropagation();
-  setLanguage(s.value);
- },true);
- const obs=new MutationObserver(ms=>{
-  if(applying)return;
-  let full=false;
-  for(const m of ms){
-   if(m.type==='characterData'){translateNode(m.target);continue}
-   if(m.type==='attributes'){processAttributes(m.target,activeLang,dicts()[activeLang]||{});continue}
-   if(m.addedNodes?.length){m.addedNodes.forEach(n=>translateNode(n,activeLang));full=true}
-  }
-  if(full)translateAllSoon();
- });
+ document.addEventListener('change',e=>{const s=e.target;if(!s||s.id!=='appLanguage')return;e.stopImmediatePropagation();setLanguage(s.value)},true);
+ const obs=new MutationObserver(ms=>{if(applying)return;let full=false;for(const m of ms){if(m.type==='characterData'){translateNode(m.target);continue}if(m.type==='attributes'){processAttributes(m.target,activeLang,dicts()[activeLang]||{});continue}if(m.addedNodes?.length){m.addedNodes.forEach(n=>translateNode(n,activeLang));full=true}}if(full)translateAllSoon()});
  obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
  window.addEventListener('load',()=>{syncSelector();forceApply()});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-window.KOW_CLEAN_I18N={apply:forceApply,current,setLanguage,translateNode,translateStructured,phraseTranslate,applyLocalizedHelp,purgeLegacyLanguageState,forceApply,getCanonicalKeys:()=>Object.keys(dicts().en).sort((a,b)=>a.localeCompare(b)),getDictionaries:dicts};
+window.KOW_CLEAN_I18N={apply:forceApply,current,setLanguage,translateNode,translateStructured,phraseTranslate,residualTranslate,applyLocalizedHelp,purgeLegacyLanguageState,forceApply,getCanonicalKeys:()=>Object.keys(dicts().en).sort((a,b)=>a.localeCompare(b)),getDictionaries:dicts};
 })();
