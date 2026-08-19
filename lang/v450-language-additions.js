@@ -1,4 +1,4 @@
-/* KoW Companion Multilingual v4.5.0 TEST2 — v4.5 language additions and Help. */
+/* KoW Companion Multilingual v4.5.0 TEST4 — v4.5 language additions and Help. */
 (function(){
 'use strict';
 const add=(name,map)=>{window[name]=Object.assign(window[name]||{},map)};
