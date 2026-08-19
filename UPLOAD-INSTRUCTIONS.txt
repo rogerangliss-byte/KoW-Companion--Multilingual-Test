@@ -1,9 +1,9 @@
-KoW Companion Multilingual v4.5.0 TEST — Upload Package
+KoW Companion Multilingual v4.5.0 TEST2 — COMPLETE SELF-CONTAINED ZIP
 
-1. Upload/replace the files in this ZIP at the root of KoW-Companion--Multilingual-Test.
-2. KEEP the existing lang/ folder and officer-portraits/ folder in the repository. They are intentionally not duplicated in this overlay ZIP.
-3. KEEP the existing background image files if GitHub does not replace them.
-4. After Pages deploys, test English, French, German and Italian, refresh persistence, backup/restore, Inventory, Resource Optimiser and Planner.
-5. This is TEST only — do not upload to Multilingual Live yet.
+Upload/replace the ZIP contents at the root of KoW-Companion--Multilingual-Test.
 
+This package INCLUDES the complete lang/ folder. Upload/update the language files too.
+Keep the existing officer-portraits/ folder and background images if they are not included in this archive.
 Test site: https://multilingualtest.firestorm-companion.uk/
+
+After deployment, select French, German and Italian separately in Settings and run Runtime Language QA for each active language.
