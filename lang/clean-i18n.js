@@ -1,8 +1,8 @@
-/* KoW Companion v4.4.0 TEST — clean multilingual runtime, clean13.
+/* KoW Companion v4.5.0 TEST — clean multilingual runtime, clean13.
    Final generated database-summary translation fix. */
 (function(){
 'use strict';
-const KEY='kow_language_clean_v440';
+const KEY='kow_language_clean_v450';
 const LANGS=['en','fr','de','it'];
 const LEGACY_KEYS=['kow_language','appLanguage','kowLanguage','kow_lang','kowLang','language','selectedLanguage','kow_language_v4357','kow_language_v440','kow_i18n_language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
@@ -29,7 +29,7 @@ function canonicalText(n){const now=String(n.nodeValue??''),last=textLast.get(n)
 function processTextNode(n,l,d){if(!n||n.nodeType!==3||!n.parentElement)return;if(['SCRIPT','STYLE','NOSCRIPT','TEXTAREA','CODE','PRE'].includes(n.parentElement.tagName))return;const base=canonicalText(n),next=l==='en'?base:translateStructured(base,d,l);textLast.set(n,next);if(n.nodeValue!==next)n.nodeValue=next}
 function attrMaps(el){let b=attrBase.get(el),last=attrLast.get(el);if(!b){b={};attrBase.set(el,b)}if(!last){last={};attrLast.set(el,last)}return {b,last}}
 function processAttributes(el,l,d){if(!el||el.nodeType!==1)return;const {b,last}=attrMaps(el);['placeholder','title','aria-label'].forEach(a=>{if(!el.hasAttribute(a))return;const now=el.getAttribute(a);if(!(a in b)||!(a in last)||now!==last[a])b[a]=now;const next=l==='en'?b[a]:translateStructured(b[a],d,l);last[a]=next;if(now!==next)el.setAttribute(a,next)})}
-function applyLocalizedHelp(l=current(),d=dicts()[l]||{}){const article=document.querySelector('#help > article.card');if(!article)return;if(!helpEnglishHTML)helpEnglishHTML=article.innerHTML;if(l==='en'){if(article.dataset.v440LocalizedHelp){article.innerHTML=helpEnglishHTML;delete article.dataset.v440LocalizedHelp}return}const html=window.KOW_HELP_HTML_V440?.[l];if(!html||article.dataset.v440LocalizedHelp===l)return;article.innerHTML=`<h2>${exact('❓ Help & Instructions',d)}</h2>${html}`;article.dataset.v440LocalizedHelp=l}
+function applyLocalizedHelp(l=current(),d=dicts()[l]||{}){const article=document.querySelector('#help > article.card');if(!article)return;if(!helpEnglishHTML)helpEnglishHTML=article.innerHTML;if(l==='en'){if(article.dataset.v440LocalizedHelp){article.innerHTML=helpEnglishHTML;delete article.dataset.v440LocalizedHelp}return}const html=window.KOW_HELP_HTML_V450?.[l]||window.KOW_HELP_HTML_V440?.[l];if(!html||article.dataset.v440LocalizedHelp===l)return;article.innerHTML=`<h2>${exact('❓ Help & Instructions',d)}</h2>${html}`;article.dataset.v440LocalizedHelp=l}
 function translateNode(root=document.body,l=current()){if(!root||applying)return;const d=dicts()[l]||{};applying=true;try{if(root===document.body||root.nodeType===9)applyLocalizedHelp(l,d);if(root.nodeType===3)processTextNode(root,l,d);else if(root.nodeType===1||root.nodeType===9){if(root.nodeType===1)processAttributes(root,l,d);const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))processTextNode(n,l,d);root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el=>processAttributes(el,l,d))}}finally{applying=false}}
 function syncSelector(){const s=document.getElementById('appLanguage');if(s&&s.value!==activeLang)s.value=activeLang}
 function forceApply(){document.documentElement.lang=activeLang;applyLocalizedHelp(activeLang,dicts()[activeLang]||{});translateNode(document.body,activeLang)}
