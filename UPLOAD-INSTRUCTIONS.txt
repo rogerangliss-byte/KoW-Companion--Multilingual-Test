@@ -1,0 +1,7 @@
+KoW Companion Multilingual v4.5.0 TEST — Upload Package
+
+1. Upload/replace the files in this ZIP at the root of KoW-Companion--Multilingual-Test.
+2. KEEP the existing lang/ folder and officer-portraits/ folder in the repository. They are intentionally not duplicated in this overlay ZIP.
+3. KEEP the existing background image files if GitHub does not replace them.
+4. After Pages deploys, test English, French, German and Italian, refresh persistence, backup/restore, Inventory, Resource Optimiser and Planner.
+5. This is TEST only — do not upload to Multilingual Live yet.
