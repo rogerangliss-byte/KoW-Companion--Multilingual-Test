@@ -1,5 +1,4 @@
-/* KoW Companion v4.5.0 TEST — clean multilingual runtime, clean13.
-   Final generated database-summary translation fix. */
+/* KoW Companion v4.5.0 TEST4 — clean multilingual runtime. */
 (function(){
 'use strict';
 const KEY='kow_language_clean_v450';
@@ -14,9 +13,9 @@ let applying=false,queued=false,phraseCache={};
 const textBase=new WeakMap(),textLast=new WeakMap(),attrBase=new WeakMap(),attrLast=new WeakMap();
 let helpEnglishHTML='';
 const RESIDUAL={
- fr:[['Guns: Field · Jets: Fighter','Armes : Terrain · Jets : Chasseur'],['officers shown','officiers affichés'],['Database validation passed.','Validation de la base de données réussie.'],['Encore requis: Development, XP','Encore requis : Développement, XP'],['more Officer Badges are required.','Badges d’Officier supplémentaires sont requis.'],['20% growth per Officer release from the latest known 600 ORV / 300 SRV release. For 1,600 badges and 98,000 Star value (891 Exclusive Stars), plan for approximately','20 % de croissance par sortie d’Officier à partir de la dernière sortie connue à 600 ORV / 300 SRV. Pour 1 600 Badges et une valeur d’Étoiles de 98 000 (891 Étoiles exclusives), prévoyez environ']],
- de:[['officers shown','Offiziere angezeigt'],['Database validation passed.','Datenbankprüfung erfolgreich.']],
- it:[['officers shown','Officieri visualizzati'],['Database validation passed.','Validazione del database riuscita.']]
+ fr:[['Priority: Development','Priorité : Développement'],['Priority:','Priorité :'],['Development','Développement'],['Encore requis: Development, XP','Encore requis : Développement, XP'],['more Officer Badges are required.','Badges d’Officier supplémentaires sont requis.'],['Guns: Field · Jets: Fighter','Armes : Terrain · Jets : Chasseur'],['officers shown','officiers affichés'],['Database validation passed.','Validation de la base de données réussie.'],['20% growth per Officer release from the latest known 600 ORV / 300 SRV release. For 1,600 badges and 98,000 Star value (891 Exclusive Stars), plan for approximately','20 % de croissance par sortie d’Officier à partir de la dernière sortie connue à 600 ORV / 300 SRV. Pour 1 600 Badges et une valeur d’Étoiles de 98 000 (891 Étoiles exclusives), prévoyez environ']],
+ de:[['Noch erforderlich: Development, XP','Noch erforderlich: Entwicklung, XP'],['Development','Entwicklung'],['more Officer Badges are required.','weitere Offiziersabzeichen sind erforderlich.'],['officers shown','Offiziere angezeigt'],['Database validation passed.','Datenbankprüfung erfolgreich.']],
+ it:[['more Officer Badges are required.','Badge Ufficiale aggiuntivi sono necessari.'],['officers shown','Ufficiali visualizzati'],['Database validation passed.','Convalida della banca dati riuscita.']]
 };
 function current(){return activeLang}
 function purgeLegacyLanguageState(){LEGACY_KEYS.forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});try{Object.keys(sessionStorage).filter(k=>k!==KEY&&/lang|i18n/i.test(k)).forEach(k=>sessionStorage.removeItem(k))}catch(_){}}
