@@ -14,7 +14,7 @@ let applying=false,queued=false,phraseCache={};
 const textBase=new WeakMap(),textLast=new WeakMap(),attrBase=new WeakMap(),attrLast=new WeakMap();
 let helpEnglishHTML='';
 const RESIDUAL={
- fr:[['Guns: Field · Jets: Fighter','Armes : Terrain · Jets : Chasseur'],['officers shown','officiers affichés'],['Database validation passed.','Validation de la base de données réussie.'],['20% growth per Officer release from the latest known 600 ORV / 300 SRV release. For 1,600 badges and 98,000 Star value (891 Exclusive Stars), plan for approximately','20 % de croissance par sortie d’Officier à partir de la dernière sortie connue à 600 ORV / 300 SRV. Pour 1 600 Badges et une valeur d’Étoiles de 98 000 (891 Étoiles exclusives), prévoyez environ']],
+ fr:[['Guns: Field · Jets: Fighter','Armes : Terrain · Jets : Chasseur'],['officers shown','officiers affichés'],['Database validation passed.','Validation de la base de données réussie.'],['Encore requis: Development, XP','Encore requis : Développement, XP'],['more Officer Badges are required.','Badges d’Officier supplémentaires sont requis.'],['20% growth per Officer release from the latest known 600 ORV / 300 SRV release. For 1,600 badges and 98,000 Star value (891 Exclusive Stars), plan for approximately','20 % de croissance par sortie d’Officier à partir de la dernière sortie connue à 600 ORV / 300 SRV. Pour 1 600 Badges et une valeur d’Étoiles de 98 000 (891 Étoiles exclusives), prévoyez environ']],
  de:[['officers shown','Offiziere angezeigt'],['Database validation passed.','Datenbankprüfung erfolgreich.']],
  it:[['officers shown','Officieri visualizzati'],['Database validation passed.','Validazione del database riuscita.']]
 };

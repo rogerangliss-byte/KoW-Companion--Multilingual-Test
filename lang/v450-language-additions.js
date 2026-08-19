@@ -30,7 +30,9 @@ add('KOW_I18N_FR',{
 'A normal browser refresh should keep the working interface where you left it instead of returning key controls to defaults.':'Une actualisation normale du navigateur conserve l’interface de travail à l’endroit où vous l’avez laissée au lieu de rétablir les contrôles principaux par défaut.',
 'The non-game 50 XP Book entry has been removed.':'L’entrée Livre d’XP 50, qui n’existe pas dans le jeu, a été supprimée.',
 'Each Legendary Officer Badge Chest can be used as either 1 Universal Legendary Badge or 600 Officer Readiness Vouchers. A chest cannot count as both.':'Chaque Coffre de Badges d’Officier légendaires peut être utilisé soit comme 1 Badge légendaire universel, soit comme 600 Bons de préparation d’Officier. Un coffre ne peut pas compter pour les deux.',
-'Each Legendary Officer Badge Selection Chest gives 1 specific Legendary Officer Badge for an Officer currently available in the chest. It does not convert to a Universal Legendary Badge or ORV.':'Chaque Coffre de sélection de Badge d’Officier légendaire donne 1 Badge spécifique d’Officier légendaire pour un Officier actuellement disponible dans le coffre. Il ne se convertit ni en Badge légendaire universel ni en ORV.'
+'Each Legendary Officer Badge Selection Chest gives 1 specific Legendary Officer Badge for an Officer currently available in the chest. It does not convert to a Universal Legendary Badge or ORV.':'Chaque Coffre de sélection de Badge d’Officier légendaire donne 1 Badge spécifique d’Officier légendaire pour un Officier actuellement disponible dans le coffre. Il ne se convertit ni en Badge légendaire universel ni en ORV.',
+'Encore requis: Development, XP':'Encore requis : Développement, XP',
+'more Officer Badges are required.':'Badges d’Officier supplémentaires sont requis.'
 });
 add('KOW_I18N_DE',{
 'Language / Langue / Sprache / Lingua':'Sprache',
