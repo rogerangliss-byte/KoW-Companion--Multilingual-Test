@@ -1,7 +1,7 @@
-/* KoW Companion Multilingual v4.5.0 TEST6 — runtime multilingual QA. */
+/* KoW Companion Multilingual v4.5.0 TEST7 — runtime multilingual QA. */
 (function(){
 'use strict';
-const QA_VERSION='v450-test6-runtime';
+const QA_VERSION='v450-test7-runtime';
 const EXPECTED_TITLE='KoW Companion Multilingual v4.5.0 TEST';
 const SAFE=new Set(['XP','ORV','SRV','MAXED','IN PROGRESS','NOT STARTED','CURRENT','NEXT']);
 const dicts=()=>window.KOW_CLEAN_I18N?.getDictionaries?.()||{en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}};
