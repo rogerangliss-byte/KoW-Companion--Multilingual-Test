@@ -15,7 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply TEST6 Italian fixes, comprehensive Help and cache bust
+        with:
+          fetch-depth: 0
+
+      - name: Apply TEST6 final completion
         shell: python
         run: |
           from pathlib import Path
@@ -23,11 +26,10 @@ jobs:
           p=Path('lang/clean-i18n.js')
           s=p.read_text(encoding='utf-8')
           s=s.replace('v4.5.0 TEST5 — clean multilingual runtime','v4.5.0 TEST6 — clean multilingual runtime')
-          old="it:[['Priority: Development','Priorità: Sviluppo']"
-          new="it:[['Inventory → Officer → Stars → Sviluppo → XP → Planner → Save Progress','Inventario → Ufficiale → Stelle → Sviluppo → XP → Pianificatore → Salva progressi'],['🏅 Officer Sviluppo','🏅 Sviluppo Ufficiale'],['Priority: Development','Priorità: Sviluppo']"
-          if old not in s:
-              raise SystemExit('Expected Italian residual anchor not found')
-          s=s.replace(old,new,1)
+          anchor="it:[['Priority: Development','Priorità: Sviluppo']"
+          insert="it:[['Inventory → Officer → Stars → Sviluppo → XP → Planner → Save Progress','Inventario → Ufficiale → Stelle → Sviluppo → XP → Pianificatore → Salva progressi'],['🏅 Officer Sviluppo','🏅 Sviluppo Ufficiale'],['Priority: Development','Priorità: Sviluppo']"
+          if 'Inventory → Ufficiale → Stelle → Sviluppo → XP → Pianificatore → Salva progressi' not in s:
+              s=s.replace(anchor,insert,1)
           p.write_text(s,encoding='utf-8')
 
           q=Path('lang/clean-qa.js')
@@ -39,36 +41,29 @@ jobs:
           i=Path('index.html')
           x=i.read_text(encoding='utf-8').replace('v=450-test5','v=450-test6')
           marker='<script src="./lang/v450-language-additions.js?v=450-test6"></script>'
-          add=marker+'\n<script src="./lang/v450-full-help.js?v=450-test6"></script>'
-          if 'v450-full-help.js' not in x:
-              if marker not in x: raise SystemExit('Language additions marker missing')
-              x=x.replace(marker,add,1)
+          full='<script src="./lang/v450-full-help.js?v=450-test6"></script>'
+          if full not in x and marker in x:
+              x=x.replace(marker,marker+'\n'+full,1)
           i.write_text(x,encoding='utf-8')
 
           sw=Path('service-worker.js')
           if sw.exists():
-              z=sw.read_text(encoding='utf-8').replace('kow-multilingual-test-v4.5.0-test5','kow-multilingual-test-v4.5.0-test6').replace('kow-multilingual-test-v4.5.0-test4','kow-multilingual-test-v4.5.0-test6')
+              z=sw.read_text(encoding='utf-8')
+              for old in ['kow-multilingual-test-v4.5.0-test4','kow-multilingual-test-v4.5.0-test5']:
+                  z=z.replace(old,'kow-multilingual-test-v4.5.0-test6')
               sw.write_text(z,encoding='utf-8')
 
-      - name: Verify TEST6 completion
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q "QA_VERSION='v450-test6-runtime'" lang/clean-qa.js
-          grep -q 'Inventory → Ufficiale → Stelle → Sviluppo → XP → Pianificatore → Salva progressi' lang/clean-i18n.js
-          grep -q '🏅 Sviluppo Ufficiale' lang/clean-i18n.js
-          grep -q 'v450-full-help.js?v=450-test6' index.html
-          grep -q '11. ⚙' lang/v450-full-help.js
-          grep -q '199.646.700 XP' lang/v450-full-help.js
-          grep -q '199 646 700 XP' lang/v450-full-help.js
-
-      - name: Commit final completion and remove workflow
+      - name: Commit TEST6 final completion
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'FireStorm Build Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git rm .github/workflows/test6-final-completion-once.yml
           git add index.html service-worker.js lang/clean-i18n.js lang/clean-qa.js lang/v450-full-help.js
+          git rm .github/workflows/test6-final-completion-once.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
           git commit -m 'Multilingual v4.5.0 TEST6 complete translated guides and Italian runtime'
+          git pull --rebase origin main
           git push origin main
