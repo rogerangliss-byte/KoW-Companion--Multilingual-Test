@@ -1,4 +1,4 @@
-/* KoW Companion v4.5.0 TEST7 — clean multilingual runtime. */
+/* KoW Companion v4.5.07 — clean multilingual runtime. */
 (function(){
 'use strict';
 const KEY='kow_language_clean_v450';

@@ -1,4 +1,4 @@
-/* KoW Companion v4.5.0 TEST — read-only language QA.
+/* KoW Companion v4.5.0 — read-only language QA.
    Never mutates app translations or language state. It audits canonical English
    strings captured by clean-i18n.js against the loaded language dictionaries. */
 (function(){
