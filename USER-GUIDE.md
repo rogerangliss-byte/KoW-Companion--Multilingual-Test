@@ -1,9 +1,23 @@
 # KoW Companion — User Guide
-## v4.5.0 TEST — NOT LIVE
+## v4.6.0 — NOT LIVE
 
-This guide describes the English v4.5.0 Test build. The red TEST banner must remain visible until the build is approved for Live.
+This guide describes the English v4.6.0 Test build. The red TEST banner must remain visible until the build is approved for Live.
 
 ## Recommended workflow
+
+## v4.6.0 additions
+### Upgrade Targets & Recommendations
+Set a future Level, Star and Training target for the selected Officer, or choose **MAX Officer**. The calculator compares the saved Officer position with the chosen target and shows remaining resource requirements. It is non-destructive and does not spend Inventory.
+
+### Dynamic Officer Data
+The app reads the published `officers.json` dataset and `officer-data-version.json` manifest. Settings shows **Global Officer Data** so the active dataset can be verified.
+
+### Future Officer Cost Forecast
+The forecast uses the latest confirmed Legendary seasonal Officer release in the Officer Database as its baseline. At v4.6.0 the confirmed example is **S7 Tank Destroyers — 600 ORV per Badge / 300 SRV per Exclusive Star**. When a newer confirmed release is published, it becomes the new baseline automatically.
+
+### Multilingual pop-ups
+Browser alerts and confirmation dialogs are translated into the selected language (English, French, German or Italian), including Backup/Restore, Officer progress, MAX confirmation, Planner, Database, CSV, Appearance and Inventory messages.
+
 1. **Inventory** — enter and save all resources currently held.
 2. **Officer** — select an Officer and enter/save current progress.
 3. **Stars** — confirm Star progress and resources.
@@ -13,7 +27,7 @@ This guide describes the English v4.5.0 Test build. The red TEST banner must rem
 7. **Planner** — preview current and future upgrade decisions.
 8. **Backup** — export a backup before destructive testing or major changes.
 
-## v4.5.0 working-state persistence
+## v4.6.0 working-state persistence
 A normal browser refresh should preserve the active working interface rather than returning key controls to defaults. This includes the selected Officer, current tab, Officer filters, Progress filters, Compare filters/selections, Multi-Officer Planner rows and working values, Advanced Planner selections, future scenario fields and Resource Optimiser comparison Officer.
 
 This working-state persistence is separate from saved Officer profiles, saved plans and Central Inventory.
@@ -75,7 +89,7 @@ Level 1 is free when a strand becomes available.
 ## Officer Progress and Compare
 Progress classifies Officers as **MAXED**, **IN PROGRESS** or **NOT STARTED**. Shared resources do not increase the Officer's saved progress percentage.
 
-The main Progress filters and Compare Officer Progress filters are independent. Compare selections should survive a normal browser refresh in v4.5.0 Test.
+The main Progress filters and Compare Officer Progress filters are independent. Compare selections should survive a normal browser refresh in v4.6.0 Test.
 
 ## Resource Optimiser — Preview
 The Resource Optimiser compares the selected Officer with a second Officer and can highlight ORV efficiency where both Officers are eligible.
@@ -115,7 +129,7 @@ The v4.4.0 Planning Readiness Dashboard remains available. Saved scenarios show 
 ## Backup & Restore
 Use **Settings → Export App Backup** to create a portable backup of locally saved app data.
 
-Restore should import Officer profiles, individual Officer Badges and shared Inventory and then reload the app. Always test a known-good backup before promoting v4.5.0 to Live.
+Restore should import Officer profiles, individual Officer Badges and shared Inventory and then reload the app. Always test a known-good backup before promoting v4.6.0 to Live.
 
 ## Pre-Live QA
 Before Live promotion verify:
@@ -134,7 +148,7 @@ Before Live promotion verify:
 - Inventory Save works globally;
 - Export and Restore Backup work;
 - restored data survives reload;
-- version reporting is consistently v4.5.0 TEST; and
+- version reporting is consistently v4.6.0; and
 - the red TEST / NOT LIVE banner remains visible.
 
 ---

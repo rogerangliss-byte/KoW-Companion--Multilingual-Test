@@ -1,10 +1,10 @@
-# KoW Companion Multilingual v4.5.0 TEST
+# KoW Companion Multilingual v4.6.0
 
 **Multilingual Test environment — English / French / German / Italian — NOT LIVE**
 
-KoW Companion is an Officer development, Inventory, Progress and planning companion for *Kiss of War*. This v4.5.0 Test build is based on the stable v4.4.0 English Live application and is being validated before promotion to Live.
+KoW Companion is an Officer development, Inventory, Progress and planning companion for *Kiss of War*. This v4.6.0 Test build is based on the stable v4.4.0 English Live application and is being validated before promotion to Live.
 
-## What's New — v4.5.0 TEST
+## What's New — v4.6.0
 
 ### Native working-state persistence
 A normal browser refresh should preserve the current working interface state, including selected Officer, current tab, Officer filters, Progress status filters, Compare selections, Planner working rows/resources, Advanced Planner selections, future scenario fields and Resource Optimiser comparison Officer.
@@ -67,7 +67,7 @@ Planning Readiness Dashboard, Badge/Star/XP readiness, Priority Target, Suggeste
 - Export App Backup and Restore App Backup work correctly.
 - Restored data survives reload.
 - MAXED / IN PROGRESS / NOT STARTED remain correct.
-- Header, Settings, About and Version Integrity consistently report **v4.5.0 TEST**.
+- Header, Settings, About and Version Integrity consistently report **v4.6.0**.
 - Red TEST / NOT LIVE banner remains visible.
 
 ## Backup before testing
@@ -82,12 +82,16 @@ Do not delete the existing `officer-portraits` folder or background assets durin
 - `README.md` — release overview and pre-Live QA checklist.
 - `USER-GUIDE.md` — comprehensive usage guidance.
 - `CHANGELOG.md` — version history.
-- `RELEASE-v4.5.0-TEST1.md` — Test release notes.
+- `RELEASE-v4.6.0-TEST1.md` — Test release notes.
 
 ---
 **Created by FireStorm (371)**
 
 
-## Multilingual v4.5.0 migration
+## Multilingual v4.6.0 migration
 
-This Test package uses the approved English v4.5.0 functional build as its baseline and reuses the validated v4.4.0 multilingual dictionaries/runtime already stored in the repository `lang/` folder. New v4.5.0 interface wording is layered on top for French, German and Italian. Officer names and game data remain intentionally untranslated.
+This Test package uses the approved English v4.6.0 functional build as its baseline and reuses the validated v4.4.0 multilingual dictionaries/runtime already stored in the repository `lang/` folder. New v4.6.0 interface wording is layered on top for French, German and Italian. Officer names and game data remain intentionally untranslated.
+
+
+## v4.6.0
+Adds Upgrade Targets & Recommendations, Dynamic Officer Data, database-driven future Officer forecasting, and localized browser alert/confirmation pop-ups in English, French, German and Italian.

@@ -4,6 +4,20 @@
 ### Flusso consigliato
 1. **Inventario** — inserisci e salva prima tutte le risorse possedute.
 2. **Ufficiale** — seleziona ogni Ufficiale e salva i progressi attuali.
+
+## Novità v4.6.0
+### Obiettivi di potenziamento e consigli
+Imposta Livello, Stelle e Addestramento obiettivo per l’Ufficiale selezionato oppure scegli **Ufficiale MAX**. Il calcolo confronta i progressi salvati con l’obiettivo e mostra le risorse ancora necessarie. Non consuma l’Inventario.
+
+### Dati dinamici Ufficiali
+L’app legge `officers.json` e il manifesto `officer-data-version.json`. Nelle Impostazioni appare **Dati globali Ufficiali** per verificare la versione attiva.
+
+### Previsione costi Ufficiali futuri
+La previsione usa come base l’ultima uscita stagionale Leggendaria confermata nella banca dati. Per v4.6.0 l’esempio confermato è **S7 Tank Destroyers — 600 ORV per Badge / 300 SRV per Stella esclusiva**. Una nuova uscita confermata pubblicata diventa automaticamente la nuova base.
+
+### Pop-up multilingue
+Gli avvisi e le conferme del browser vengono tradotti nella lingua selezionata, inclusi Backup/Ripristino, progressi Ufficiale, MAX, Pianificatore, Banca dati, CSV, Aspetto e Inventario.
+
 3. **Stelle** — verifica livello attuale, obiettivo e risorse Stelle.
 4. **Sviluppo** — inserisci sblocco, rami abilità e Addestramento.
 5. **XP** — inserisci livello attuale, livello obiettivo e Libri XP posseduti.

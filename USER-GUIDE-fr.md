@@ -4,6 +4,20 @@
 ### Flux de travail recommandé
 1. **Inventaire** — saisissez et enregistrez d’abord toutes les ressources détenues.
 2. **Officier** — sélectionnez chaque Officier et enregistrez sa progression actuelle.
+
+## Nouveautés v4.6.0
+### Objectifs d’amélioration et recommandations
+Définissez un niveau, des étoiles et un entraînement cibles pour l’Officier sélectionné, ou choisissez **Officier MAX**. Le calcul compare la progression enregistrée à l’objectif et indique les ressources restantes. Il ne dépense pas l’Inventaire.
+
+### Données dynamiques des Officiers
+L’application lit `officers.json` et le manifeste `officer-data-version.json`. Les Paramètres affichent **Données globales des Officiers** pour vérifier la version active.
+
+### Prévision des coûts des futurs Officiers
+La prévision utilise la dernière sortie saisonnière légendaire confirmée de la base de données. Pour v4.6.0, l’exemple confirmé est **S7 Tank Destroyers — 600 ORV par Badge / 300 SRV par Étoile exclusive**. Une nouvelle sortie confirmée publiée devient automatiquement la nouvelle référence.
+
+### Fenêtres contextuelles multilingues
+Les alertes et confirmations du navigateur sont traduites dans la langue sélectionnée, notamment pour Sauvegarde/Restauration, progression, MAX, Planificateur, Base de données, CSV, Apparence et Inventaire.
+
 3. **Étoiles** — vérifiez le niveau actuel, l’objectif et les ressources d’Étoiles.
 4. **Développement** — renseignez le déblocage, les branches de compétences et l’entraînement.
 5. **XP** — renseignez le niveau actuel, le niveau cible et les Livres XP détenus.

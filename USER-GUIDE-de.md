@@ -4,6 +4,20 @@
 ### Empfohlener Ablauf
 1. **Inventar** — zuerst alle vorhandenen Ressourcen eingeben und speichern.
 2. **Offizier** — jeden Offizier auswählen und den aktuellen Fortschritt speichern.
+
+## Neu in v4.6.0
+### Upgrade-Ziele & Empfehlungen
+Legen Sie Zielstufe, Zielsterne und Zieltraining für den ausgewählten Offizier fest oder wählen Sie **MAX Offizier**. Die Berechnung vergleicht den gespeicherten Fortschritt mit dem Ziel und zeigt den verbleibenden Ressourcenbedarf. Das Inventar wird nicht verbraucht.
+
+### Dynamische Offiziersdaten
+Die App liest `officers.json` und das Manifest `officer-data-version.json`. Unter Einstellungen werden **Globale Offiziersdaten** zur Kontrolle der aktiven Datenversion angezeigt.
+
+### Prognose zukünftiger Offizierskosten
+Die Prognose verwendet die neueste bestätigte saisonale legendäre Offiziersveröffentlichung in der Datenbank als Basis. Für v4.6.0 ist das bestätigte Beispiel **S7 Tank Destroyers — 600 ORV pro Abzeichen / 300 SRV pro Exklusivstern**. Eine neuere bestätigte Veröffentlichung wird automatisch zur neuen Basis.
+
+### Mehrsprachige Pop-ups
+Browser-Warnungen und Bestätigungsdialoge werden in die ausgewählte Sprache übersetzt, einschließlich Backup/Wiederherstellung, Offiziersfortschritt, MAX, Planer, Datenbank, CSV, Darstellung und Inventar.
+
 3. **Sterne** — aktuelle Sternstufe, Ziel und Sternressourcen prüfen.
 4. **Entwicklung** — Freischaltung, Fähigkeitsstränge und Training erfassen.
 5. **XP** — aktuelle Stufe, Zielstufe und vorhandene XP-Bücher eingeben.

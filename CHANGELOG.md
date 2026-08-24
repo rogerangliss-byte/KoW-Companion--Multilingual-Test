@@ -1,13 +1,20 @@
 # Changelog
 
-## v4.5.0 TEST
+## v4.6.0 MULTILINGUAL
+- Added Upgrade Targets & Recommendations.
+- Added Dynamic Officer Data and Global Officer Data status.
+- Added database-driven Future Officer Cost Forecast and Planner season synchronization.
+- Added French, German and Italian localization for browser alert/confirmation pop-ups.
+- Updated multilingual User Guides.
+
+## v4.5.0
 - Rebuilt from the stable v4.4.0 English Live baseline.
 - Added native working-state persistence for Officer, Progress, Compare and Planner UI state.
 - Corrected Legendary Officer Badge Chest and Selection Chest rules.
 - Updated Resource Optimiser and Multi-Officer Planner behaviour.
 - Reordered Central Inventory using the approved Order in List numbering.
 - Removed the non-game 50 XP Book entry.
-- Updated README, User Guide, release notes and in-app Help for v4.5.0 TEST.
+- Updated README, User Guide, release notes and in-app Help for v4.5.0.
 
 # v4.4.0 LIVE
 - Added Planning Readiness Dashboard for saved future-Officer scenarios.
