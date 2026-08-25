@@ -1,0 +1,1 @@
+(function(){function a(){let l=localStorage.getItem('kow-language-v460')||'en',h=document.getElementById('help');if(l!=='en'&&h&&window.KOW_MULTILINGUAL_HELP?.[l])h.innerHTML=window.KOW_MULTILINGUAL_HELP[l]}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(a,600));else setTimeout(a,400)})();
