@@ -75,3 +75,90 @@ function inject(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inject,350));else setTimeout(inject,150);
 })();
+
+
+/* v4.6.0 QA2 — Download QA Report restoration */
+(function(){
+'use strict';
+let lastReport=null;
+
+function currentLang(){
+  try{return window.KOW_CLEAN_I18N?.current?.()||document.getElementById('appLanguage')?.value||'en'}catch(e){return 'en'}
+}
+function nowIso(){return new Date().toISOString()}
+function parseResults(){
+  const root=document.getElementById('v460QaResults');
+  const report={
+    generated_at:nowIso(),
+    app_version:'4.6.0',
+    qa_version:'QA2 rendered translation test',
+    selected_language:currentLang(),
+    url:location.href,
+    results:{}
+  };
+  if(!root){report.error='QA results container not found';return report}
+  const blocks=[...root.children].filter(el=>el.querySelector('b,strong')||el.textContent.trim());
+  const langs=['English','Français','Deutsch','Italiano'];
+  for(const lang of langs){
+    const block=blocks.find(el=>el.textContent.trim().startsWith(lang));
+    if(!block)continue;
+    const raw=block.innerText||block.textContent||'';
+    const status=/\bPASS\b|RÉUSSI|BESTANDEN|SUPERATO/.test(raw)?'PASS':(/\bFAIL\b|ÉCHEC|FEHLER|NON SUPERATO/.test(raw)?'FAIL':'UNKNOWN');
+    const num=(label)=>{
+      const m=raw.match(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*:?\\s*(\\d+)','i'));
+      return m?Number(m[1]):null;
+    };
+    const details={};
+    const detailNodes=[...block.querySelectorAll('details')];
+    for(const d of detailNodes){
+      const s=d.querySelector('summary')?.textContent?.trim()||'Details';
+      details[s]=[...d.querySelectorAll('div')].map(x=>x.textContent.trim()).filter(Boolean);
+    }
+    // Also capture expanded/plain failure lines in older QA2 rendering.
+    const lines=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    report.results[lang]={
+      status,
+      dictionary:num('Dictionary'),
+      rendered_english_bleed:num('Rendered English bleed'),
+      full_user_guide:num('Full User Guide'),
+      popups:num('Pop-ups'),
+      lines,
+      details
+    };
+  }
+  report.test_banner=!!document.getElementById('multilingualTestBanner') || /MULTILINGUAL TEST|TEST.*NOT LIVE/i.test(document.body.innerText||'');
+  report.cname_expected='multilingualtest.firestorm-companion.uk';
+  return report;
+}
+function downloadReport(){
+  lastReport=parseResults();
+  const stamp=nowIso().replace(/[:.]/g,'-');
+  const blob=new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`KoW-Language-QA-v4.6.0-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+function install(){
+  const run=document.getElementById('v460QaRun');
+  if(!run)return;
+  if(document.getElementById('v460QaDownload'))return;
+  const btn=document.createElement('button');
+  btn.id='v460QaDownload';
+  btn.type='button';
+  btn.className=run.className||'app-action-secondary';
+  btn.textContent='⬇ Download QA Report';
+  btn.style.marginLeft='8px';
+  btn.addEventListener('click',downloadReport);
+  run.insertAdjacentElement('afterend',btn);
+
+  // Refresh cached report after every QA run.
+  run.addEventListener('click',()=>setTimeout(()=>{lastReport=parseResults()},1200));
+}
+window.kowDownloadLanguageQaReport=downloadReport;
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,500));
+else setTimeout(install,300);
+window.addEventListener('load',()=>setTimeout(install,900));
+})();
