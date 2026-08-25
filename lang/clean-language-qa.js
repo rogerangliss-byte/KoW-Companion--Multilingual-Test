@@ -1,65 +1,42 @@
-/* KoW Companion v4.5.0 — read-only language QA.
-   Never mutates app translations or language state. It audits canonical English
-   strings captured by clean-i18n.js against the loaded language dictionaries. */
+/* v4.6.0 read-only Language QA */
 (function(){
 'use strict';
-const UI={
- en:{title:'Language QA / Translation Test',desc:'Read-only audit of the clean v4.5.0 translation dictionaries. This tool does not change app text or language state.',run:'Run Full Language QA',refresh:'Refresh Captured Text',keys:'English UI strings captured',pass:'PASS',warn:'WARNING',missing:'Missing translations',same:'Still English',none:'None',note:'Open or use different tabs first if you want dynamically created text included in the scan.'},
- fr:{title:'QA linguistique / Test de traduction',desc:'Audit en lecture seule des dictionnaires de traduction v4.5.0. Cet outil ne modifie ni le texte de l’application ni la langue sélectionnée.',run:'Lancer le QA complet',refresh:'Actualiser le texte capturé',keys:'Chaînes anglaises capturées',pass:'RÉUSSI',warn:'AVERTISSEMENT',missing:'Traductions manquantes',same:'Toujours en anglais',none:'Aucun',note:'Ouvrez ou utilisez les différents onglets pour inclure le texte créé dynamiquement.'},
- de:{title:'Sprach-QA / Übersetzungstest',desc:'Schreibgeschützte Prüfung der sauberen v4.5.0-Übersetzungswörterbücher. Dieses Werkzeug ändert weder App-Text noch Spracheinstellung.',run:'Vollständige Sprach-QA starten',refresh:'Erfassten Text aktualisieren',keys:'Erfasste englische UI-Texte',pass:'BESTANDEN',warn:'WARNUNG',missing:'Fehlende Übersetzungen',same:'Noch Englisch',none:'Keine',note:'Öffnen oder verwenden Sie verschiedene Registerkarten, um dynamisch erzeugten Text einzubeziehen.'},
- it:{title:'QA lingua / Test traduzione',desc:'Controllo in sola lettura dei dizionari di traduzione v4.5.0. Questo strumento non modifica il testo dell’app né la lingua selezionata.',run:'Esegui QA completo lingua',refresh:'Aggiorna testo acquisito',keys:'Stringhe inglesi UI acquisite',pass:'SUPERATO',warn:'AVVISO',missing:'Traduzioni mancanti',same:'Ancora in inglese',none:'Nessuno',note:'Apri o usa le diverse schede per includere nel controllo il testo creato dinamicamente.'}
-};
-const LANG_LABEL={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
-const TECHNICAL=new Set(['ORV','SRV','XP','MAX','TEST','CSV','JSON','KoW','GitHub Pages']);
-function lang(){return window.KOW_CLEAN_I18N?.current?.()||'en';}
-function ui(){return UI[lang()]||UI.en;}
-function ignorable(k){
- const t=String(k||'').trim();
- if(!t)return true;
- if(TECHNICAL.has(t))return true;
- if(/^[\d\s.,:%+\-–—/()★⭐]+$/.test(t))return true;
- if(/^v?\d+(?:\.\d+)+/i.test(t))return true;
- if(/^(S[2-9]|Level \d+|Star \d+|Training \d+)$/i.test(t))return true;
- return false;
+const labels={
+en:['Language QA / Translation Test','Run Full Language QA','PASS','FAIL','Missing','Still English','v4.6.0 features','Popup translations'],
+fr:['QA linguistique / Test de traduction','Lancer le QA complet','RÉUSSI','ÉCHEC','Manquant','Toujours en anglais','Fonctions v4.6.0','Traductions des fenêtres'],
+de:['Sprach-QA / Übersetzungstest','Vollständige Sprach-QA starten','BESTANDEN','FEHLER','Fehlend','Noch Englisch','v4.6.0-Funktionen','Pop-up-Übersetzungen'],
+it:['QA lingua / Test traduzione','Esegui QA completo lingua','SUPERATO','NON SUPERATO','Mancante','Ancora in inglese','Funzioni v4.6.0','Traduzioni pop-up']};
+const names={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
+const req=['Upgrade Targets & Recommendations','Target Level','Target Stars','Target Training','Calculate Target Recommendation','Global Officer Data:','Data version:','Officers:','Published:','Resource requirement to target','Inventory is read for comparison only; nothing is spent or changed.','Forecast future Officer costs from the established Officer-release sequence.','latest confirmed database release','Forecast only — replace with confirmed costs when released.'];
+const pops=['Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.','Enter a plan name.','Plan saved.','Saved plan deleted.','Fix validation issues first.','Officer database saved.','CSV validation failed.','CSV imported.','Restore default officer database?','Appearance and backgrounds restored to defaults.','Reset Central Inventory?','S7 Julia progress saved.','S7 Julia is now saved as MAXED.','Reset saved progress for S7 Julia? Shared resources will not be changed.'];
+const ignore=/^(ORV|SRV|XP|MAX|TEST|CSV|JSON|KoW|S[2-9]|v?\d+(?:\.\d+)+|\d+|[★⭐\s\d.,:%+\-–—/()]+)$/i;
+function cur(){return window.KOW_CLEAN_I18N?.current?.()||'en'}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function audit(code,keys,dict){
+ if(code==='en')return {m:[],s:[],f:[],p:[]};
+ let m=[],s=[];
+ keys.forEach(k=>{let t=String(k).trim();if(!t||ignore.test(t))return;if(!(k in dict))m.push(k);else if(String(dict[k]).trim()===t)s.push(k)});
+ let f=req.filter(k=>!(k in dict)||String(dict[k]).trim()===k),p=[];
+ const tr=window.kowPopupTranslate,api=window.KOW_CLEAN_I18N,old=api.current();
+ if(typeof tr!=='function')p=['Popup translator not loaded'];
+ else{try{api.setLanguage(code);p=pops.filter(x=>String(tr(x)||'').trim()===x.trim())}finally{api.setLanguage(old)}}
+ return {m,s,f,p};
 }
-function auditOne(code,keys,dict){
- if(code==='en')return {missing:[],same:[]};
- const missing=[],same=[];
- keys.forEach(k=>{
-  if(ignorable(k))return;
-  if(!Object.prototype.hasOwnProperty.call(dict,k))missing.push(k);
-  else if(String(dict[k]).trim()===String(k).trim())same.push(k);
- });
- return {missing,same};
-}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function renderResults(){
- const api=window.KOW_CLEAN_I18N;if(!api)return;
- const u=ui(),keys=api.getCanonicalKeys(),dicts=api.getDictionaries();
- const out=document.getElementById('cleanLanguageQaResults');if(!out)return;
- let html=`<div style="margin:10px 0;color:var(--muted)"><b style="color:var(--gold2)">${esc(u.keys)}:</b> ${keys.length}</div>`;
- ['en','fr','de','it'].forEach(code=>{
-  const r=auditOne(code,keys,dicts[code]||{}),ok=!r.missing.length&&!r.same.length;
-  html+=`<div style="margin:10px 0;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between;gap:12px"><b>${LANG_LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#f2cf6b'}">${ok?esc(u.pass):esc(u.warn)}</strong></div>`;
-  if(code!=='en'){
-   html+=`<div style="margin-top:6px;font-size:.85rem"><span>${esc(u.missing)}: <b>${r.missing.length}</b></span> · <span>${esc(u.same)}: <b>${r.same.length}</b></span></div>`;
-   const items=[...r.missing.map(x=>'MISSING: '+x),...r.same.map(x=>'ENGLISH: '+x)].slice(0,80);
-   html+=items.length?`<details style="margin-top:7px"><summary style="cursor:pointer">${items.length} issue${items.length===1?'':'s'}</summary><div style="margin-top:6px;max-height:260px;overflow:auto;font-size:.78rem;line-height:1.45">${items.map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:`<div style="margin-top:6px;color:#9ee493">${esc(u.none)}</div>`;
-  }
-  html+='</div>';
- });
- html+=`<div class="notice">${esc(u.note)}</div>`;
- out.innerHTML=html;
+function det(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:220px;overflow:auto;font-size:.78rem">${a.slice(0,150).map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
+function run(){
+ const api=window.KOW_CLEAN_I18N,out=document.getElementById('v460QaResults');if(!api||!out)return;
+ const keys=api.getCanonicalKeys(),ds=api.getDictionaries(),L=labels[cur()]||labels.en;
+ let h=`<div class="notice">Canonical English keys: <b>${keys.length}</b></div>`;
+ ['en','fr','de','it'].forEach(c=>{let a=audit(c,keys,ds[c]||{}),ok=!a.m.length&&!a.s.length&&!a.f.length&&!a.p.length;
+ h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${names[c]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?L[2]:L[3]}</strong></div>`;
+ if(c!=='en'){h+=`<div>${L[4]}: <b>${a.m.length}</b> · ${L[5]}: <b>${a.s.length}</b> · ${L[6]}: <b>${a.f.length}</b> · ${L[7]}: <b>${a.p.length}</b></div>${det(L[4],a.m)}${det(L[5],a.s)}${det(L[6],a.f)}${det(L[7],a.p)}`}h+='</div>'});
+ out.innerHTML=h;
 }
 function inject(){
- if(document.getElementById('cleanLanguageQaCard'))return;
- const settings=document.getElementById('settings');if(!settings)return;
- const u=ui(),card=document.createElement('div');card.id='cleanLanguageQaCard';card.className='card wide';card.style.marginTop='12px';
- card.innerHTML=`<h2>🧪 ${esc(u.title)}</h2><p class="notice">${esc(u.desc)}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><button id="runCleanLanguageQa" class="app-action-primary">${esc(u.run)}</button><button id="refreshCleanLanguageQa" class="app-action-secondary">${esc(u.refresh)}</button></div><div id="cleanLanguageQaResults"></div>`;
- settings.appendChild(card);
- document.getElementById('runCleanLanguageQa').addEventListener('click',renderResults);
- document.getElementById('refreshCleanLanguageQa').addEventListener('click',()=>{window.KOW_CLEAN_I18N?.translateNode?.(document.body);renderResults();});
+ if(document.getElementById('v460QaCard'))return;let s=document.getElementById('settings');if(!s)return;
+ let L=labels[cur()]||labels.en,d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';
+ d.innerHTML=`<h2>🧪 ${L[0]}</h2><p class="notice">v4.6.0 read-only audit: dictionaries, new feature text and browser pop-ups. Saved app data is not changed.</p><button id="v460QaRun" class="app-action-primary" type="button">${L[1]}</button><div id="v460QaResults"></div>`;
+ s.appendChild(d);document.getElementById('v460QaRun').addEventListener('click',run);
 }
-function start(){inject();}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',inject);else inject();
 })();
