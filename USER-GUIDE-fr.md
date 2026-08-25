@@ -1,77 +1,81 @@
 # KoW Companion — Guide utilisateur
-## v4.4.0 TEST
+## v4.6.0 — TEST / PAS LIVE
 
-### Flux de travail recommandé
-1. **Inventaire** — saisissez et enregistrez d’abord toutes les ressources détenues.
-2. **Officier** — sélectionnez chaque Officier et enregistrez sa progression actuelle.
+Ce guide décrit la version Multilingual Test v4.6.0.
 
 ## Nouveautés v4.6.0
 ### Objectifs d’amélioration et recommandations
-Définissez un niveau, des étoiles et un entraînement cibles pour l’Officier sélectionné, ou choisissez **Officier MAX**. Le calcul compare la progression enregistrée à l’objectif et indique les ressources restantes. Il ne dépense pas l’Inventaire.
+Définissez un futur objectif de Niveau, d’Étoiles et d’Entraînement pour l’Officier sélectionné, ou choisissez **Officier MAX**. Le calcul compare la progression enregistrée à l’objectif choisi et affiche les ressources restantes. Il est non destructif et ne dépense pas l’Inventaire.
 
 ### Données dynamiques des Officiers
-L’application lit `officers.json` et le manifeste `officer-data-version.json`. Les Paramètres affichent **Données globales des Officiers** pour vérifier la version active.
+L’application lit le jeu de données publié `officers.json` et le manifeste `officer-data-version.json`. Les Paramètres affichent **Données globales des Officiers** afin de vérifier la version active des données.
 
-### Prévision des coûts des futurs Officiers
-La prévision utilise la dernière sortie saisonnière légendaire confirmée de la base de données. Pour v4.6.0, l’exemple confirmé est **S7 Tank Destroyers — 600 ORV par Badge / 300 SRV par Étoile exclusive**. Une nouvelle sortie confirmée publiée devient automatiquement la nouvelle référence.
+### Prévision du coût des futurs Officiers
+La prévision utilise comme référence la dernière sortie saisonnière légendaire confirmée dans la Base de données des Officiers. Dans v4.6.0, l’exemple confirmé est **S7 Chasseurs de chars — 600 ORV par Badge / 300 SRV par Étoile exclusive**. Lorsqu’une sortie confirmée plus récente est publiée, elle devient automatiquement la nouvelle référence.
 
 ### Fenêtres contextuelles multilingues
-Les alertes et confirmations du navigateur sont traduites dans la langue sélectionnée, notamment pour Sauvegarde/Restauration, progression, MAX, Planificateur, Base de données, CSV, Apparence et Inventaire.
+Les alertes et confirmations du navigateur sont traduites en English, Français, Deutsch ou Italiano, notamment pour Sauvegarde/Restauration, progression d’Officier, confirmation MAX, Planificateur, Base de données, CSV, Apparence et Inventaire.
 
-3. **Étoiles** — vérifiez le niveau actuel, l’objectif et les ressources d’Étoiles.
-4. **Développement** — renseignez le déblocage, les branches de compétences et l’entraînement.
-5. **XP** — renseignez le niveau actuel, le niveau cible et les Livres XP détenus.
-6. **Progression** — contrôlez les états MAXIMUM, EN COURS et NON COMMENCÉ.
-7. **Sorties** — consultez le calendrier récurrent et les prévisions de coûts.
-8. **Planificateur** — analysez les besoins actuels et futurs sans dépenser de ressources.
-9. **Enregistrer la progression** après toute modification importante.
+## Flux recommandé
+1. **Inventaire** — saisissez et enregistrez toutes les ressources détenues.
+2. **Officier** — sélectionnez un Officier et enregistrez sa progression actuelle.
+3. **Étoiles** — vérifiez la progression et les ressources d’Étoiles.
+4. **Développement** — vérifiez Déblocage, Brins de compétences et Entraînement.
+5. **XP** — vérifiez le niveau actuel et les Livres XP détenus.
+6. **Progression** — contrôlez MAXIMUM / EN COURS / NON COMMENCÉ.
+7. **Planificateur** — prévisualisez les décisions d’amélioration actuelles et futures.
+8. **Sauvegarde** — exportez une sauvegarde avant les tests destructifs ou changements importants.
 
-## Inventaire
-L’Inventaire est partagé par toute l’application. Il contient notamment les Coffres de Badges légendaires, les Coffres de sélection de Badges légendaires, ORV, SRV, les Badges universels Légendaires/Épiques/Élite, les Étoiles par rareté, les Livres XP et les Badges individuels des Officiers.
+## Persistance de l’état de travail v4.6.0
+Une actualisation normale doit conserver l’Officier sélectionné, l’onglet actif, les filtres Officier/Progression/Comparaison, les sélections de comparaison, les lignes du Planificateur multi-Officiers, les sélections du Planificateur avancé, les scénarios futurs et l’Officier de comparaison de l’Optimiseur. Cet état temporaire reste séparé des profils, plans et Inventaire enregistrés.
 
-Un Coffre de Badge d’Officier légendaire fournit **1 Badge légendaire universel**. Un Coffre de sélection peut fournir **1 Badge légendaire universel** ou, lorsqu’un Officier saisonnier éligible est concerné, la valeur ORV publiée correspondante.
+## Inventaire central
+Saisissez les ressources partagées une seule fois puis appuyez sur **Enregistrer l’Inventaire**. Ordre approuvé :
+1. Coffre de Badges d’Officier légendaire
+2. Coffre de sélection de Badges d’Officier légendaire
+3. ORV
+4. SRV
+5. Badge d’Officier légendaire universel
+6. Badge d’Officier épique universel
+7. Badge d’Officier élite universel
+8. Badges individuels des Officiers dans l’ordre numéroté approuvé
+9. Étoiles élites I / II / III
+10. Étoiles épiques I / II / III
+11. Étoiles légendaires I / II / III
+12. Livres XP : 100 / 500 / 1 000 / 5 000 / 10 000 / 20 000 / 50 000
 
-## Officier
-Utilisez la recherche, la Saison, la Rareté et le Rôle pour sélectionner un Officier. Les noms propres des Officiers et les données de jeu restent inchangés. Chaque Officier conserve son propre profil de progression, tandis que l’Inventaire partagé reste disponible lors d’un changement d’Officier.
+Il n’existe pas de Livre XP 50 dans cette version.
 
-Les Officiers Légendaires d’origine ne peuvent pas utiliser ORV ou SRV. Les Officiers Légendaires saisonniers éligibles peuvent les utiliser selon leur coût publié. Les Officiers Épiques et Élite utilisent leurs propres ressources de rareté.
+## Règles des coffres légendaires
+**Coffre de Badges d’Officier légendaire :** chaque coffre peut être utilisé soit comme **1 Badge légendaire universel**, soit comme **600 ORV**, jamais les deux.
 
-## Étoiles
-Les ressources d’Étoiles sont séparées par rareté. Les seuils Légendaires sont 500, 1 000, 6 500, 25 000 et 65 000, soit **98 000** au total pour atteindre 5★. SRV est réservé aux Officiers Légendaires saisonniers éligibles.
+**Coffre de sélection de Badges d’Officier légendaire :** chaque coffre donne **1 Badge spécifique d’Officier légendaire** pour un Officier actuellement éligible. Il ne devient ni ORV ni Badge universel.
 
-## Développement
-Les branches de compétences se débloquent selon le niveau d’Étoiles actuel : 0★ = branche 1, 1★ = branches 1–2, 2★ = branches 1–3 et 3★+ = les quatre branches. Le niveau 1 est gratuit lorsqu’une branche devient disponible.
+**Officiers légendaires originaux :** ils ne peuvent pas utiliser les conversions saisonnières ORV/SRV.
 
-- **Légendaire** : déblocage 10 + compétences 690 + entraînement 900 = **1 600 Badges**.
-- **Épique** : déblocage 10 + compétences 440 + entraînement 4 500 = **4 950 Badges**.
-- **Élite** : déblocage 10 + compétences 440 + entraînement 18 000 = **18 450 Badges**.
+## Progression d’Officier
+**Officier MAX** règle 5★, Niveau 70, Débloqué, les quatre Brins au Niveau 5 et Entraînement 180.
 
-## XP
-Saisissez le niveau actuel, le niveau cible et les Livres XP détenus. L’application calcule les XP détenus, requis et manquants. Le total pour passer du niveau initial au niveau 70 est **199 646 700 XP**.
+Déblocage des Brins : 0★ → Brin 1 ; 1★ → Brins 1–2 ; 2★ → Brins 1–3 ; 3★+ → les quatre. Le Niveau 1 est gratuit à l’ouverture d’un Brin.
 
-## Progression et comparaison
-Progression classe les Officiers en MAXIMUM, EN COURS ou NON COMMENCÉ. Un Officier MAX possède 5★, niveau 70, est débloqué, dispose de quatre branches au niveau 5 et d’un entraînement à 180. La comparaison utilise les mêmes données enregistrées.
+Totaux confirmés : **Légendaire 1 600**, **Épique 4 950**, **Élite 18 450 Badges**.
 
-## Planificateur avancé
-Le Planificateur est un outil d’aperçu : il ne dépense aucune ressource et ne modifie pas la progression enregistrée. Les Officiers MAX sont exclus des recommandations.
+## Progression, Comparaison et Optimiseur
+Progression classe les Officiers en **MAXIMUM**, **EN COURS** ou **NON COMMENCÉ**. Les ressources partagées n’augmentent pas artificiellement le pourcentage enregistré. L’Optimiseur compare deux Officiers, notamment l’efficacité ORV, mais reste un outil d’aperçu : aucune ressource n’est dépensée.
 
-Les sessions disponibles couvrent les Officiers enregistrés, toutes les sessions, la prochaine session ou une session récurrente précise : Octobre — Ralliement/Garnison, Janvier — Infanterie, Avril — Chars, Juillet — Chasseurs de chars. Saison et Type peuvent être combinés.
+## Planificateur multi-Officiers
+Créez une liste prioritaire et prévisualisez la couverture des Badges avec ORV, Badges universels, Coffres et Coffres de sélection. Les plans peuvent être nommés et enregistrés. Le Planificateur ne déduit pas l’Inventaire.
 
-Les scénarios futurs sont clairement marqués **PROJETÉ**. Les valeurs ORV/SRV futures restent des **PRÉVISIONS** jusqu’à publication des coûts réels.
+## Planification avancée et futurs Officiers
+Les sessions peuvent couvrir les Officiers enregistrés, toutes les sessions, la prochaine session ou Octobre Ralliement/Garnison, Janvier Infanterie, Avril Chars et Juillet Chasseurs de chars. Les Officiers **PROJETÉS** sont des espaces réservés de planification et ne sont pas ajoutés à la base publiée.
 
-## Tableau de préparation à la planification
-Les scénarios futurs enregistrés affichent la préparation en Badges, Étoiles et XP. La préparation globale utilise la ressource la plus limitante. L’Objectif prioritaire indique le scénario nécessitant le plus d’attention et l’Action suivante suggérée indique quelle ressource économiser en priorité.
+Pour un futur Légendaire : **1 Officier = 1 600 Badges, 98 000 valeur d’Étoiles, 199 646 700 XP**. Les valeurs ORV/SRV futures restent des prévisions jusqu’à publication.
 
-## Sorties
-Sorties affiche le calendrier annuel récurrent et la prévision des coûts futurs des Officiers. Les estimations ne remplacent jamais les coûts officiels publiés.
+## Sauvegarde et restauration
+**Paramètres → Exporter la sauvegarde de l’application** crée une sauvegarde portable des données locales. La restauration réimporte les profils, Badges individuels et Inventaire partagé puis recharge l’application.
 
-## Paramètres, langue et sauvegarde
-Choisissez English, Français, Deutsch ou Italiano. Le choix de langue est enregistré sur l’appareil. La réinitialisation de l’application revient à l’anglais.
+## QA linguistique
+Dans Paramètres, **QA linguistique / Test de traduction** contrôle Français, Deutsch et Italiano pour les traductions manquantes, le texte restant en anglais, les nouvelles fonctions v4.6.0 et les fenêtres contextuelles.
 
-**Exporter la sauvegarde de l’application** crée une sauvegarde JSON des données locales. **Restaurer la sauvegarde de l’application** recharge une sauvegarde précédente, notamment la progression des Officiers et l’Inventaire partagé.
-
-## Contrôle des traductions
-Le contrôle multilingue v4.4.0 vérifie l’interface rendue et le Guide utilisateur dans la langue sélectionnée. ORV, SRV, XP, MAX, TEST, les noms d’Officiers et les termes de jeu explicitement conservés ne sont pas considérés comme des erreurs de traduction.
-
-## Version
-Cette version est **KoW Companion v4.4.0 TEST**. Elle doit conserver l’identification TEST jusqu’à validation pour Multilingual Live.
+---
+**Créé par FireStorm (371)**
