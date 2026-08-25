@@ -1,13 +1,11 @@
-# KoW Companion Multilingual v4.6.0 TEST — Language QA
+# KoW Companion Multilingual v4.6.0 TEST — QA2
 
-Settings contains the read-only **Language QA / Translation Test**.
+QA2 replaces the earlier dictionary-only PASS logic.
 
-It checks French, German and Italian for:
-- missing dictionary translations;
-- strings still identical to English;
-- v4.6.0 Upgrade Targets & Recommendations;
-- Global/Dynamic Officer Data;
-- Future Officer Cost Forecast;
-- browser alerts and confirmation pop-ups.
+A non-English language now passes only when:
+- v4.6.0 dictionary keys are translated;
+- the rendered Officer/Inventory/Stars/Development/XP/Planner/Database/Releases/Settings/Help content contains none of the monitored English bleed phrases;
+- the full in-app User Guide contains all required sections;
+- browser alert/confirm pop-ups are localized.
 
-For the strongest test, open Officer, Planner, Database, Releases and Help once, then run Language QA from Settings. Do not promote to Live while any non-English language reports FAIL.
+The Test CNAME is `multilingualtest.firestorm-companion.uk`.

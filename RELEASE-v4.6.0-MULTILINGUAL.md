@@ -16,3 +16,10 @@ Check all four languages, especially Backup/Restore, Officer progress, MAX Offic
 
 ## v4.6.0 multilingual guide correction
 French, German and Italian User Guides and in-app Help are now aligned to v4.6.0. The Test package CNAME is multilingualtest.firestorm-companion.uk.
+
+## QA2 correction
+- Replaced dictionary-only Language QA with rendered-page QA.
+- Added full in-app French, German and Italian User Guides matching English functional coverage.
+- Localized dynamically generated Future Officer Forecast sentences, release options and confirmed baseline labels.
+- Localized recurring Release Calendar Current/Next labels and release descriptions.
+- PASS now requires rendered English-bleed, full-guide coverage, dictionary and popup checks.
