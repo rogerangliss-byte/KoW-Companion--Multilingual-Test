@@ -87,16 +87,16 @@ Pour les Badges individuels d’Officier, saisissez les quantités pour l’Offi
 
 Utilisez les filtres Recherche , Saison et Type / Rôle d’Officier pour réduire la liste des Officiers. Select the Officier you want to calculate. A matching portrait is displayed automatically when its file is disponible in the officer-portraits folder.
 
-L’Officier sélectionné détermine le coût d’un Badge d’Officier en Bons de préparation d’Officier (ORV) and the cost of an Exclusive Star in Bons de préparation d’Étoile (SRV) .
+L’Officier sélectionné détermine le coût d’un Badge d’Officier en Bons de préparation d’Officier (ORV) et le coût d’une Étoile exclusive en Bons de préparation d’Étoile (SRV) .
 
-The Résumé d’amélioration de l’Officier shows the remaining Officier Badges, Officier Étoiles and Officier XP for the currently selected Officier.
+The Résumé d’amélioration de l’Officier shows the restants Officier Badges, Officier Étoiles and Officier XP for the currently selected Officier.
 
-Original Officiers : Bons de préparation d’Officier (ORV) and Bons de préparation d’Étoile (SRV) canpas be used for Original Officiers.
+Original Officiers : Bons de préparation d’Officier (ORV) and Bons de préparation d’Étoile (SRV) canpas be utilisés for Original Officiers.
 
 
 ## 3. Étoiles
 
-Set the Officier's current and target Star level. The Étoiles tab automatically follows the selected Officier rarity: Legendary, Epic or Elite Star I / II / III. Bons de préparation d’Étoile (SRV) are shown only for Legendary Officiers and canpas be used by Epic or Elite Officiers.
+Set the Officier's current and target Star level. The Étoiles tab automatically follows the selected Officier rarity: Legendary, Epic or Elite Star I / II / III. Bons de préparation d’Étoile (SRV) are shown only for Legendary Officiers and canpas be utilisés by Epic or Elite Officiers.
 
 
 ## 4. Développement
@@ -105,7 +105,7 @@ Saisissez l’état de déblocage, les niveaux des quatre Brins de compétence i
 
 Each Badge légendaire universel is worth 1 Officier Badge for a Legendary Officier.
 
-Each Coffre de sélection de Badge d’Officier légendaire gives 1 Badge spécifique d’Officier Légendaire for an Officier currently disponible in that chest. It does pas convert to ORV. Each Coffre de Badges d’Officier légendaire can instead be used as either 1 Badge légendaire universel or 600 ORV .
+Each Coffre de sélection de Badge d’Officier légendaire gives 1 Badge spécifique d’Officier Légendaire for an Officier currently disponible in that chest. It does pas convert to ORV. Each Coffre de Badges d’Officier légendaire can instead be utilisés as either 1 Badge légendaire universel or 600 ORV .
 
 
 ## 5. XP
@@ -117,11 +117,11 @@ Saisissez le Niveau actuel et cible. Les quantités de Livres XP sauvegardées d
 
 Utilisez le Planificateur après avoir saisi l’Inventaire et la progression Étoiles, Développement et XP. Sélectionnez un objectif tel que Officier MAX, Étoile suivante, Atteindre 5★, Compétences MAX ou Entraînement MAX pour voir besoins, ressources détenues et manques.
 
-The Resource Optimiser vous permet de sélectionner un second Officier dans Comparaisonr avec un Officier . It compares the Bon de préparation d’Officier (ORV) cost per Officier Badge for the two Officiers.
+The Resource Optimiser vous permet de sélectionner un second Officier dans Comparaisonr avec un Officier . Il compare le coût en Bons de préparation d’Officier (ORV) par Badge d’Officier pour les deux Officiers.
 
-How to interpret the recommendation: lorsque les deux Officiers peuvent utiliser des ORV, l’optimiseur recommande de privilégier les ORV pour l’Officier ayant le lower ORV cost per badge and favouring shared Badge légendaire universels / Coffre de Badges d’Officier légendaires pour l’Officier ayant le higher ORV cost per badge . This protects the more expensive Officier from unnecessary ORV spending.
+How to interpret the recommendation: lorsque les deux Officiers peuvent utiliser des ORV, l’optimiseur recommande de privilégier les ORV pour l’Officier ayant le coût ORV par Badge le plus faible and favouring shared Badge légendaire universels / Coffre de Badges d’Officier légendaires pour l’Officier ayant le coût ORV par Badge le plus élevé . This protects the more expensive Officier from unnecessary ORV spending.
 
-The optimiser is preview only . It does pas automatically spend, allocate or change your saved resources.
+The optimiser is aperçu uniquement . It does pas automatically spend, allocate or change your saved resources.
 
 
 ## 7. Planificateur d’amélioration multi-Officiers
@@ -140,14 +140,14 @@ Utilisez Sauvegarder la progression after entering or changing Officier progress
 
 ## 9. Base de données
 
-The Base de données Manager controls the Officier master list. Utilisez it to add or edit Officiers and export the database. Export CSV exports the Officier database; it is different from Sauvegarder la progression and App Backup.
+The Base de données Manager controls the Officier master list. Utilisez it to add or edit Officiers and export the database. Export CSV exporte la base de données des Officiers ; cela est différent de Sauvegarder la progression et de la Sauvegarde de l’application.
 
 Pour publier de nouveaux Officiers ou des Officiers modifiés pour tous, mettez à jour les fichiers publiés officers.json and officers.csv files in the GitHub repository.
 
 
 ## 10. Calendrier récurrent des sorties
 
-The Sorties tab shows the recurring Août → Juillet annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does pas require a yearly reset.
+The Sorties affiche le cycle annuel récurrent des sorties KoW d’août à juillet. Le mois actuel et la prochaine sortie programmée sont automatiquement mis en évidence ; le calendrier ne nécessite donc pas de réinitialisation annuelle.
 
 
 ## 11. Paramètres, sauvegarde et restauration
@@ -156,7 +156,7 @@ Paramètres contains the app name, portrait and landscape backgrounds, update co
 
 Exporter la sauvegarde de l’application creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. Restaurer la sauvegarde de l’application loads a previously exported JSON backup and reloads the app.
 
-Vérifier les mises à jour compares the installed version with the published version. Actualiser vers la dernière version refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
+Vérifier les mises à jour compare la version installée à la version publiée. Actualiser vers la dernière version refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
 
 
 ## Terminologie

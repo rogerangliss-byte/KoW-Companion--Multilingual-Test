@@ -18,8 +18,8 @@ Gespeicherte Offiziersprofile, Pläne und das zentrale Inventar bleiben von dies
 
 ### 📦 Korrekte Regeln für legendäre Truhen
 
-- Legendary Offizier Badge Chest: each chest can be used as either 1 Universal Legendary Badge or 600 Offizier Readiness Vouchers (ORV) . It cannot count as both.
-- Legendary Offizier Badge Selection Chest: each chest gives 1 specific Legendary Offizier Badge for an Offizier currently verfügbar in the Selection Chest pool. It does not convert to ORV or a Universal Legendary Badge.
+- Legendary Offizier Badge Chest: each chest can be verwendet as either 1 Universal Legendary Badge or 600 Offizier Readiness Vouchers (ORV) . It cannot count as both.
+- Legendary Offizier Badge Selection Chest: each chest gives 1 specific Legendary Offizier Badge für einen Offizier, der derzeit im Auswahltruhen-Pool verfügbar ist. Sie not convert to ORV or a Universal Legendary Badge.
 - Original Legendary Offiziers remain ineligible for ORV/SRV seasonal conversion routes.
 
 ### 🧮 Ressourcenoptimierer — Vorschau
@@ -69,14 +69,14 @@ Planning Readiness Dashboard, Badge/Star/XP readiness, Priority Ziel, Suggested 
 
 ### 🔮 Dynamische Prognose zukünftiger Offizierskosten
 
-The forecast now uses the latest confirmed Legendary seasonal Offizier release in the Offizier Datenbank as its baseline. Example: at the v4.6.0 release, the latest confirmed baseline is S7 Panzerjäger — 600 ORV per Badge / 300 SRV per Exclusive Star . When a newer confirmed release is published, the baseline automatically advances.
+The forecast now uses the latest confirmed Legendary seasonal Offizier release in the Offizier Datenbank as its baseline. Example: bei Veröffentlichung von v4.6.0 ist die neueste bestätigte Basis S7 Panzerjäger — 600 ORV pro Abzeichen / 300 SRV pro Exklusivstern . When a newer confirmed release is published, the baseline automatically advances.
 
-Future ORV/SRV figures are planning estimates only until actual release costs are confirmed.
+Future ORV/SRV figures are planning estimates only bis die tatsächlichen Veröffentlichungskosten bestätigt sind.
 
 
 ## 1. Inventar
 
-Start here. Enter the resources you currently hold and press Save Inventar . Das Inventar wird in der gesamten App gemeinsam genutzt, daher müssen diese Ressourcensummen nur an einer Stelle gepflegt werden.
+Beginnen Sie hier. Geben Sie Ihre aktuell vorhandenen Ressourcen ein und drücken Sie Save Inventar . Das Inventar wird in der gesamten App gemeinsam genutzt, daher müssen diese Ressourcensummen nur an einer Stelle gepflegt werden.
 
 Inventar includes Offizier Readiness Vouchers (ORV) , Star Readiness Vouchers (SRV) , Universal Legendary/Epic/Elite Badges, Legendary Offizier Badge Chests and Selection Chests, Legendary/Epic/Elite Sterne, XP Books, and individual Offizier Badges.
 
@@ -87,16 +87,16 @@ For individual Offizier Badges, enter quantities against the appropriate Offizie
 
 Use Search , Season and Offizier Type / Role filters to narrow the Offizier list. Select the Offizier you want to calculate. A matching portrait is displayed automatically when its file is verfügbar in the officer-portraits folder.
 
-Der ausgewählte Offizier bestimmt die Kosten eines Offiziersabzeichens in Offizier Readiness Vouchers (ORV) and the cost of an Exclusive Star in Star Readiness Vouchers (SRV) .
+Der ausgewählte Offizier bestimmt die Kosten eines Offiziersabzeichens in Offizier Readiness Vouchers (ORV) und die Kosten eines Exklusivsterns in Star Readiness Vouchers (SRV) .
 
-The Offizier-Upgrade-Zusammenfassung shows the remaining Offizier Badges, Offizier Sterne and Offizier XP for the currently selected Offizier.
+The Offizier-Upgrade-Zusammenfassung shows the verbleibend Offizier Badges, Offizier Sterne and Offizier XP for the currently selected Offizier.
 
-Original Offiziere : Offizier Readiness Vouchers (ORV) and Star Readiness Vouchers (SRV) cannot be used for Original Offiziers.
+Original Offiziere : Offizier Readiness Vouchers (ORV) and Star Readiness Vouchers (SRV) cannot be verwendet for Original Offiziers.
 
 
 ## 3. Sterne
 
-Set the Offizier's current and target Star level. The Sterne tab automatically follows the selected Offizier rarity: Legendary, Epic or Elite Star I / II / III. Star Readiness Vouchers (SRV) are shown only for Legendary Offiziers and cannot be used by Epic or Elite Offiziers.
+Set the Offizier's current and target Star level. The Sterne tab automatically follows the selected Offizier rarity: Legendary, Epic or Elite Star I / II / III. Star Readiness Vouchers (SRV) are shown only for Legendary Offiziers and cannot be verwendet by Epic or Elite Offiziers.
 
 
 ## 4. Entwicklung
@@ -105,7 +105,7 @@ Enter unlock status, the four independent Skill Strand levels and Training Level
 
 Each Universal Legendary Badge is worth 1 Offizier Badge for a Legendary Offizier.
 
-Each Legendary Offizier Badge Selection Chest gives 1 specific Legendary Offizier Badge for an Offizier currently verfügbar in that chest. It does not convert to ORV. Each Legendary Offizier Badge Chest can instead be used as either 1 Universal Legendary Badge or 600 ORV .
+Each Legendary Offizier Badge Selection Chest gives 1 specific Legendary Offizier Badge für einen Offizier, der derzeit in dieser Truhe verfügbar ist. Sie wird nicht in ORV umgewandelt. Jede Legendary Offizier Badge Chest can instead be verwendet as either 1 Universal Legendary Badge or 600 ORV .
 
 
 ## 5. XP
@@ -119,9 +119,9 @@ Use Planer after entering Inventar and the Offizier's Sterne, Entwicklung and XP
 
 The Resource Optimiser ermöglicht die Auswahl eines zweiten Offiziers in Vergleich with Offizier . Er vergleicht die Kosten in Offiziersbereitschaftsgutscheinen (ORV) pro Offiziersabzeichen für die beiden Offiziere.
 
-How to interpret the recommendation: wenn beide Offiziere ORV verwenden können, empfiehlt der Optimierer, ORV beim Offizier mit dem lower ORV cost per badge and favouring shared Universal Legendary Badges / Legendary Offizier Badge Chests beim Offizier mit dem higher ORV cost per badge . This protects the more expensive Offizier from unnecessary ORV spending.
+How to interpret the recommendation: wenn beide Offiziere ORV verwenden können, empfiehlt der Optimierer, ORV beim Offizier mit dem niedrigeren ORV-Kosten pro Abzeichen and favouring shared Universal Legendary Badges / Legendary Offizier Badge Chests beim Offizier mit dem höheren ORV-Kosten pro Abzeichen . This protects the more expensive Offizier from unnecessary ORV spending.
 
-The optimiser is preview only . It does not automatically spend, allocate or change your saved resources.
+The optimiser is nur Vorschau . It does not automatically spend, allocate or change your saved resources.
 
 
 ## 7. Mehr-Offizier-Upgrade-Planer
@@ -140,14 +140,14 @@ Use Fortschritt speichern after entering or changing Offizier progress informati
 
 ## 9. Datenbank
 
-Der Datenbankmanager verwaltet die Offiziers-Stammliste. Verwenden Sie ihn zum Hinzufügen oder Bearbeiten von Offizieren und zum Exportieren der Datenbank. Export CSV exports the Offizier database; it is different from Fortschritt speichern and App Backup.
+Der Datenbankmanager verwaltet die Offiziers-Stammliste. Verwenden Sie ihn zum Hinzufügen oder Bearbeiten von Offizieren und zum Exportieren der Datenbank. Export CSV exportiert die Offiziersdatenbank; dies unterscheidet sich von Fortschritt speichern und App-Sicherung.
 
 Um neue oder bearbeitete Offiziere für alle zu veröffentlichen, aktualisieren Sie die veröffentlichten officers.json and officers.csv files in the GitHub repository.
 
 
 ## 10. Wiederkehrender Veröffentlichungskalender
 
-The Veröffentlichungen tab shows the recurring August → Juli annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.
+The Veröffentlichungen zeigt den wiederkehrenden jährlichen KoW-Veröffentlichungszyklus von August bis Juli. Der aktuelle Monat und die nächste geplante Veröffentlichung werden automatisch hervorgehoben; ein jährlicher Reset ist daher nicht erforderlich.
 
 
 ## 11. Einstellungen, Backup & Wiederherstellung
@@ -156,7 +156,7 @@ Einstellungen contains the app name, portrait and landscape backgrounds, update 
 
 App-Backup exportieren creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. App-Backup wiederherstellen loads a previously exported JSON backup and reloads the app.
 
-Nach Updates suchen compares the installed version with the published version. Neueste Version laden refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
+Nach Updates suchen vergleicht die installierte Version mit der veröffentlichten Version. Neueste Version laden refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
 
 
 ## Begriffe
