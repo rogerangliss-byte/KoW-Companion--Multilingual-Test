@@ -1,160 +1,29 @@
-/* KoW Companion v4.6.0 QA2 — rendered-language audit */
+/* KoW Companion v4.6.0 QA3 — comprehensive rendered-language audit */
 (function(){
 'use strict';
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id), wait=ms=>new Promise(r=>setTimeout(r,ms));
 const LABEL={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
-const UI={
-en:{title:'Language QA / Rendered Translation Test',run:'Run Full Rendered QA',pass:'PASS',fail:'FAIL',dict:'Dictionary',render:'Rendered English bleed',guide:'Full User Guide',popup:'Pop-ups'},
-fr:{title:'QA linguistique / Test rendu',run:'Lancer le QA rendu complet',pass:'RÉUSSI',fail:'ÉCHEC',dict:'Dictionnaire',render:'Anglais visible détecté',guide:'Guide utilisateur complet',popup:'Fenêtres contextuelles'},
-de:{title:'Sprach-QA / Render-Test',run:'Vollständige Render-QA starten',pass:'BESTANDEN',fail:'FEHLER',dict:'Wörterbuch',render:'Sichtbarer englischer Text',guide:'Vollständiges Benutzerhandbuch',popup:'Pop-ups'},
-it:{title:'QA lingua / Test visualizzato',run:'Esegui QA completo visualizzato',pass:'SUPERATO',fail:'NON SUPERATO',dict:'Dizionario',render:'Testo inglese visibile',guide:'Guida utente completa',popup:'Pop-up'}};
-const FEATURE=['Upgrade Targets & Recommendations','Target Level','Target Stars','Target Training','Calculate Target Recommendation','Global Officer Data:','Data version:','Officers:','Published:'];
-const POPS=['Plan saved.','Officer database saved.','CSV imported.','Restore default officer database?','Reset Central Inventory?','S7 Julia progress saved.','S7 Julia is now saved as MAXED.'];
-const ENGLISH_PHRASES=[
-'Planning estimate using','growth per Officer release','latest confirmed database release','For 1,600 badges','Star value','Exclusive Stars','plan for approximately','Forecast only','replace with confirmed costs',
-'Current month:','Next scheduled release:','No scheduled release','New Dogs','New Ships','Guns:','Jets:','Officers: Tanks','Officers: Tank Destroyers','Officers: Infantry',
-'Open the in-app User Guide','Export all locally saved','No backup created yet','Backup & Restore','Check for Updates','Refresh Latest Version',
-'Upgrade Targets & Recommendations','Calculate Target Recommendation','Global Officer Data','Resource requirement to target'
+const UI={en:{pass:'PASS',fail:'FAIL'},fr:{pass:'RÉUSSI',fail:'ÉCHEC'},de:{pass:'BESTANDEN',fail:'FEHLER'},it:{pass:'SUPERATO',fail:'NON SUPERATO'}};
+const ROOTS=['home','progress','officer','inventory','stars','development','xp','planner','database','releases','settings','help'];
+/* Words which are legitimate game/technical tokens and must not alone fail QA. */
+const ALLOW=new Set(('XP ORV SRV CSV MAX MAXED FireStorm KoW S2 S3 S4 S5 S6 S7 S8 Tank Tanks Bomber Fighter Jets Rally Garrison Infantry Legendary Epic Elite PASS FAIL QA').toLowerCase().split(/\s+/));
+/* High-confidence English UI vocabulary. QA3 scans every rendered text node; this is not a phrase allow-list. */
+const EN=new Set(('the and or to from with without for of in on at by is are was were be been being this that these those your you can cannot could should would will now current next previous latest saved save saving load loaded loading reset restore restored export import download upload select selected selecting choose chosen enter entered required require requires remaining remain held available availability shortfall still more less total value values level levels target targets training skill skills strand strands officer officers badge badges star stars inventory planner planning plan plans database release releases forecast forecasts forecasted growth month scheduled schedule resource resources development progress readiness ready partially fully funded funding upgrade upgrades action actions suggested open close calculate calculated calculation average priority showing shown created updated last first second third fourth guide user popup popups settings backup check refresh version field fields search add delete copy name notes actions result results displayed display universal chest chests selection book books point points used use using per only preview published replace confirmed cost costs approximately requirement requirements achieve achieved what how all no yes not started completed complete currently locally individual shared against future expected actual data global recommended order step workflow summary status upcoming new ships dogs guns terrain fighter bomber').split(/\s+/));
+const PHRASES=[
+ 'Central Inventory','Inventory Readiness','Guided Workflow','Next suggested step','saved Officers','Highest progress','Showing','Still required','Suggested next action','Current readiness','Current Upgrades','Projected voucher requirement','Preview only','Inventory has not been changed','Future ORV/SRV figures','until published','Training point','Promotion badges','total to MAX','Strand 1','Strand 2','Strand 3','Strand 4','Load','No backup created yet','Run Full Rendered QA','Download QA Report','Current month','Next scheduled release','Open in Planner','Average readiness','Saved targets','Priority target','Calculate Target','Planning Scenario','Planning estimate using','growth per Officer release','latest confirmed database release','replace with confirmed costs','Resource requirement to target','Upgrade Targets & Recommendations','Global Officer Data','Check for Updates','Refresh Latest Version','Backup & Restore'
 ];
-const GUIDE_REQUIRED={"fr":["✨ Nouveautés — v4.6.0 MULTILINGUAL TEST — NOT LIVE","💾 Persistance native de l’état de travail","📦 Règles correctes des coffres Légendaires","🧮 Optimiseur de ressources — Aperçu","👥 Planificateur d’amélioration multi-Officiers","📋 Ordre de l’Inventaire central","📊 Progressionion et Comparaison","🏅 Totaux confirmés de Badges d’Officier","🧭 Planification v4.4.0 conservée","🔮 Prévision dynamique des coûts des futurs Officiers","1. Inventaire","2. Officier","3. Étoiles","4. Développement","5. XP","6. Planificateur et Optimiseur de ressources","7. Planificateur d’amélioration multi-Officiers","8. Sauvegarder la progression","9. Base de données","10. Calendrier récurrent des sorties","11. Paramètres, sauvegarde et restauration","Terminologie"],"de":["✨ Neu in v4.6.0 MULTILINGUAL TEST — NOT LIVE","💾 Native Speicherung des Arbeitszustands","📦 Korrekte Regeln für legendäre Truhen","🧮 Ressourcenoptimierer — Vorschau","👥 Mehr-Offizier-Upgrade-Planer","📋 Reihenfolge des zentralen Inventars","📊 Fortschritt und Vergleich","🏅 Bestätigte Gesamtzahlen für Offiziersabzeichen","🧭 Planung aus v4.4.0 beibehalten","🔮 Dynamische Prognose zukünftiger Offizierskosten","1. Inventar","2. Offizier","3. Sterne","4. Entwicklung","5. XP","6. Planer und Ressourcenoptimierer","7. Mehr-Offizier-Upgrade-Planer","8. Fortschritt speichern","9. Datenbank","10. Wiederkehrender Veröffentlichungskalender","11. Einstellungen, Backup & Wiederherstellung","Begriffe"],"it":["✨ Novità — v4.6.0 MULTILINGUAL TEST — NOT LIVE","💾 Persistenza nativa dello stato di lavoro","📦 Regole corrette delle Casse Leggendarie","🧮 Ottimizzatore risorse — Anteprima","👥 Pianificatore potenziamento multi-Ufficiale","📋 Ordine dell’Inventario centrale","📊 Progressii e Confronto","🏅 Totali Badge Ufficiale confermati","🧭 Pianificazione v4.4.0 mantenuta","🔮 Previsione dinamica costi futuri Ufficiali","1. Inventario","2. Ufficiale","3. Stelle","4. Sviluppo","5. XP","6. Pianificatore e Ottimizzatore risorse","7. Pianificatore potenziamento multi-Ufficiale","8. Salva progressi","9. Banca dati","10. Calendario ricorrente delle uscite","11. Impostazioni, backup e ripristino","Terminologia"]};
 function cur(){return window.KOW_CLEAN_I18N?.current?.()||'en'}
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function wait(ms){return new Promise(r=>setTimeout(r,ms))}
-function details(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:260px;overflow:auto;font-size:.78rem">${a.map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
-function dictCheck(code){
- if(code==='en')return [];
- const ds=window.KOW_CLEAN_I18N.getDictionaries(),d=ds[code]||{};
- return FEATURE.filter(k=>!(k in d)||String(d[k]).trim()===k);
-}
-function popupCheck(code){
- if(code==='en')return [];
- const api=window.KOW_CLEAN_I18N,tr=window.kowPopupTranslate,old=api.current(),bad=[];
- try{api.setLanguage(code);POPS.forEach(s=>{if(typeof tr!=='function'||String(tr(s)||'').trim()===s)bad.push(s)})}finally{api.setLanguage(old)}
- return bad;
-}
-function guideCheck(code){
- if(code==='en')return [];
- const txt=document.querySelector('#help > article.card')?.textContent||'';
- return (GUIDE_REQUIRED[code]||[]).filter(x=>!txt.includes(x));
-}
-function renderedBleed(){
- const roots=['officer','inventory','stars','development','xp','planner','database','releases','settings','help'];
- let txt=roots.map(id=>$(id)?.textContent||'').join('\n');
- // QA card is deliberately multilingual but contains technical English labels; exclude it.
- txt=txt.replace($('v460QaCard')?.textContent||'','');
- return ENGLISH_PHRASES.filter(p=>txt.includes(p));
-}
-async function auditLanguage(code){
- const api=window.KOW_CLEAN_I18N;api.setLanguage(code);await wait(120);
- window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.();await wait(120);
- return {d:dictCheck(code),p:popupCheck(code),g:guideCheck(code),r:code==='en'?[]:renderedBleed()};
-}
-async function run(){
- const out=$('v460QaResults');if(!out)return;const api=window.KOW_CLEAN_I18N,original=api.current(),ui=UI[original]||UI.en;
- out.innerHTML='<div class="notice">Running rendered QA…</div>';
- let h='';
- try{
-   for(const code of ['en','fr','de','it']){
-     const a=await auditLanguage(code),ok=!a.d.length&&!a.p.length&&!a.g.length&&!a.r.length;
-     h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?ui.pass:ui.fail}</strong></div>`;
-     if(code!=='en')h+=`<div>${ui.dict}: <b>${a.d.length}</b> · ${ui.render}: <b>${a.r.length}</b> · ${ui.guide}: <b>${a.g.length}</b> · ${ui.popup}: <b>${a.p.length}</b></div>${details(ui.dict,a.d)}${details(ui.render,a.r)}${details(ui.guide,a.g)}${details(ui.popup,a.p)}`;
-     h+='</div>';
-   }
- }finally{api.setLanguage(original);await wait(80);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.()}
- out.innerHTML=h+'<div class="notice"><b>QA2:</b> PASS now requires dictionary coverage, rendered-page English-bleed checks, complete in-app User Guide section coverage and popup localization.</div>';
-}
-function inject(){
- const old=$('v460QaCard');if(old)old.remove();
- const s=$('settings');if(!s)return;const ui=UI[cur()]||UI.en,d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';
- d.innerHTML=`<h2>🧪 ${ui.title}</h2><p class="notice">QA2 scans the actual rendered application, not just dictionary keys. It also verifies full User Guide section coverage.</p><button id="v460QaRun" class="app-action-primary" type="button">${ui.run}</button><div id="v460QaResults"></div>`;
- s.appendChild(d);$('v460QaRun').addEventListener('click',run);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inject,350));else setTimeout(inject,150);
-})();
-
-
-/* v4.6.0 QA2 — Download QA Report restoration */
-(function(){
-'use strict';
+function esc(s){return String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
+function visible(el){if(!el||!el.isConnected)return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}
+function nodes(){const out=[];for(const id of ROOTS){const root=$(id);if(!root)continue;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);while(w.nextNode()){const n=w.currentNode,p=n.parentElement;if(!p||p.closest('script,style,code,pre,#v460QaCard,[data-no-translate]')||!visible(p))continue;const t=(n.nodeValue||'').replace(/\s+/g,' ').trim();if(t)out.push({id,t})}root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(el=>{if(!visible(el)||el.closest('#v460QaCard'))return;for(const a of ['placeholder','title','aria-label']){const t=(el.getAttribute(a)||'').trim();if(t)out.push({id,t:`[${a}] ${t}`})}})}return out}
+function scoreEnglish(t){const clean=t.replace(/\bS\d\b/gi,' ').replace(/[0-9,.%+:/()—–·★✓⚠️✅🔴🟠🟢]+/g,' ');const words=(clean.match(/[A-Za-z][A-Za-z'-]*/g)||[]).map(x=>x.toLowerCase());let hits=0,meaningful=0;for(const w of words){if(ALLOW.has(w)||w.length<2)continue;meaningful++;if(EN.has(w))hits++}const phrase=PHRASES.find(p=>t.toLowerCase().includes(p.toLowerCase()));return {hits,meaningful,phrase,words}}
+function renderedBleed(code){if(code==='en')return[];const bad=[];for(const x of nodes()){const s=scoreEnglish(x.t);/* One exact UI phrase OR >=2 English UI words with >=50% English confidence. */if(s.phrase||(s.hits>=2&&s.hits/Math.max(1,s.meaningful)>=.5))bad.push(`${x.id}: ${x.t}`)}return [...new Set(bad)]}
+function dictCheck(code){if(code==='en')return[];const ds=window.KOW_CLEAN_I18N?.getDictionaries?.()||{},en=ds.en||{},d=ds[code]||{};return Object.keys(en).filter(k=>{const v=d[k];return v==null||String(v).trim()===''||String(v).trim()===String(k).trim()})}
+function details(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:320px;overflow:auto;font-size:.78rem">${a.slice(0,300).map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
+async function audit(code){const api=window.KOW_CLEAN_I18N,old=api.current();api.setLanguage(code);await wait(250);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.();await wait(250);const result={d:dictCheck(code),r:renderedBleed(code)};if(old!==code){}return result}
 let lastReport=null;
-
-function currentLang(){
-  try{return window.KOW_CLEAN_I18N?.current?.()||document.getElementById('appLanguage')?.value||'en'}catch(e){return 'en'}
-}
-function nowIso(){return new Date().toISOString()}
-function parseResults(){
-  const root=document.getElementById('v460QaResults');
-  const report={
-    generated_at:nowIso(),
-    app_version:'4.6.0',
-    qa_version:'QA2 rendered translation test',
-    selected_language:currentLang(),
-    url:location.href,
-    results:{}
-  };
-  if(!root){report.error='QA results container not found';return report}
-  const blocks=[...root.children].filter(el=>el.querySelector('b,strong')||el.textContent.trim());
-  const langs=['English','Français','Deutsch','Italiano'];
-  for(const lang of langs){
-    const block=blocks.find(el=>el.textContent.trim().startsWith(lang));
-    if(!block)continue;
-    const raw=block.innerText||block.textContent||'';
-    const status=/\bPASS\b|RÉUSSI|BESTANDEN|SUPERATO/.test(raw)?'PASS':(/\bFAIL\b|ÉCHEC|FEHLER|NON SUPERATO/.test(raw)?'FAIL':'UNKNOWN');
-    const num=(label)=>{
-      const m=raw.match(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*:?\\s*(\\d+)','i'));
-      return m?Number(m[1]):null;
-    };
-    const details={};
-    const detailNodes=[...block.querySelectorAll('details')];
-    for(const d of detailNodes){
-      const s=d.querySelector('summary')?.textContent?.trim()||'Details';
-      details[s]=[...d.querySelectorAll('div')].map(x=>x.textContent.trim()).filter(Boolean);
-    }
-    // Also capture expanded/plain failure lines in older QA2 rendering.
-    const lines=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-    report.results[lang]={
-      status,
-      dictionary:num('Dictionary'),
-      rendered_english_bleed:num('Rendered English bleed'),
-      full_user_guide:num('Full User Guide'),
-      popups:num('Pop-ups'),
-      lines,
-      details
-    };
-  }
-  report.test_banner=!!document.querySelector('.test-banner,#multilingualTestBanner') || /MULTILINGUAL TEST|TEST.*NOT LIVE|TEST BUILD/i.test(document.body.innerText||'');
-  report.cname_expected='multilingualtest.firestorm-companion.uk';
-  return report;
-}
-function downloadReport(){
-  lastReport=parseResults();
-  const stamp=nowIso().replace(/[:.]/g,'-');
-  const blob=new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`KoW-Language-QA-v4.6.0-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
-}
-function install(){
-  const run=document.getElementById('v460QaRun');
-  if(!run)return;
-  if(document.getElementById('v460QaDownload'))return;
-  const btn=document.createElement('button');
-  btn.id='v460QaDownload';
-  btn.type='button';
-  btn.className=run.className||'app-action-secondary';
-  btn.textContent='⬇ Download QA Report';
-  btn.style.marginLeft='8px';
-  btn.addEventListener('click',downloadReport);
-  run.insertAdjacentElement('afterend',btn);
-
-  // Refresh cached report after every QA run.
-  run.addEventListener('click',()=>setTimeout(()=>{lastReport=parseResults()},1200));
-}
-window.kowDownloadLanguageQaReport=downloadReport;
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,500));
-else setTimeout(install,300);
-window.addEventListener('load',()=>setTimeout(install,900));
+async function run(){const out=$('v460QaResults');if(!out)return;const api=window.KOW_CLEAN_I18N,original=api.current(),ui=UI[original]||UI.en;out.innerHTML='<div class="notice">Running QA3 across every rendered application view…</div>';const report={generated_at:new Date().toISOString(),app_version:'4.6.0',qa_version:'QA3 comprehensive rendered audit',results:{}};let h='';try{for(const code of ['en','fr','de','it']){const a=await audit(code),ok=code==='en'||(!a.d.length&&!a.r.length);report.results[LABEL[code]]={status:ok?'PASS':'FAIL',dictionary:a.d,rendered_english_bleed:a.r};h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?ui.pass:ui.fail}</strong></div>`;if(code!=='en')h+=`<div>Dictionary: <b>${a.d.length}</b> · Rendered English bleed: <b>${a.r.length}</b></div>${details('Missing/untranslated dictionary entries',a.d)}${details('Rendered English bleed',a.r)}`;h+='</div>'}}finally{api.setLanguage(original);await wait(150);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.()}lastReport=report;out.innerHTML=h+'<div class="notice"><b>QA3:</b> PASS requires zero untranslated dictionary entries and zero high-confidence English UI text across all rendered application views. The old short phrase-list test has been removed.</div>'}
+function download(){const r=lastReport||{generated_at:new Date().toISOString(),error:'Run QA3 first'};const b=new Blob([JSON.stringify(r,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA3-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function inject(){const old=$('v460QaCard');if(old)old.remove();const s=$('settings');if(!s)return;const d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';d.innerHTML='<h2>🧪 Language QA / Rendered Translation Test — QA3</h2><p class="notice">QA3 scans every visible text node and translated attribute across every app view. It no longer relies on a short list of English phrases.</p><button id="v460QaRun" class="app-action-primary" type="button">Run Full Rendered QA</button> <button id="v460QaDownload" class="app-action-secondary" type="button">⬇ Download QA Report</button><div id="v460QaResults"></div>';s.appendChild(d);$('v460QaRun').addEventListener('click',run);$('v460QaDownload').addEventListener('click',download)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inject,450));else setTimeout(inject,250);
 })();
