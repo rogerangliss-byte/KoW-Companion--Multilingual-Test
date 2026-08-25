@@ -1,0 +1,25 @@
+{
+  "test_banner": true,
+  "cname": true,
+  "views": true,
+  "feature_scripts": true,
+  "guides_full": {
+    "fr": {
+      "chars": 8874,
+      "headings": 28,
+      "ok": true
+    },
+    "de": {
+      "chars": 8093,
+      "headings": 28,
+      "ok": true
+    },
+    "it": {
+      "chars": 8121,
+      "headings": 28,
+      "ok": true
+    }
+  },
+  "portraits": 67,
+  "qa3": true
+}
