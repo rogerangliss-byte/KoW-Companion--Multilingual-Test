@@ -1,136 +1,165 @@
-# KoW Companion — Benutzerhandbuch
-## Version 4.6.0 MEHRSPRACHIGER TEST — NICHT LIVE
+# ❓ Hilfe und Anweisungen
 
-KoW Companion unterstützt Planung, Verfolgung und Prognose der Offiziersentwicklung in *Kiss of War*. Die App verbindet Offiziersfortschritt, gemeinsames Inventar, Upgrade-Berechnungen, Mehr-Offizier-Planung, Prognosen zukünftiger Veröffentlichungen und Backup-Werkzeuge.
 
-## Empfohlener Ablauf
-1. **Inventar** — alle vorhandenen Ressourcen eingeben und speichern.
-2. **Offizier** — Offizier wählen und aktuellen Fortschritt eingeben.
-3. **Sterne** — Sternfortschritt und verfügbare Sternressourcen bestätigen.
-4. **Entwicklung** — Freischaltung, Fertigkeitsstränge und Training eingeben.
-5. **XP** — aktuelle Stufe und vorhandene XP-Bücher bestätigen.
-6. **Fortschritt** — MAXIMIERT, IN ARBEIT und NICHT BEGONNEN prüfen.
-7. **Planer** — Upgrades für einen oder mehrere Offiziere modellieren.
-8. **Upgrade-Ziele** — aktuellen Stand mit einem gewählten Ziel vergleichen.
-9. **Veröffentlichungen** — wiederkehrenden Kalender und Zukunftskosten prüfen.
-10. **Backup** — regelmäßig ein App-Backup exportieren.
+## ✨ Neu in v4.6.0 MULTILINGUAL TEST — NOT LIVE
 
-# Neu in v4.6.0
-- **Upgrade-Ziele & Empfehlungen**
-- **Dynamische Offiziersdaten**
-- **Globale Offiziersdaten**
-- **Datenbankgesteuerte Prognose zukünftiger Offizierskosten**
-- Verbesserte Planung zukünftiger Offiziere
-- Arbeitszustand bleibt bei normalem Aktualisieren erhalten
-- Planungs-, Inventar- und Backup-Funktionen aus v4.5.0 bleiben erhalten
 
-# Upgrade-Ziele & Empfehlungen
-Das System berechnet zerstörungsfrei, was zwischen dem gespeicherten Stand und einem Ziel fehlt. Ziele können Offiziersstufe, Sternstufe, Training oder MAX-Offizier umfassen.
+### 💾 Native Speicherung des Arbeitszustands
 
-**MAX-Offizier** bedeutet 5 Sterne, Stufe 70, freigeschaltet, alle vier Fertigkeitsstränge auf Stufe 5 und Training 180. Die Berechnung verbraucht nichts aus dem zentralen Inventar.
+Eine normale Browser-Aktualisierung behält die Arbeitsoberfläche an der aktuellen Stelle, statt wichtige Steuerelemente auf Standardwerte zurückzusetzen.
 
-# Dynamische Offiziersdaten
-v4.6.0 trennt veröffentlichte Offiziersdaten von der Hauptlogik. Dazu gehören Name, Saison, Seltenheit, Rolle/Typ, ORV-Kosten, SRV-Kosten, Bereitschaftsberechtigung und zugehörige Daten. Der veröffentlichte Datensatz ist unter **Einstellungen → Globale Offiziersdaten** prüfbar.
+- Selected Offizier and current app tab/page.
+- Offizier Search, Season, Rarity and Role filters.
+- Offizier Fortschritt MAXED / IN PROGRESS / NOT STARTED filters.
+- Vergleich Offizier Fortschritt filters and selected Offiziers.
+- Multi-Offizier Planer rows, Offizier selections, badge requirements and working resource fields.
+- Advanced Planer/session selections, future scenario fields and Resource Optimiser comparison Offizier.
+Gespeicherte Offiziersprofile, Pläne und das zentrale Inventar bleiben von diesem temporären Arbeitszustand getrennt.
 
-Neue Veröffentlichungen müssen zuerst in Test ergänzt und validiert werden, bevor sie nach Live übernommen werden.
 
-# Prognose zukünftiger Offizierskosten
-Sie schätzt mögliche ORV- und SRV-Kosten zukünftiger saisonaler legendärer Offiziere.
+### 📦 Korrekte Regeln für legendäre Truhen
 
-## Dynamische Prognosebasis
-Als Basis dient die neueste bestätigte saisonale legendäre Veröffentlichung in der Offiziersdatenbank.
+- Legendary Offizier Badge Chest: each chest can be used as either 1 Universal Legendary Badge or 600 Offizier Readiness Vouchers (ORV) . It cannot count as both.
+- Legendary Offizier Badge Selection Chest: each chest gives 1 specific Legendary Offizier Badge for an Offizier currently verfügbar in the Selection Chest pool. It does not convert to ORV or a Universal Legendary Badge.
+- Original Legendary Offiziers remain ineligible for ORV/SRV seasonal conversion routes.
 
-**Beispiel:** Bei v4.6.0 ist die neueste bestätigte Veröffentlichung **S7 Panzerjäger** mit **600 ORV pro Abzeichen und 300 SRV pro Exklusivstern**. Wird eine neuere bestätigte Veröffentlichung publiziert, rückt die Basis automatisch vor.
+### 🧮 Ressourcenoptimierer — Vorschau
 
-Prognosewerte sind nur Planungswerte und keine bestätigten Spielkosten.
+Select a second Offizier under Vergleich with Offizier to compare badge efficiency, including ORV cost per Offizier Badge where applicable. The Optimiser is preview-only and does not spend or alter saved resources.
 
-## Wiederkehrende Veröffentlichungsfolge
-- **Oktober — Rallye / Garnison**
-- **Januar — Infanterie**
-- **April — Panzer**
-- **Juli — Panzerjäger**
 
-Nach Juli folgt in der nächsten Saison wieder Oktober Rallye / Garnison.
+### 👥 Mehr-Offizier-Upgrade-Planer
 
-## Prognosewachstum
-Standardannahme: **20 % Wachstum pro Veröffentlichung**, frei änderbar. Angezeigt werden ORV pro Abzeichen, SRV pro Exklusivstern sowie prognostizierte ORV- und SRV-Gesamtsummen.
+Create a priority list of Offiziers and preview how shared badge resources could be allocated without changing normal saved Inventar. The Planer supports named plans, multiple Offizier rows, per-Offizier badge requirements, priority/order controls, ORV, Universal Legendary Badges, Badge Chests, Selection Chests and selectable Badge Chest strategy.
 
-# Zentrales Inventar
-Gemeinsame Ressourcen einmal eingeben und **Inventar speichern** drücken. Danach werden sie appweit verwendet.
 
-Genehmigte Reihenfolge:
-1. Legendäre Offiziersabzeichentruhe
-2. Legendäre Offiziersabzeichen-Auswahltruhe
-3. Offiziersbereitschaftsgutschein (ORV)
-4. Sternbereitschaftsgutschein (SRV)
-5. Universelles legendäres Offiziersabzeichen
-6. Universelles episches Offiziersabzeichen
-7. Universelles Elite-Offiziersabzeichen
-8. Individuelle Offiziersabzeichen
-9. Elite-Sterne I / II / III
-10. Epische Sterne I / II / III
-11. Legendäre Sterne I / II / III
-12. XP-Bücher — 100 / 500 / 1.000 / 5.000 / 10.000 / 20.000 / 50.000
+### 📋 Reihenfolge des zentralen Inventars
 
-Es gibt **kein 50-XP-Buch**.
+The Inventar now follows the approved Order in List sequence rather than spreadsheet row order:
 
-# Regeln für legendäre Truhen
-## Legendäre Offiziersabzeichentruhe
-Jede Truhe kann **entweder als 1 universelles legendäres Abzeichen oder als 600 ORV** verwendet werden. Nie beides gleichzeitig.
+- Legendary Offizier Badge Chest
+- Legendary Offizier Badge Selection Chest
+- Offizier Readiness Voucher (ORV)
+- Star Readiness Voucher (SRV)
+- Legendary Offizier Badge
+- Epic Offizier Badge
+- Elite Offizier Badge
+- Individuelle Offiziersabzeichen in the approved numbered order
+- Elite Sterne I–III
+- Epic Sterne I–III
+- Legendary Sterne I–III
+- XP Books: 100, 500, 1,000, 5,000, 10,000, 20,000 and 50,000
+The non-game 50 XP Book entry has been removed.
 
-## Legendäre Offiziersabzeichen-Auswahltruhe
-Jede Truhe liefert **1 bestimmtes legendäres Offiziersabzeichen** für einen aktuell berechtigten Offizier. Keine Umwandlung in ORV oder Universalabzeichen.
 
-# Originale legendäre Offiziere
-Sie verwenden keine saisonale ORV/SRV-Umwandlung. Ihre Entwicklung nutzt passende Ressourcen wie individuelle und universelle legendäre Abzeichen. Der Planer darf ihnen keine ORV oder SRV zuweisen.
+### 📊 Fortschritt und Vergleich
 
-# Offiziersfortschritt
-Der Offiziersbereich speichert Sterne, Stufe, Freischaltung, Fertigkeitsstränge und Training je Offizier. Gemeinsame Ressourcen bleiben im zentralen Inventar.
+Offizier Fortschritt continues to classify Offiziers as MAXED , IN PROGRESS or NOT STARTED . Shared Inventar does not artificially increase an Offizier's saved progress percentage. Vergleich Offizier Fortschritt uses actual saved Offizier progress.
 
-## Fertigkeitsstränge
-- **0★** — Strang 1
-- **1★** — Stränge 1–2
-- **2★** — Stränge 1–3
-- **3★ oder höher** — alle vier Stränge
 
-Stufe 1 ist kostenlos, sobald ein Strang verfügbar wird.
+### 🏅 Bestätigte Gesamtzahlen für Offiziersabzeichen
 
-# Bestätigte Abzeichenanforderungen
-- **Legendär:** 10 Freischaltung + 690 Fähigkeiten + 900 Training = **1.600 Abzeichen**
-- **Episch:** 10 + 440 + 4.500 = **4.950 Abzeichen**
-- **Elite:** 10 + 440 + 18.000 = **18.450 Abzeichen**
+- Legendary: 10 unlock + 690 Skills + 900 Training = 1,600 badges to MAX .
+- Epic: 10 unlock + 440 Skills + 4,500 Training = 4,950 badges to MAX .
+- Elite: 10 unlock + 440 Skills + 18,000 Training = 18,450 badges to MAX .
 
-# Fortschritt & Vergleich
-Fortschritt klassifiziert als **MAXIMIERT**, **IN ARBEIT** oder **NICHT BEGONNEN**. Nur im Inventar gehaltene Ressourcen erhöhen den gespeicherten Entwicklungsprozentsatz nicht. Fortschritts- und Vergleichsfilter arbeiten unabhängig; Arbeitseinstellungen bleiben nach normalem Aktualisieren erhalten.
+### 🧭 Planung aus v4.4.0 beibehalten
 
-# Ressourcenoptimierer
-Er vergleicht Entwicklungsoptionen und kann ORV-Effizienz hervorheben, wenn beide Offiziere berechtigt sind. Nur Vorschau: keine Ressourcen werden verbraucht.
+Planning Readiness Dashboard, Badge/Star/XP readiness, Priority Ziel, Suggested Next Action, future Oktober/Januar/April/Juli sessions, Season + Offizier Type reports, projected future Legendary resources, ORV/SRV forecasting and MAXED-Offizier exclusions remain verfügbar.
 
-# Mehr-Offizier-Upgrade-Planer
-Mehrere Offiziere werden priorisiert und gemeinsame Ressourcen gegen verbleibende Abzeichenanforderungen geprüft. Unterstützt werden ORV, Universalabzeichen, Truhen, Auswahltruhen und Truhenstrategien. Planung ist nicht destruktiv.
 
-# Erweiterte Planung und zukünftige Offiziere
-Sitzungen können gespeicherte Offiziere, Alle Sitzungen, Nächste Sitzung, Oktober Rallye/Garnison, Januar Infanterie, April Panzer und Juli Panzerjäger modellieren. **PROJIZIERTE** Offiziere sind Planungsplatzhalter und nicht bestätigt.
+### 🔮 Dynamische Prognose zukünftiger Offizierskosten
 
-Vollausbau eines projizierten legendären Offiziers: **1.600 Abzeichen, 98.000 Sternwert und 199.646.700 XP**. Für zwei: **3.200 Abzeichen, 196.000 Sternwert und 399.293.400 XP**.
+The forecast now uses the latest confirmed Legendary seasonal Offizier release in the Offizier Datenbank as its baseline. Example: at the v4.6.0 release, the latest confirmed baseline is S7 Panzerjäger — 600 ORV per Badge / 300 SRV per Exclusive Star . When a newer confirmed release is published, the baseline automatically advances.
 
-# Bereitschafts-Dashboard
-Es bewertet gespeicherte Szenarien anhand verfügbarer Ressourcen: Abzeichen-, Stern- und XP-Bereitschaft, Gesamtbereitschaft, Prioritätsziel und empfohlene nächste Aktion. Die knappste Ressource bestimmt die Gesamtbereitschaft.
+Future ORV/SRV figures are planning estimates only until actual release costs are confirmed.
 
-# Arbeitszustands-Persistenz
-Normales Aktualisieren erhält unter anderem ausgewählten Offizier, aktuelle Seite, Filter, Vergleiche, Planerzeilen, erweiterte Auswahl, Zukunftsszenariofelder und Vergleichsoffizier des Optimierers. Das ist getrennt von dauerhaft gespeicherten Profilen, Plänen und Inventar.
 
-# Wiederkehrender Veröffentlichungskalender
-Die Seite Veröffentlichungen zeigt den Jahreszyklus und erkennt aktuelle Periode und nächste Veröffentlichung automatisch: **Oktober Rallye/Garnison → Januar Infanterie → April Panzer → Juli Panzerjäger**, danach Wiederholung.
+## 1. Inventar
 
-# Offiziersdatenbank
-Sie steuert die Hauptliste und unterstützt Suche, Saisonfilter, Hinzufügen/Bearbeiten/Löschen, CSV-Export/Import und Wiederherstellung veröffentlichter Standarddaten. Neue bestätigte Veröffentlichungen werden vor Live getestet und können die Prognosebasis automatisch vorziehen.
+Start here. Enter the resources you currently hold and press Save Inventar . Inventar is shared throughout the app, so you only need to maintain these resource totals in one place.
 
-# Backup & Wiederherstellung
-Unter **Einstellungen → App-Backup exportieren** ein portables Backup erstellen. Vor größeren Änderungen ein bekannt gutes Backup behalten. Nach Wiederherstellung prüfen, ob die Daten auch nach Neuladen vorhanden sind.
+Inventar includes Offizier Readiness Vouchers (ORV) , Star Readiness Vouchers (SRV) , Universal Legendary/Epic/Elite Badges, Legendary Offizier Badge Chests and Selection Chests, Legendary/Epic/Elite Sterne, XP Books, and individual Offizier Badges.
 
-# Wichtiges Planungsprinzip
-KoW Companion trennt **bestätigte Daten** von **Prognosedaten**. Bestätigte Datenbankkosten gelten als bekannt; Zukunftskosten sind Schätzungen. Sobald ein Offizier offiziell veröffentlicht ist, ersetzen bestätigte Werte die Prognoseannahmen.
+For individual Offizier Badges, enter quantities against the appropriate Offizier. Each Offizier's badge quantity is stored separately. Update Inventar whenever your in-game resources change, then save it before planning upgrades.
 
----
-**Erstellt von FireStorm (371)**
+
+## 2. Offizier
+
+Use Search , Season and Offizier Type / Role filters to narrow the Offizier list. Select the Offizier you want to calculate. A matching portrait is displayed automatically when its file is verfügbar in the officer-portraits folder.
+
+The selected Offizier determines the cost of an Offizier Badge in Offizier Readiness Vouchers (ORV) and the cost of an Exclusive Star in Star Readiness Vouchers (SRV) .
+
+The Offizier Upgrade Summary shows the remaining Offizier Badges, Offizier Sterne and Offizier XP for the currently selected Offizier.
+
+Original Offiziere : Offizier Readiness Vouchers (ORV) and Star Readiness Vouchers (SRV) cannot be used for Original Offiziers.
+
+
+## 3. Sterne
+
+Set the Offizier's current and target Star level. The Sterne tab automatically follows the selected Offizier rarity: Legendary, Epic or Elite Star I / II / III. Star Readiness Vouchers (SRV) are shown only for Legendary Offiziers and cannot be used by Epic or Elite Offiziers.
+
+
+## 4. Entwicklung
+
+Enter unlock status, the four independent Skill Strand levels and Training Level. Entwicklung uses the relevant saved Inventar resources when calculating what is verfügbar for the selected Offizier.
+
+Each Universal Legendary Badge is worth 1 Offizier Badge for a Legendary Offizier.
+
+Each Legendary Offizier Badge Selection Chest gives 1 specific Legendary Offizier Badge for an Offizier currently verfügbar in that chest. It does not convert to ORV. Each Legendary Offizier Badge Chest can instead be used as either 1 Universal Legendary Badge or 600 ORV .
+
+
+## 5. XP
+
+Geben Sie aktuelle und Zielstufe ein. Gespeicherte XP-Bücher werden zur Berechnung vorhandener, benötigter und fehlender XP verwendet.
+
+
+## 6. Planer und Ressourcenoptimierer
+
+Use Planer after entering Inventar and the Offizier's Sterne, Entwicklung and XP progress. Select a goal such as Max Offizier, Nächster Stern, 5★ erreichen, Max Skills or Max Training to see requirements, resources vorhanden and Fehlbestands.
+
+The Resource Optimiser lets you select a second Offizier in Vergleich with Offizier . It compares the Offizier Readiness Voucher (ORV) cost per Offizier Badge for the two Offiziers.
+
+How to interpret the recommendation: where both Offiziers can use ORV, the optimiser recommends favouring ORV on the Offizier with the lower ORV cost per badge and favouring shared Universal Legendary Badges / Legendary Offizier Badge Chests on the Offizier with the higher ORV cost per badge . This protects the more expensive Offizier from unnecessary ORV spending.
+
+The optimiser is preview only . It does not automatically spend, allocate or change your saved resources.
+
+
+## 7. Mehr-Offizier-Upgrade-Planer
+
+The Multi-Offizier Planer lets you create a priority list of several Offiziers, set the Offizier Badges still needed for each, and preview how shared ORV, Universal Legendary Badges and Legendary Offizier Badge Chests could cover the plan.
+
+Pläne sind nur Vorschauen und verändern das gespeicherte Inventar nicht. Benannte Pläne können lokal gespeichert und später geladen werden.
+
+
+## 8. Fortschritt speichern
+
+Offizier MAX: use the ⭐ Offizier MAX button to set the selected Offizier to 5 Sterne, Level 70, Freischaltunged, all 4 Skill Strands at Level 5 and Training Level 180. The Offizier profile is saved immediately. Shared inventory is not spent or changed.
+
+Use Fortschritt speichern after entering or changing Offizier progress information. Fortschritt is stored locally in the browser on the current device. Fortschritt speichern does not publish your personal data to other users.
+
+
+## 9. Datenbank
+
+The Datenbank Manager controls the Offizier master list. Use it to add or edit Offiziers and export the database. Export CSV exports the Offizier database; it is different from Fortschritt speichern and App Backup.
+
+To publish new or edited Offiziers for everyone, update the published officers.json and officers.csv files in the GitHub repository.
+
+
+## 10. Wiederkehrender Veröffentlichungskalender
+
+The Veröffentlichungen tab shows the recurring August → Juli annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.
+
+
+## 11. Einstellungen, Backup & Wiederherstellung
+
+Einstellungen contains the app name, portrait and landscape backgrounds, update controls and Backup & Restore .
+
+App-Backup exportieren creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. App-Backup wiederherstellen loads a previously exported JSON backup and reloads the app.
+
+Nach Updates suchen compares the installed version with the published version. Neueste Version laden refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
+
+
+## Begriffe
+
+ORV = Offizier Readiness Voucher SRV = Star Readiness Voucher Universal Legendary Badge = 1 Offizier Badge for a Legendary Offizier Exclusive Star = 110 Offizier Sternwert

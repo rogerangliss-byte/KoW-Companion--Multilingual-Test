@@ -1,0 +1,52 @@
+{
+  "version": "v4.6.0",
+  "base": "English Live HOTFIX-2",
+  "feature_file_hash_mismatches": [],
+  "canonical_help_signature": {
+    "h2": 1,
+    "h3": 13,
+    "h4": 9,
+    "p": 37,
+    "li": 24,
+    "ol": 1,
+    "ul": 3
+  },
+  "translated_help_signatures": {
+    "fr": {
+      "h2": 1,
+      "h3": 13,
+      "h4": 9,
+      "p": 37,
+      "li": 24,
+      "ol": 1,
+      "ul": 3
+    },
+    "de": {
+      "h2": 1,
+      "h3": 13,
+      "h4": 9,
+      "p": 37,
+      "li": 24,
+      "ol": 1,
+      "ul": 3
+    },
+    "it": {
+      "h2": 1,
+      "h3": 13,
+      "h4": 9,
+      "p": 37,
+      "li": 24,
+      "ol": 1,
+      "ul": 3
+    }
+  },
+  "guide_structural_parity": true,
+  "test_banner": true,
+  "language_files": [
+    "multilingual-dictionaries.json",
+    "multilingual-help-runtime.js",
+    "multilingual-help.js",
+    "multilingual-qa.js",
+    "multilingual-runtime.js"
+  ]
+}

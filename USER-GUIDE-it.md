@@ -1,136 +1,165 @@
-# KoW Companion — Guida utente
-## Versione 4.6.0 TEST MULTILINGUE — NON LIVE
+# ❓ Aiuto e istruzioni
 
-KoW Companion aiuta a pianificare, monitorare e prevedere lo sviluppo degli Ufficiali in *Kiss of War*. Riunisce progresso Ufficiali, Inventario condiviso, calcoli di potenziamento, pianificazione multi-Ufficiale, previsione delle uscite future e strumenti di backup.
 
-## Flusso consigliato
-1. **Inventario** — inserisci e salva tutte le risorse possedute.
-2. **Ufficiale** — seleziona un Ufficiale e inserisci il progresso attuale.
-3. **Stelle** — conferma progresso e risorse Stella disponibili.
-4. **Sviluppo** — inserisci Sblocco, Rami abilità e Addestramento.
-5. **XP** — conferma Livello attuale e Libri XP posseduti.
-6. **Progressi** — controlla MASSIMIZZATI, IN CORSO e NON INIZIATI.
-7. **Pianificatore** — modella potenziamenti per uno o più Ufficiali.
-8. **Obiettivi di potenziamento** — confronta la posizione attuale con un obiettivo.
-9. **Uscite** — consulta calendario ricorrente e previsioni dei costi futuri.
-10. **Backup** — esporta periodicamente un Backup dell’app.
+## ✨ Novità — v4.6.0 MULTILINGUAL TEST — NOT LIVE
 
-# Novità di v4.6.0
-- **Obiettivi di potenziamento e consigli**
-- **Dati dinamici degli Ufficiali**
-- **Informazioni Dati globali Ufficiali**
-- **Previsione costi futuri basata sulla Banca dati**
-- Pianificazione migliorata dei futuri Ufficiali
-- Persistenza dello stato di lavoro dopo un normale aggiornamento
-- Funzioni v4.5.0 di pianificazione, Inventario e backup mantenute
 
-# Obiettivi di potenziamento e consigli
-Il sistema calcola senza detrazioni ciò che manca tra la posizione salvata di un Ufficiale e un obiettivo scelto. Gli obiettivi possono includere Livello, Stelle, Addestramento o Ufficiale MAX.
+### 💾 Persistenza nativa dello stato di lavoro
 
-**Ufficiale MAX** significa 5 Stelle, Livello 70, Ufficiale sbloccato, tutti e quattro i Rami abilità a Livello 5 e Addestramento 180. Il calcolo non spende risorse né sottrae nulla dall’Inventario centrale.
+Un normale aggiornamento del browser mantiene l’interfaccia di lavoro dove l’hai lasciata invece di riportare i controlli principali ai valori predefiniti.
 
-# Dati dinamici degli Ufficiali
-La v4.6.0 separa i dati pubblicati delle uscite dalla logica principale. Comprendono nome, Stagione, rarità, ruolo/tipo, costo ORV, costo SRV, idoneità preparazione e dati associati. Il dataset pubblicato è verificabile in **Impostazioni → Dati globali Ufficiali**.
+- Selected Ufficiale and current app tab/page.
+- Ufficiale Search, Season, Rarity and Role filters.
+- Ufficiale Progressi MAXED / IN PROGRESS / NOT STARTED filters.
+- Confronto Ufficiale Progressi filters and selected Ufficiales.
+- Multi-Ufficiale Pianificatore rows, Ufficiale selections, badge requirements and working resource fields.
+- Advanced Pianificatore/session selections, future scenario fields and Resource Optimiser comparison Ufficiale.
+Profili Ufficiale salvati, piani salvati e Inventario centrale restano separati da questo stato temporaneo dell’interfaccia.
 
-Le nuove uscite devono essere aggiunte e validate prima nell’ambiente Test e solo dopo promosse a Live.
 
-# Previsione costi futuri degli Ufficiali
-Stima possibili costi ORV e SRV dei futuri Ufficiali Leggendari stagionali.
+### 📦 Regole corrette delle Casse Leggendarie
 
-## Base dinamica della previsione
-La v4.6.0 usa come base l’ultima uscita stagionale Leggendaria confermata nella Banca dati Ufficiali.
+- Legendary Ufficiale Badge Chest: each chest can be used as either 1 Universal Legendary Badge or 600 Ufficiale Readiness Vouchers (ORV) . It cannot count as both.
+- Legendary Ufficiale Badge Selection Chest: each chest gives 1 specific Legendary Ufficiale Badge for an Ufficiale currently disponibile in the Selection Chest pool. It does not convert to ORV or a Universal Legendary Badge.
+- Original Legendary Ufficiales remain ineligible for ORV/SRV seasonal conversion routes.
 
-**Esempio:** al rilascio v4.6.0 l’ultima uscita confermata è **S7 Cacciacarri**, con **600 ORV per Badge e 300 SRV per Stella esclusiva**. Quando viene pubblicata un’uscita confermata più recente, la base avanza automaticamente.
+### 🧮 Ottimizzatore risorse — Anteprima
 
-I valori previsti sono solo stime di pianificazione e non costi di gioco confermati.
+Select a second Ufficiale under Confronto with Ufficiale to compare badge efficiency, including ORV cost per Ufficiale Badge where applicable. The Optimiser is preview-only and does not spend or alter saved resources.
 
-## Sequenza ricorrente delle uscite
-- **Ottobre — Rally / Guarnigione**
-- **Gennaio — Fanteria**
-- **Aprile — Carri**
-- **Luglio — Cacciacarri**
 
-Dopo luglio il ciclo continua nella Stagione successiva con Ottobre Rally / Guarnigione.
+### 👥 Pianificatore potenziamento multi-Ufficiale
 
-## Crescita della previsione
-L’ipotesi predefinita è **20% di crescita per uscita**, modificabile. La previsione mostra ORV per Badge, SRV per Stella esclusiva, ORV totali e SRV totali previsti.
+Create a priority list of Ufficiales and preview how shared badge resources could be allocated without changing normal saved Inventario. The Pianificatore supports named plans, multiple Ufficiale rows, per-Ufficiale badge requirements, priority/order controls, ORV, Universal Legendary Badges, Badge Chests, Selection Chests and selectable Badge Chest strategy.
 
-# Inventario centrale
-Inserisci le risorse condivise una sola volta e premi **Salva Inventario**. I valori salvati vengono usati in tutta l’app.
 
-Ordine approvato:
-1. Cassa Badge Ufficiale Leggendario
-2. Cassa selezione Badge Ufficiale Leggendario
-3. Voucher Preparazione Ufficiale (ORV)
-4. Voucher Preparazione Stella (SRV)
-5. Badge Universale Ufficiale Leggendario
-6. Badge Universale Ufficiale Epico
-7. Badge Universale Ufficiale Elite
-8. Badge individuali Ufficiali
-9. Stelle Elite I / II / III
-10. Stelle Epiche I / II / III
-11. Stelle Leggendarie I / II / III
-12. Libri XP — 100 / 500 / 1.000 / 5.000 / 10.000 / 20.000 / 50.000
+### 📋 Ordine dell’Inventario centrale
 
-**Non esiste un Libro XP da 50**.
+The Inventario now follows the approved Order in List sequence rather than spreadsheet row order:
 
-# Regole delle Casse Leggendarie
-## Cassa Badge Ufficiale Leggendario
-Ogni cassa può essere usata come **1 Badge Universale Leggendario oppure 600 ORV**. Non può essere conteggiata in entrambi i modi.
+- Legendary Ufficiale Badge Chest
+- Legendary Ufficiale Badge Selection Chest
+- Ufficiale Readiness Voucher (ORV)
+- Star Readiness Voucher (SRV)
+- Legendary Ufficiale Badge
+- Epic Ufficiale Badge
+- Elite Ufficiale Badge
+- Badge individuali Ufficiale in the approved numbered order
+- Elite Stelle I–III
+- Epic Stelle I–III
+- Legendary Stelle I–III
+- XP Books: 100, 500, 1,000, 5,000, 10,000, 20,000 and 50,000
+The non-game 50 XP Book entry has been removed.
 
-## Cassa selezione Badge Ufficiale Leggendario
-Ogni cassa fornisce **1 Badge specifico di un Ufficiale Leggendario** attualmente idoneo. Non si converte in ORV e non diventa Badge Universale.
 
-# Ufficiali Leggendari Originali
-Non usano conversioni stagionali ORV/SRV. La loro progressione usa risorse applicabili come Badge individuali e Badge Universali Leggendari. Il Pianificatore non deve assegnare ORV o SRV a un Originale Leggendario.
+### 📊 Progressii e Confronto
 
-# Progresso Ufficiale
-La sezione Ufficiale memorizza Stelle, Livello, Sblocco, Rami abilità e Addestramento specifici. Le risorse condivise restano nell’Inventario centrale.
+Ufficiale Progressi continues to classify Ufficiales as MAXED , IN PROGRESS or NOT STARTED . Shared Inventario does not artificially increase an Ufficiale's saved progress percentage. Confronto Ufficiale Progressi uses actual saved Ufficiale progress.
 
-## Rami abilità
-- **0★** — Ramo 1
-- **1★** — Rami 1–2
-- **2★** — Rami 1–3
-- **3★ o superiore** — tutti e quattro i Rami
 
-Il Livello 1 è gratuito quando un Ramo diventa disponibile.
+### 🏅 Totali Badge Ufficiale confermati
 
-# Requisiti Badge confermati
-- **Leggendario:** 10 Sblocco + 690 Abilità + 900 Addestramento = **1.600 Badge**
-- **Epico:** 10 + 440 + 4.500 = **4.950 Badge**
-- **Elite:** 10 + 440 + 18.000 = **18.450 Badge**
+- Legendary: 10 unlock + 690 Skills + 900 Training = 1,600 badges to MAX .
+- Epic: 10 unlock + 440 Skills + 4,500 Training = 4,950 badges to MAX .
+- Elite: 10 unlock + 440 Skills + 18,000 Training = 18,450 badges to MAX .
 
-# Progressi e Confronto
-Progressi classifica gli Ufficiali come **MASSIMIZZATO**, **IN CORSO** o **NON INIZIATO**. Le risorse semplicemente detenute nell’Inventario non aumentano la percentuale di sviluppo salvata. I filtri Progressi e Confronto sono indipendenti e le selezioni di lavoro restano dopo un normale aggiornamento.
+### 🧭 Pianificazione v4.4.0 mantenuta
 
-# Ottimizzatore risorse
-Confronta opzioni di sviluppo tra Ufficiali e può evidenziare l’efficienza ORV quando entrambi sono idonei. È solo un’anteprima e non spende risorse.
+Planning Readiness Dashboard, Badge/Star/XP readiness, Priority Obiettivo, Suggested Next Action, future Ottobre/Gennaio/Aprile/Luglio sessions, Season + Ufficiale Type reports, projected future Legendary resources, ORV/SRV forecasting and MAXED-Ufficiale exclusions remain disponibile.
 
-# Pianificatore potenziamento multi-Ufficiale
-Mette più Ufficiali in ordine di priorità e valuta come le risorse condivise coprono i Badge mancanti. Supporta ORV, Badge Universali, Casse, Casse di selezione e strategie delle Casse. La pianificazione non è distruttiva.
 
-# Pianificazione avanzata e futuri Ufficiali
-Le sessioni possono modellare Ufficiali salvati, Tutte le sessioni, Prossima sessione, Ottobre Rally/Guarnigione, Gennaio Fanteria, Aprile Carri e Luglio Cacciacarri. Gli Ufficiali **PROIETTATI** sono segnaposto di pianificazione, non Ufficiali confermati.
+### 🔮 Previsione dinamica costi futuri Ufficiali
 
-Risorse stabilite per un Leggendario proiettato completo: **1.600 Badge, 98.000 valore Stelle e 199.646.700 XP**. Per due: **3.200 Badge, 196.000 valore Stelle e 399.293.400 XP**.
+The forecast now uses the latest confirmed Legendary seasonal Ufficiale release in the Ufficiale Banca dati as its baseline. Example: at the v4.6.0 release, the latest confirmed baseline is S7 Cacciacarri — 600 ORV per Badge / 300 SRV per Exclusive Star . When a newer confirmed release is published, the baseline automatically advances.
 
-# Dashboard preparazione
-Valuta scenari salvati rispetto alle risorse disponibili: preparazione Badge, Stelle, XP, preparazione complessiva, obiettivo prioritario e prossima azione suggerita. La risorsa limitante determina la preparazione complessiva.
+Future ORV/SRV figures are planning estimates only until actual release costs are confirmed.
 
-# Persistenza dello stato di lavoro
-Un normale aggiornamento conserva Ufficiale selezionato, pagina corrente, filtri, confronti, righe del Pianificatore, selezioni avanzate, campi scenari futuri e Ufficiale di confronto dell’Ottimizzatore. È separato da profili, piani e Inventario salvati permanentemente.
 
-# Calendario ricorrente delle uscite
-La sezione Uscite mostra il ciclo annuale e identifica automaticamente periodo corrente e prossima uscita: **Ottobre Rally/Guarnigione → Gennaio Fanteria → Aprile Carri → Luglio Cacciacarri**, poi si ripete.
+## 1. Inventario
 
-# Banca dati Ufficiali
-Controlla l’elenco principale e supporta ricerca, filtro Stagione, aggiunta/modifica/eliminazione, esportazione/importazione CSV e ripristino dei valori pubblicati. Le nuove uscite confermate devono essere testate prima di Live e possono avanzare automaticamente la base della previsione.
+Start here. Enter the resources you currently hold and press Save Inventario . Inventario is shared throughout the app, so you only need to maintain these resource totals in one place.
 
-# Backup e ripristino
-Usa **Impostazioni → Esporta Backup app** per creare un backup portatile. Conserva un backup valido prima di modifiche importanti. Dopo il ripristino verifica che i dati restino presenti dopo il ricaricamento.
+Inventario includes Ufficiale Readiness Vouchers (ORV) , Star Readiness Vouchers (SRV) , Universal Legendary/Epic/Elite Badges, Legendary Ufficiale Badge Chests and Selection Chests, Legendary/Epic/Elite Stelle, XP Books, and individual Ufficiale Badges.
 
-# Principio importante di pianificazione
-KoW Companion separa **dati confermati** e **dati previsti**. I costi confermati nella Banca dati sono informazioni note; i costi futuri sono stime. Quando un Ufficiale viene rilasciato ufficialmente, i valori confermati devono sostituire le ipotesi previste.
+For individual Ufficiale Badges, enter quantities against the appropriate Ufficiale. Each Ufficiale's badge quantity is stored separately. Update Inventario whenever your in-game resources change, then save it before planning upgrades.
 
----
-**Creato da FireStorm (371)**
+
+## 2. Ufficiale
+
+Use Search , Season and Ufficiale Type / Role filters to narrow the Ufficiale list. Select the Ufficiale you want to calculate. A matching portrait is displayed automatically when its file is disponibile in the officer-portraits folder.
+
+The selected Ufficiale determines the cost of an Ufficiale Badge in Ufficiale Readiness Vouchers (ORV) and the cost of an Exclusive Star in Star Readiness Vouchers (SRV) .
+
+The Ufficiale Upgrade Summary shows the remaining Ufficiale Badges, Ufficiale Stelle and Ufficiale XP for the currently selected Ufficiale.
+
+Original Ufficiali : Ufficiale Readiness Vouchers (ORV) and Star Readiness Vouchers (SRV) cannot be used for Original Ufficiales.
+
+
+## 3. Stelle
+
+Set the Ufficiale's current and target Star level. The Stelle tab automatically follows the selected Ufficiale rarity: Legendary, Epic or Elite Star I / II / III. Star Readiness Vouchers (SRV) are shown only for Legendary Ufficiales and cannot be used by Epic or Elite Ufficiales.
+
+
+## 4. Sviluppo
+
+Enter unlock status, the four independent Skill Strand levels and Training Level. Sviluppo uses the relevant saved Inventario resources when calculating what is disponibile for the selected Ufficiale.
+
+Each Universal Legendary Badge is worth 1 Ufficiale Badge for a Legendary Ufficiale.
+
+Each Legendary Ufficiale Badge Selection Chest gives 1 specific Legendary Ufficiale Badge for an Ufficiale currently disponibile in that chest. It does not convert to ORV. Each Legendary Ufficiale Badge Chest can instead be used as either 1 Universal Legendary Badge or 600 ORV .
+
+
+## 5. XP
+
+Inserisci Livello attuale e obiettivo. I Libri XP salvati nell’Inventario calcolano XP posseduti, richiesti e mancanti.
+
+
+## 6. Pianificatore e Ottimizzatore risorse
+
+Use Pianificatore after entering Inventario and the Ufficiale's Stelle, Sviluppo and XP progress. Select a goal such as Max Ufficiale, Stella successiva, Raggiungi 5★, Max Skills or Max Training to see requirements, resources posseduto and mancantes.
+
+The Resource Optimiser lets you select a second Ufficiale in Confronto with Ufficiale . It compares the Ufficiale Readiness Voucher (ORV) cost per Ufficiale Badge for the two Ufficiales.
+
+How to interpret the recommendation: where both Ufficiales can use ORV, the optimiser recommends favouring ORV on the Ufficiale with the lower ORV cost per badge and favouring shared Universal Legendary Badges / Legendary Ufficiale Badge Chests on the Ufficiale with the higher ORV cost per badge . This protects the more expensive Ufficiale from unnecessary ORV spending.
+
+The optimiser is preview only . It does not automatically spend, allocate or change your saved resources.
+
+
+## 7. Pianificatore potenziamento multi-Ufficiale
+
+The Multi-Ufficiale Pianificatore lets you create a priority list of several Ufficiales, set the Ufficiale Badges still needed for each, and preview how shared ORV, Universal Legendary Badges and Legendary Ufficiale Badge Chests could cover the plan.
+
+I piani sono solo anteprime e non spendono né modificano l’Inventario salvato. I piani nominati possono essere salvati localmente e ricaricati.
+
+
+## 8. Salva progressi
+
+Ufficiale MAX: use the ⭐ Ufficiale MAX button to set the selected Ufficiale to 5 Stelle, Level 70, Sbloccoed, all 4 Skill Strands at Level 5 and Training Level 180. The Ufficiale profile is saved immediately. Shared inventory is not spent or changed.
+
+Use Salva progressi after entering or changing Ufficiale progress information. Progressi is stored locally in the browser on the current device. Salva progressi does not publish your personal data to other users.
+
+
+## 9. Banca dati
+
+The Banca dati Manager controls the Ufficiale master list. Use it to add or edit Ufficiales and export the database. Export CSV exports the Ufficiale database; it is different from Salva progressi and App Backup.
+
+To publish new or edited Ufficiales for everyone, update the published officers.json and officers.csv files in the GitHub repository.
+
+
+## 10. Calendario ricorrente delle uscite
+
+The Uscite tab shows the recurring Agosto → Luglio annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.
+
+
+## 11. Impostazioni, backup e ripristino
+
+Impostazioni contains the app name, portrait and landscape backgrounds, update controls and Backup & Restore .
+
+Esporta Backup App creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. Ripristina Backup App loads a previously exported JSON backup and reloads the app.
+
+Controlla aggiornamenti compares the installed version with the published version. Aggiorna all’ultima versione refreshes the KoW Companion application cache without intentionally deleting saved calculator progress.
+
+
+## Terminologia
+
+ORV = Ufficiale Readiness Voucher SRV = Star Readiness Voucher Universal Legendary Badge = 1 Ufficiale Badge for a Legendary Ufficiale Exclusive Star = 110 Ufficiale Valore Stelle
