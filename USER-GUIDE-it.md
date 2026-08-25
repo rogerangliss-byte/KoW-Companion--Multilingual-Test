@@ -58,9 +58,9 @@ Ufficiale Progressi continues to classify Ufficiales as MAXED , IN PROGRESS or N
 
 ### 🏅 Totali Badge Ufficiale confermati
 
-- Legendary: 10 unlock + 690 Skills + 900 Training = 1,600 badges to MAX .
-- Epic: 10 unlock + 440 Skills + 4,500 Training = 4,950 badges to MAX .
-- Elite: 10 unlock + 440 Skills + 18,000 Training = 18,450 badges to MAX .
+- Legendary: 10 unlock + 690 Skills + 900 Training = 1,600 Badge to MAX .
+- Epic: 10 unlock + 440 Skills + 4,500 Training = 4,950 Badge to MAX .
+- Elite: 10 unlock + 440 Skills + 18,000 Training = 18,450 Badge to MAX .
 
 ### 🧭 Pianificazione v4.4.0 mantenuta
 
