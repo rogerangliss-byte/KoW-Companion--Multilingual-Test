@@ -24,3 +24,6 @@ Automated QA3 must PASS first. Then manually verify each language (English, Fren
 20. Repeat at desktop and mobile/portrait width.
 
 A Live candidate requires automated QA3 PASS plus all 20 manual checks PASS.
+
+## Mandatory User Guide 1:1 Parity Gate
+Before any language QA can PASS, French, German and Italian must each match the canonical English v4.6.0 User Guide in structure and information. QA requires exactly 28 guide headings, 40 list items and 31 explanatory paragraphs in the rendered guide, plus all critical v4.6.0 guide concepts. A shortened or summary guide must FAIL even if its translation is otherwise correct.
