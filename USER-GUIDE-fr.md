@@ -96,7 +96,7 @@ Original Officiers : Bons de préparation d’Officier (ORV) and Bons de prépar
 
 ## 3. Étoiles
 
-Set the Officier's current and target Star level. The Étoiles tab automatically follows the selected Officier rarity: Legendary, Epic or Elite Star I / II / III. Bons de préparation d’Étoile (SRV) are shown only for Legendary Officiers and canpas be utilisés by Epic or Elite Officiers.
+Définissez le niveau d’Étoiles actuel et cible de l’Officier. L’onglet Étoiles suit automatiquement la rareté de l’Officier sélectionné : Étoile légendaire, épique ou élite I / II / III. Bons de préparation d’Étoile (SRV) are shown only for Legendary Officiers and canpas be utilisés by Epic or Elite Officiers.
 
 
 ## 4. Développement
@@ -133,7 +133,7 @@ Les plans sont uniquement des aperçus et ne dépensent ni ne modifient l’Inve
 
 ## 8. Sauvegarder la progression
 
-Officier MAX: use the ⭐ Officier MAX button to set the selected Officier to 5 Étoiles, Level 70, Déblocageed, all 4 Skill Strands at Level 5 and Training Level 180. The Officier profile is saved immediately. Shared inventory is pas spent or changed.
+Officier MAX: utilisez le bouton ⭐ Officier MAX pour définir l’Officier sélectionné à 5 Étoiles, niveau 70, débloqué, les 4 branches de compétence au niveau 5 et le niveau d’entraînement à 180. Le profil de l’Officier est enregistré immédiatement. L’inventaire partagé n’est ni dépensé ni modifié.
 
 Utilisez Sauvegarder la progression after entering or changing Officier progress information. Progression is stored locally in the browser on the current device. Sauvegarder la progression does pas publish your personal data to other users.
 
@@ -152,7 +152,7 @@ The Sorties affiche le cycle annuel récurrent des sorties KoW d’août à juil
 
 ## 11. Paramètres, sauvegarde et restauration
 
-Paramètres contains the app name, portrait and landscape backgrounds, update controls and Backup & Restore .
+Paramètres contains the app name, portrait and landscape backgrounds, update controls and Sauvegarde et restauration .
 
 Exporter la sauvegarde de l’application creates a JSON backup of KoW Companion data stored locally by the browser. Keep this file somewhere safe. Restaurer la sauvegarde de l’application loads a previously exported JSON backup and reloads the app.
 
