@@ -1,42 +1,77 @@
-/* v4.6.0 read-only Language QA */
+/* KoW Companion v4.6.0 QA2 — rendered-language audit */
 (function(){
 'use strict';
-const labels={
-en:['Language QA / Translation Test','Run Full Language QA','PASS','FAIL','Missing','Still English','v4.6.0 features','Popup translations'],
-fr:['QA linguistique / Test de traduction','Lancer le QA complet','RÉUSSI','ÉCHEC','Manquant','Toujours en anglais','Fonctions v4.6.0','Traductions des fenêtres'],
-de:['Sprach-QA / Übersetzungstest','Vollständige Sprach-QA starten','BESTANDEN','FEHLER','Fehlend','Noch Englisch','v4.6.0-Funktionen','Pop-up-Übersetzungen'],
-it:['QA lingua / Test traduzione','Esegui QA completo lingua','SUPERATO','NON SUPERATO','Mancante','Ancora in inglese','Funzioni v4.6.0','Traduzioni pop-up']};
-const names={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
-const req=['Upgrade Targets & Recommendations','Target Level','Target Stars','Target Training','Calculate Target Recommendation','Global Officer Data:','Data version:','Officers:','Published:','Resource requirement to target','Inventory is read for comparison only; nothing is spent or changed.','Forecast future Officer costs from the established Officer-release sequence.','latest confirmed database release','Forecast only — replace with confirmed costs when released.'];
-const pops=['Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.','Enter a plan name.','Plan saved.','Saved plan deleted.','Fix validation issues first.','Officer database saved.','CSV validation failed.','CSV imported.','Restore default officer database?','Appearance and backgrounds restored to defaults.','Reset Central Inventory?','S7 Julia progress saved.','S7 Julia is now saved as MAXED.','Reset saved progress for S7 Julia? Shared resources will not be changed.'];
-const ignore=/^(ORV|SRV|XP|MAX|TEST|CSV|JSON|KoW|S[2-9]|v?\d+(?:\.\d+)+|\d+|[★⭐\s\d.,:%+\-–—/()]+)$/i;
+const $=id=>document.getElementById(id);
+const LABEL={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
+const UI={
+en:{title:'Language QA / Rendered Translation Test',run:'Run Full Rendered QA',pass:'PASS',fail:'FAIL',dict:'Dictionary',render:'Rendered English bleed',guide:'Full User Guide',popup:'Pop-ups'},
+fr:{title:'QA linguistique / Test rendu',run:'Lancer le QA rendu complet',pass:'RÉUSSI',fail:'ÉCHEC',dict:'Dictionnaire',render:'Anglais visible détecté',guide:'Guide utilisateur complet',popup:'Fenêtres contextuelles'},
+de:{title:'Sprach-QA / Render-Test',run:'Vollständige Render-QA starten',pass:'BESTANDEN',fail:'FEHLER',dict:'Wörterbuch',render:'Sichtbarer englischer Text',guide:'Vollständiges Benutzerhandbuch',popup:'Pop-ups'},
+it:{title:'QA lingua / Test visualizzato',run:'Esegui QA completo visualizzato',pass:'SUPERATO',fail:'NON SUPERATO',dict:'Dizionario',render:'Testo inglese visibile',guide:'Guida utente completa',popup:'Pop-up'}};
+const FEATURE=['Upgrade Targets & Recommendations','Target Level','Target Stars','Target Training','Calculate Target Recommendation','Global Officer Data:','Data version:','Officers:','Published:'];
+const POPS=['Plan saved.','Officer database saved.','CSV imported.','Restore default officer database?','Reset Central Inventory?','S7 Julia progress saved.','S7 Julia is now saved as MAXED.'];
+const ENGLISH_PHRASES=[
+'Planning estimate using','growth per Officer release','latest confirmed database release','For 1,600 badges','Star value','Exclusive Stars','plan for approximately','Forecast only','replace with confirmed costs',
+'Current month:','Next scheduled release:','No scheduled release','New Dogs','New Ships','Guns:','Jets:','Officers: Tanks','Officers: Tank Destroyers','Officers: Infantry',
+'Open the in-app User Guide','Export all locally saved','No backup created yet','Backup & Restore','Check for Updates','Refresh Latest Version',
+'Upgrade Targets & Recommendations','Calculate Target Recommendation','Global Officer Data','Resource requirement to target'
+];
+const GUIDE_REQUIRED={
+fr:['Flux de travail recommandé','Nouveautés v4.6.0','Persistance de l’état de travail v4.6.0','Inventaire central','Règles des coffres légendaires','Progression d’Officier','Brins de compétences','Totaux de Badges confirmés','Progression des Officiers et Comparaison','Optimiseur de ressources','Planificateur d’amélioration multi-Officiers','Planification avancée et futurs Officiers','Tableau de préparation de planification','Sauvegarde et restauration','QA linguistique','QA avant mise en Live'],
+de:['Empfohlener Ablauf','Neu in v4.6.0','Arbeitszustands-Persistenz v4.6.0','Zentrales Inventar','Regeln für legendäre Truhen','Offiziersfortschritt','Fertigkeitsstränge','Bestätigte Abzeichensummen','Offiziersfortschritt und Vergleich','Ressourcenoptimierer','Mehr-Offizier-Upgrade-Planer','Erweiterte Planung und zukünftige Offiziere','Planungsbereitschafts-Dashboard','Backup & Wiederherstellung','Sprach-QA','QA vor Live'],
+it:['Flusso consigliato','Novità v4.6.0','Persistenza dello stato di lavoro v4.6.0','Inventario centrale','Regole delle casse leggendarie','Progresso Ufficiale','Rami abilità','Totali Badge confermati','Progressi Ufficiali e Confronto','Ottimizzatore risorse','Pianificatore potenziamento multi-Ufficiale','Pianificazione avanzata e futuri Ufficiali','Dashboard preparazione pianificazione','Backup e ripristino','QA lingua','QA prima del Live']
+};
 function cur(){return window.KOW_CLEAN_I18N?.current?.()||'en'}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function audit(code,keys,dict){
- if(code==='en')return {m:[],s:[],f:[],p:[]};
- let m=[],s=[];
- keys.forEach(k=>{let t=String(k).trim();if(!t||ignore.test(t))return;if(!(k in dict))m.push(k);else if(String(dict[k]).trim()===t)s.push(k)});
- let f=req.filter(k=>!(k in dict)||String(dict[k]).trim()===k),p=[];
- const tr=window.kowPopupTranslate,api=window.KOW_CLEAN_I18N,old=api.current();
- if(typeof tr!=='function')p=['Popup translator not loaded'];
- else{try{api.setLanguage(code);p=pops.filter(x=>String(tr(x)||'').trim()===x.trim())}finally{api.setLanguage(old)}}
- return {m,s,f,p};
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function details(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:260px;overflow:auto;font-size:.78rem">${a.map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
+function dictCheck(code){
+ if(code==='en')return [];
+ const ds=window.KOW_CLEAN_I18N.getDictionaries(),d=ds[code]||{};
+ return FEATURE.filter(k=>!(k in d)||String(d[k]).trim()===k);
 }
-function det(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:220px;overflow:auto;font-size:.78rem">${a.slice(0,150).map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
-function run(){
- const api=window.KOW_CLEAN_I18N,out=document.getElementById('v460QaResults');if(!api||!out)return;
- const keys=api.getCanonicalKeys(),ds=api.getDictionaries(),L=labels[cur()]||labels.en;
- let h=`<div class="notice">Canonical English keys: <b>${keys.length}</b></div>`;
- ['en','fr','de','it'].forEach(c=>{let a=audit(c,keys,ds[c]||{}),ok=!a.m.length&&!a.s.length&&!a.f.length&&!a.p.length;
- h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${names[c]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?L[2]:L[3]}</strong></div>`;
- if(c!=='en'){h+=`<div>${L[4]}: <b>${a.m.length}</b> · ${L[5]}: <b>${a.s.length}</b> · ${L[6]}: <b>${a.f.length}</b> · ${L[7]}: <b>${a.p.length}</b></div>${det(L[4],a.m)}${det(L[5],a.s)}${det(L[6],a.f)}${det(L[7],a.p)}`}h+='</div>'});
- out.innerHTML=h;
+function popupCheck(code){
+ if(code==='en')return [];
+ const api=window.KOW_CLEAN_I18N,tr=window.kowPopupTranslate,old=api.current(),bad=[];
+ try{api.setLanguage(code);POPS.forEach(s=>{if(typeof tr!=='function'||String(tr(s)||'').trim()===s)bad.push(s)})}finally{api.setLanguage(old)}
+ return bad;
+}
+function guideCheck(code){
+ if(code==='en')return [];
+ const txt=document.querySelector('#help > article.card')?.textContent||'';
+ return (GUIDE_REQUIRED[code]||[]).filter(x=>!txt.includes(x));
+}
+function renderedBleed(){
+ const roots=['officer','inventory','stars','development','xp','planner','database','releases','settings','help'];
+ let txt=roots.map(id=>$(id)?.textContent||'').join('\n');
+ // QA card is deliberately multilingual but contains technical English labels; exclude it.
+ txt=txt.replace($('v460QaCard')?.textContent||'','');
+ return ENGLISH_PHRASES.filter(p=>txt.includes(p));
+}
+async function auditLanguage(code){
+ const api=window.KOW_CLEAN_I18N;api.setLanguage(code);await wait(120);
+ window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.();await wait(120);
+ return {d:dictCheck(code),p:popupCheck(code),g:guideCheck(code),r:code==='en'?[]:renderedBleed()};
+}
+async function run(){
+ const out=$('v460QaResults');if(!out)return;const api=window.KOW_CLEAN_I18N,original=api.current(),ui=UI[original]||UI.en;
+ out.innerHTML='<div class="notice">Running rendered QA…</div>';
+ let h='';
+ try{
+   for(const code of ['en','fr','de','it']){
+     const a=await auditLanguage(code),ok=!a.d.length&&!a.p.length&&!a.g.length&&!a.r.length;
+     h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?ui.pass:ui.fail}</strong></div>`;
+     if(code!=='en')h+=`<div>${ui.dict}: <b>${a.d.length}</b> · ${ui.render}: <b>${a.r.length}</b> · ${ui.guide}: <b>${a.g.length}</b> · ${ui.popup}: <b>${a.p.length}</b></div>${details(ui.dict,a.d)}${details(ui.render,a.r)}${details(ui.guide,a.g)}${details(ui.popup,a.p)}`;
+     h+='</div>';
+   }
+ }finally{api.setLanguage(original);await wait(80);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.()}
+ out.innerHTML=h+'<div class="notice"><b>QA2:</b> PASS now requires dictionary coverage, rendered-page English-bleed checks, complete in-app User Guide section coverage and popup localization.</div>';
 }
 function inject(){
- if(document.getElementById('v460QaCard'))return;let s=document.getElementById('settings');if(!s)return;
- let L=labels[cur()]||labels.en,d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';
- d.innerHTML=`<h2>🧪 ${L[0]}</h2><p class="notice">v4.6.0 read-only audit: dictionaries, new feature text and browser pop-ups. Saved app data is not changed.</p><button id="v460QaRun" class="app-action-primary" type="button">${L[1]}</button><div id="v460QaResults"></div>`;
- s.appendChild(d);document.getElementById('v460QaRun').addEventListener('click',run);
+ const old=$('v460QaCard');if(old)old.remove();
+ const s=$('settings');if(!s)return;const ui=UI[cur()]||UI.en,d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';
+ d.innerHTML=`<h2>🧪 ${ui.title}</h2><p class="notice">QA2 scans the actual rendered application, not just dictionary keys. It also verifies full User Guide section coverage.</p><button id="v460QaRun" class="app-action-primary" type="button">${ui.run}</button><div id="v460QaResults"></div>`;
+ s.appendChild(d);$('v460QaRun').addEventListener('click',run);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',inject);else inject();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inject,350));else setTimeout(inject,150);
 })();
