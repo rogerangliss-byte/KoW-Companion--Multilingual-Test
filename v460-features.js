@@ -36,7 +36,7 @@
         '<b>Data version:</b> '+String(m.dataVersion||'—')+'<br>'+
         '<b>Officers:</b> '+String(m.officerCount??'—')+'<br>'+
         '<b>Published:</b> '+(m.publishedAt?new Date(m.publishedAt).toLocaleString():'—')+
-        '<br><span class="muted">English Test checks the published Officer dataset on load.</span>';
+        '<br><span class="muted">KoW Companion checks the published Officer dataset on load.</span>';
     }catch(e){
       box.innerHTML='<b>Global Officer Data:</b> ⚠️ bundled/local fallback in use<br><span class="muted">Published Officer manifest could not be read.</span>';
     }
