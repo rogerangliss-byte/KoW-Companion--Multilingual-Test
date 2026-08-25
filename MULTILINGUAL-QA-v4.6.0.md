@@ -1,11 +1,3 @@
-# KoW Companion Multilingual v4.6.0 TEST — QA2
-
-QA2 replaces the earlier dictionary-only PASS logic.
-
-A non-English language now passes only when:
-- v4.6.0 dictionary keys are translated;
-- the rendered Officer/Inventory/Stars/Development/XP/Planner/Database/Releases/Settings/Help content contains none of the monitored English bleed phrases;
-- the full in-app User Guide contains all required sections;
-- browser alert/confirm pop-ups are localized.
-
-The Test CNAME is `multilingualtest.firestorm-companion.uk`.
+# KoW Companion Multilingual v4.6.0 TEST — QA build
+Derived directly from English Live v4.6.0 Hotfix 2.
+Required gates: English functionality preserved; FR/DE/IT; full guides; translated pop-ups; red TEST banner; test CNAME; in-app language/function parity QA.
