@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.6.0-stable-truth-1';
+const CACHE='kow-multilingual-test-v4.6.0-qa9-dynamic-proof';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
