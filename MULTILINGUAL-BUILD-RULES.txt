@@ -33,3 +33,10 @@ QA11 or later is mandatory before every Multilingual Live promotion. It must che
 
 QA12 REPORT-DRIVEN CLOSURE
 Every returned robust QA JSON is the authoritative translation defect list. All FR/DE/IT FAIL findings must be closed or explicitly classified as proper nouns/game terminology before Live. Robust QA may not be weakened to obtain PASS.
+
+
+PERMANENT USER GUIDE READABILITY RULE (QA13B+)
+- In French, German and Italian, the ENTIRE in-app User Guide must render over a continuous opaque black reading surface.
+- No User Guide heading, paragraph, list item, notice or explanatory text may render directly over the tank background image.
+- This applies on desktop, tablet and mobile.
+- Language QA must treat loss of this black reading surface as a release-blocking presentation failure.
