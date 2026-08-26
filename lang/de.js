@@ -509,3 +509,6 @@ window.KOW_I18N_DE={
   "Forecast future Officer costs from the established Officer-release sequence.": "Prognostiziert zukünftige Offizierskosten anhand der etablierten Veröffentlichungsfolge.",
   "latest confirmed database release": "neueste bestätigte Datenbank-Veröffentlichung"
 };
+
+/* v4.6.0 FRESH RC2 — exact Development summary */
+Object.assign(window.KOW_I18N_DE,{"Next cost: 40 badges · 110/690 used · 580 remaining.":"Nächste Kosten: 40 Abzeichen · 110/690 verwendet · 580 verbleibend."});

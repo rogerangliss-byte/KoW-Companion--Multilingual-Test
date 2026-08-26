@@ -466,3 +466,6 @@ window.KOW_I18N_IT={
   "latest confirmed database release": "ultima uscita confermata nella banca dati",
   "Forecast only — replace with confirmed costs when released.": "Solo previsione — sostituire con i costi confermati quando disponibili."
 };
+
+/* v4.6.0 FRESH RC2 — exact Development summary */
+Object.assign(window.KOW_I18N_IT,{"Next cost: 40 badges · 110/690 used · 580 remaining.":"Costo successivo: 40 Badge · 110/690 utilizzati · 580 rimanenti."});
