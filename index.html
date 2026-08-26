@@ -2129,6 +2129,17 @@ function updateProfileStatus(d){
  if(n)n.textContent=o?officerDisplayName(o):'—';
  if(st)st.textContent=d?.savedAt ? `Saved ${new Date(d.savedAt).toLocaleString()}` : 'Not saved yet';
 }
+
+function kowL10n(raw){
+  try{
+    const api=window.KOW_CLEAN_I18N;
+    if(!api)return String(raw);
+    const lang=api.current?api.current():'en';
+    const dict=api.getDictionaries?api.getDictionaries()[lang]:{};
+    return api.translateStructured?api.translateStructured(String(raw),dict,lang):String(raw);
+  }catch(e){ return String(raw); }
+}
+
 function saveOfficerProfile(silent=false,index=null){
  const idx=index==null ? +$('officerSelect').value : +index;
  if(!Number.isFinite(idx)||!officers[idx])return;
@@ -2138,7 +2149,7 @@ function saveOfficerProfile(silent=false,index=null){
  saveGlobalResources();
  loadedOfficerProfileIndex=idx;
  updateProfileStatus(d);
- if(!silent)alert(`${officerDisplayName(officers[idx])} progress saved.`);
+ if(!silent)alert(kowL10n(`${officerDisplayName(officers[idx])} progress saved.`));
 }
 function loadOfficerProfile(index){
  const idx=+index, profiles=getOfficerProfiles(), d=profiles[officerProfileKey(idx)]||null;
@@ -2155,7 +2166,7 @@ function maxSelectedOfficerProfile(){
  if(!o)return;
 
  const label=officerDisplayName(o);
- if(!confirm(`Set ${label} to fully MAXED?\n\nThis will set:\n• 5 Stars\n• Level 70\n• Unlocked\n• All 4 Skill Strands at Level 5\n• Training Level 180\n\nShared ORV, SRV, badges, stars and XP inventory will not be spent or changed.`))return;
+ if(!confirm(kowL10n(`Set ${label} to fully MAXED?\n\nThis will set:\n• 5 Stars\n• Level 70\n• Unlocked\n• All 4 Skill Strands at Level 5\n• Training Level 180\n\nShared ORV, SRV, badges, stars and XP inventory will not be spent or changed.`)))return;
 
  $('currentStar').value=5;
  $('targetStar').value=5;
@@ -2181,12 +2192,12 @@ function maxSelectedOfficerProfile(){
  if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
  if(typeof renderProgressTable==='function')renderProgressTable();
 
- alert(`${label} is now saved as MAXED.`);
+ alert(kowL10n(`${label} is now saved as MAXED.`));
 }
 
 function resetOfficerProfile(){
  const idx=+$('officerSelect').value,o=officers[idx];if(!o)return;
- if(!confirm(`Reset saved progress for ${officerDisplayName(o)}? Shared resources will not be changed.`))return;
+ if(!confirm(kowL10n(`Reset saved progress for ${officerDisplayName(o)}? Shared resources will not be changed.`)))return;
  const profiles=getOfficerProfiles();
  delete profiles[officerProfileKey(idx)];
  localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
@@ -2472,7 +2483,7 @@ async function restoreFullBackup(file){
  // device from surviving when they were not present in the source-device backup.
  localStorage.clear();
  Object.entries(payload.localStorage).forEach(([k,v])=>{if(v!==null&&v!==undefined)localStorage.setItem(k,String(v));});
- alert('Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.');location.reload();
+ alert(kowL10n('Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.'));location.reload();
 }
 
 let multiPlanOfficers=[];
@@ -2562,15 +2573,15 @@ function refreshMultiSavedPlans(selectName=''){
  if(selectName&&plans[selectName])sel.value=selectName;
 }
 function saveMultiPlan(){
- const name=String($('multiPlanName').value||'').trim();if(!name){alert('Enter a plan name.');return}
+ const name=String($('multiPlanName').value||'').trim();if(!name){alert(kowL10n('Enter a plan name.'));return}
  const plans=getMultiPlans();plans[name]={name,orv:+$('multiOrv').value||0,universal:+$('multiUniversal').value||0,chests:+$('multiChests').value||0,selectionChests:+$('multiSelectionChests').value||0,chestMode:$('multiChestMode').value,officers:multiPlanOfficers};
- localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans(name);alert('Plan saved.');
+ localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans(name);alert(kowL10n('Plan saved.'));
 }
 function loadMultiPlan(name){
  const p=getMultiPlans()[name];if(!p)return;$('multiPlanName').value=p.name||name;$('multiOrv').value=p.orv||0;$('multiUniversal').value=p.universal||0;$('multiChests').value=p.chests||0;if($('multiSelectionChests'))$('multiSelectionChests').value=p.selectionChests||0;$('multiChestMode').value=p.chestMode||'optimise';multiPlanOfficers=Array.isArray(p.officers)?p.officers:[];renderMultiPlanner();savePlannerWorkingState();
 }
 function deleteMultiPlan(){
- const name=$('multiSavedPlans').value;if(!name)return;const plans=getMultiPlans();delete plans[name];localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans();alert('Saved plan deleted.');
+ const name=$('multiSavedPlans').value;if(!name)return;const plans=getMultiPlans();delete plans[name];localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans();alert(kowL10n('Saved plan deleted.'));
 }
 
 
@@ -2813,10 +2824,10 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
  if($('maxOfficerProfile'))$('maxOfficerProfile').onclick=maxSelectedOfficerProfile;
  if($('resetOfficerProfile'))$('resetOfficerProfile').onclick=resetOfficerProfile;
  $('dbSearch').oninput=renderDb;$('dbSeason').onchange=renderDb;$('dbAdd').onclick=()=>{officers.unshift({name:'New Officer',season:'S8',orv:1,srv:1,notes:''});renderDb();renderOfficerOptions('New Officer');calculate()};
- $('dbSave').onclick=()=>{const e=validateDb();if(e.length){alert('Fix validation issues first.');return}saveOfficers();renderOfficerFilters();renderOfficerOptions();alert('Officer database saved.')};
+ $('dbSave').onclick=()=>{const e=validateDb();if(e.length){alert(kowL10n('Fix validation issues first.'));return}saveOfficers();renderOfficerFilters();renderOfficerOptions();alert(kowL10n('Officer database saved.'))};
  $('dbExport').onclick=exportCsv;
- $('dbImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const parsed=parseCsv(r.result);if(validateDb(parsed).length){alert('CSV validation failed.');return}officers=parsed;saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions();calculate();alert('CSV imported.')};r.readAsText(f);e.target.value=''};
- $('dbRestore').onclick=()=>{if(confirm('Restore default officer database?')){officers=clone(window.KOW_PUBLISHED_OFFICERS||DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions('S7 Liora');calculate()}};
+ $('dbImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const parsed=parseCsv(r.result);if(validateDb(parsed).length){alert(kowL10n('CSV validation failed.'));return}officers=parsed;saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions();calculate();alert(kowL10n('CSV imported.'))};r.readAsText(f);e.target.value=''};
+ $('dbRestore').onclick=()=>{if(confirm(kowL10n('Restore default officer database?'))){officers=clone(window.KOW_PUBLISHED_OFFICERS||DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions('S7 Liora');calculate()}};
 
 
  if($('multiAddOfficer'))$('multiAddOfficer').onclick=()=>{multiPlanOfficers.push({officerIndex:0,badgesNeeded:1600});renderMultiPlanner();savePlannerWorkingState()};
@@ -2841,7 +2852,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
  if(savedLandscape){$('landscapeBgStatus').textContent='Custom landscape'}
  applyResponsivePageBackground();
  $('appName').oninput=e=>{const n=e.target.value||'GODS OF WAR 371';localStorage.setItem('kow_app_name_v4',n);$('appTitle').textContent=n;document.title=n};
- const setBackground=(inputId,key,statusId,label)=>{$(inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{localStorage.setItem(key,r.result);$(statusId).textContent=label+' · '+f.name;applyResponsivePageBackground()}catch(err){alert('This image is too large for browser storage. Try a smaller JPG or PNG.')}};r.readAsDataURL(f)}};
+ const setBackground=(inputId,key,statusId,label)=>{$(inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{localStorage.setItem(key,r.result);$(statusId).textContent=label+' · '+f.name;applyResponsivePageBackground()}catch(err){alert(kowL10n('This image is too large for browser storage. Try a smaller JPG or PNG.'))}};r.readAsDataURL(f)}};
  setBackground('portraitBackgroundPicker','kow_bg_portrait_v401','portraitBgStatus','Custom portrait');
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
@@ -2850,7 +2861,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
-  alert('Appearance and backgrounds restored to defaults.');
+  alert(kowL10n('Appearance and backgrounds restored to defaults.'));
  };
 
  $('checkUpdates').onclick=async()=>{
@@ -3231,7 +3242,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
    closeQuickProgress();
    const o=typeof currentOfficer==='function'?currentOfficer():null;
-   alert(`${o?officerDisplayName(o):'Officer'} progress saved.`);
+   alert(kowL10n(`${o?officerDisplayName(o):'Officer'} progress saved.`));
  }
  q('quickProgressBtn')?.addEventListener('click',openQuickProgress);
  q('quickStarLevel')?.addEventListener('change',buildQuickSkills);
@@ -3351,10 +3362,10 @@ onclick="(function(){
 
     q('quickProgressModal').style.display='none';
     var o=(typeof currentOfficer==='function')?currentOfficer():null;
-    alert((o&&typeof officerDisplayName==='function'?officerDisplayName(o):'Officer')+' progress saved.');
+    alert(kowL10n((o&&typeof officerDisplayName==='function'?officerDisplayName(o):'Officer')+' progress saved.'));
   }catch(err){
     console.error('Quick Progress save failed',err);
-    alert('Progress could not be saved. Please refresh and try again.');
+    alert(kowL10n('Progress could not be saved. Please refresh and try again.'));
   }
 })();return false;">💾 Save Progress</button><button id="quickProgressMax" class="primary" type="button">⭐ MAX Officer</button><button id="quickProgressCancel" class="app-action-secondary" type="button" onclick="document.getElementById('quickProgressModal').style.display='none';return false;">Cancel</button></div>
   <div class="notice">Officer-specific progress only. Shared resources remain on Stars, Develop and XP.</div>
@@ -3428,7 +3439,7 @@ function kowInvApply(x){
 function kowInvSave(){const old=kowInvGet(),x={officerBadges:old.officerBadges||{},savedAt:new Date().toISOString()};KOW_INV_IDS.forEach(id=>x[id]=Math.max(0,+document.getElementById(id)?.value||0));localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvApply(x);kowInvLoad();}
 document.addEventListener('click',e=>{
  if(e.target?.id==='saveInventory')kowInvSave();
- if(e.target?.id==='resetInventory'&&confirm('Reset Central Inventory?')){localStorage.removeItem(KOW_INV_KEY);kowInvLoad();kowInvApply({});}
+ if(e.target?.id==='resetInventory'&&confirm(kowL10n('Reset Central Inventory?'))){localStorage.removeItem(KOW_INV_KEY);kowInvLoad();kowInvApply({});}
  if(e.target?.id==='invSetOfficer'){const n=document.getElementById('invOfficerName')?.value;if(!n)return;const x=kowInvGet();x.officerBadges=x.officerBadges||{};x.officerBadges[n]=Math.max(0,+document.getElementById('invOfficerQty').value||0);x.savedAt=new Date().toISOString();localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvList(x.officerBadges);kowInvApply(x);}
 });
 document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('invOfficerName'),b=document.getElementById('officerSelect');if(a&&b)a.innerHTML=b.innerHTML;const x=kowInvLoad();if(x.savedAt)kowInvApply(x);});
@@ -3997,14 +4008,14 @@ window.kowRenderPlanningReadiness=render;
 <script src="./v460-features.js?v=460-live"></script><script src="./planner-season-sync.js?v=460-live"></script><script src="./release-forecast-sync.js?v=460-live"></script>
 
 <script src="./lang/v460-en.js?v=460stable1"></script>
-<script src="./lang/v460-fr.js?v=460stable1"></script>
-<script src="./lang/v460-de.js?v=460stable1"></script>
-<script src="./lang/v460-it.js?v=460stable1"></script>
-<script src="./lang/v460-full-help.js?v=460stable1"></script>
-<script src="./lang/v460-i18n.js?v=460stable1"></script>
+<script src="./lang/v460-fr.js?v=460qa7"></script>
+<script src="./lang/v460-de.js?v=460qa7"></script>
+<script src="./lang/v460-it.js?v=460qa7"></script>
+<script src="./lang/v460-full-help.js?v=460qa7"></script>
+<script src="./lang/v460-i18n.js?v=460qa7"></script>
 <script src="./lang/v460-popup-i18n.js?v=460stable1"></script>
 <script src="./lang/v460-release-calendar-i18n.js?v=460stable1"></script>
-<script src="./lang/v460-language-qa.js?v=460qa6"></script>
+<script src="./lang/v460-language-qa.js?v=460qa7"></script>
 
 </body>
 </html>
