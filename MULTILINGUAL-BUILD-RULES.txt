@@ -27,3 +27,6 @@ then inherited unchanged by Multilingual.
 
 QA8 RULE:
 Language QA is read-only and may not click controls, dispatch events, change form values, or invoke application functions.
+
+PERMANENT ROBUST LANGUAGE QA RELEASE GATE
+QA11 or later is mandatory before every Multilingual Live promotion. It must check rendered English bleed, EN→FR/DE/IT unchanged text, dynamic-source translation coverage, dictionary quality, Help and the EN/FR/DE/IT selector. A generic/lightweight QA PASS is not sufficient. Functional code remains inherited from English Stable.
