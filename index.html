@@ -1582,10 +1582,19 @@ function skillCostStatusText(o=currentOfficer()){
  const total=c.reduce((a,b)=>a+b,0);
  const spent=c.slice(0,n).reduce((a,b)=>a+b,0);
  const remaining=Math.max(0,total-spent);
- const state=levels.map((lvl,i)=>`Strand ${i+1}: Lv${lvl}`).join(' · ');
- return n>=16
-   ? `${state} · Skills complete · ${spent}/${total} badges used · 0 remaining.`
-   : `${state} · Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`;
+ const lang=window.KOW_CLEAN_I18N?.current?.()||'en';
+ const strandWord=lang==='fr'?'Branche':lang==='de'?'Strang':lang==='it'?'Ramo':'Strand';
+ const state=levels.map((lvl,i)=>`${strandWord} ${i+1}: Lv${lvl}`).join(' · ');
+ if(n>=16){
+   if(lang==='fr')return `${state} · Compétences terminées · ${spent}/${total} Badges utilisés · 0 restant.`;
+   if(lang==='de')return `${state} · Fertigkeiten abgeschlossen · ${spent}/${total} Abzeichen verwendet · 0 verbleibend.`;
+   if(lang==='it')return `${state} · Abilità completate · ${spent}/${total} Badge utilizzati · 0 rimanenti.`;
+   return `${state} · Skills complete · ${spent}/${total} badges used · 0 remaining.`;
+ }
+ if(lang==='fr')return `${state} · Coût suivant : ${next} Badges · ${spent}/${total} utilisés · ${remaining} restants.`;
+ if(lang==='de')return `${state} · Nächste Kosten: ${next} Abzeichen · ${spent}/${total} verwendet · ${remaining} verbleibend.`;
+ if(lang==='it')return `${state} · Costo successivo: ${next} Badge · ${spent}/${total} utilizzati · ${remaining} rimanenti.`;
+ return `${state} · Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`;
 }
 function updateSkillCostSummaries(){
  const o=currentOfficer();
