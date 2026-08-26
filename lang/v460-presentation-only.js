@@ -1,84 +1,19 @@
-/* KoW Companion v4.6.0 — STRICT presentation-only localisation.
-Functional source of truth: English v4.6.0 LIVE HOTFIX-2.
-This file may translate rendered text/attributes only. It must not change application state. */
-(function(){
-'use strict';
-const KEY='kow-language-v460-strict';
-const LANGS=['en','fr','de','it'];
-const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
-let active=(localStorage.getItem(KEY)||'en').slice(0,2).toLowerCase();
-if(!LANGS.includes(active)) active='en';
-const textBase=new WeakMap(), attrBase=new WeakMap();
-
-function dictionary(){ return dicts()[active]||{}; }
-function translateString(s){
-  if(active==='en') return s;
-  const d=dictionary();
-  return Object.prototype.hasOwnProperty.call(d,s)?d[s]:s;
-}
-function translateRoot(root=document.body){
-  if(!root) return;
-  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-  let n;
-  while((n=walker.nextNode())){
-    const parent=n.parentElement;
-    if(!parent || /^(SCRIPT|STYLE|TEXTAREA|OPTION)$/i.test(parent.tagName)) continue;
-    if(!textBase.has(n)) textBase.set(n,n.nodeValue);
-    const base=textBase.get(n);
-    const lead=(base.match(/^\s*/)||[''])[0], trail=(base.match(/\s*$/)||[''])[0];
-    const core=base.trim();
-    if(core) n.nodeValue=lead+translateString(core)+trail;
-  }
-  root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el=>{
-    for(const a of ['placeholder','title','aria-label']){
-      if(!el.hasAttribute(a)) continue;
-      let m=attrBase.get(el); if(!m){m={};attrBase.set(el,m);}
-      if(!(a in m)) m[a]=el.getAttribute(a);
-      el.setAttribute(a,translateString(m[a]));
-    }
-  });
-}
-function apply(lang){
-  active=LANGS.includes(lang)?lang:'en';
-  localStorage.setItem(KEY,active);
-  document.documentElement.lang=active;
-  const sel=document.getElementById('appLanguage');
-  if(sel) sel.value=active;
-  translateRoot(document.body);
-  const help=document.querySelector('#help');
-  if(help){
-    if(active==='en'){
-      if(help.dataset.englishHtml) help.innerHTML=help.dataset.englishHtml;
-    } else {
-      const html=window.KOW_HELP_HTML_V450?.[active];
-      if(html) help.innerHTML=html;
-    }
-  }
-}
-function addUi(){
-  if(!document.getElementById('multilingualTestBanner')){
-    const b=document.createElement('div'); b.id='multilingualTestBanner';
-    b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA10 — NOT LIVE';
-    b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px;border-bottom:2px solid #ff6b6b';
-    document.body.insertBefore(b,document.body.firstChild);
-  }
-  const settings=document.querySelector('#settings article.card')||document.querySelector('#settings .card')||document.getElementById('settings');
-  if(settings && !document.getElementById('appLanguage')){
-    const h=settings.querySelector('h2'), wrap=document.createElement('div');
-    wrap.id='languageSelectorCard'; wrap.style.marginBottom='14px';
-    wrap.innerHTML='<label for="appLanguage">Language / Langue / Sprache / Lingua</label><select id="appLanguage"><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option></select>';
-    h?.insertAdjacentElement('afterend',wrap);
-  }
-  const languageSelect=document.getElementById('appLanguage');
-  if(languageSelect && !languageSelect.dataset.kowLanguageWired){
-    languageSelect.dataset.kowLanguageWired='1';
-    languageSelect.addEventListener('change',e=>apply(e.target.value));
-  }
-  const help=document.querySelector('#help');
-  if(help && !help.dataset.englishHtml) help.dataset.englishHtml=help.innerHTML;
-}
-window.KOW_PRESENTATION_I18N={apply,translateRoot,getLanguage:()=>active};
-function initialisePresentation(){addUi();apply(active);}
-if(document.readyState==='complete') setTimeout(initialisePresentation,0);
-else window.addEventListener('load',()=>setTimeout(initialisePresentation,0),{once:true});
+/* v4.6.0 robust presentation-only localisation. English Stable remains functional truth. */
+(function(){'use strict';
+const KEY='kow-language-v460-strict',LANGS=['en','fr','de','it'];let active=(localStorage.getItem(KEY)||'en').slice(0,2).toLowerCase();if(!LANGS.includes(active))active='en';
+const D=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
+const base=new WeakMap(),last=new WeakMap();let busy=false,obs=null;
+const R={
+fr:[[/^Need ([\d,. ]+) more Officer Star value$/,'Il manque $1 de valeur d’Étoiles d’Officier'],[/^Need ([\d,. ]+) more Officer Badges$/,'Il manque $1 Badges d’Officier'],[/^([\d,. ]+) Officer Badges still required$/,'$1 Badges d’Officier encore requis'],[/^([\d,. ]+) Officer Star value still required$/,'$1 de valeur d’Étoiles d’Officier encore requise'],[/^([\d,. ]+) XP still required$/,'$1 XP encore requis'],[/^(.+?) Badges Held$/,'$1 — Badges détenus'],[/^(.+) progress saved\.$/,'Progression de $1 enregistrée.'],[/^(.+) is now saved as MAXED\.$/,'$1 est maintenant enregistré comme MAX.']],
+de:[[/^Need ([\d,. ]+) more Officer Star value$/,'Es fehlen $1 Offiziers-Sternwert'],[/^Need ([\d,. ]+) more Officer Badges$/,'Es fehlen $1 Offiziersabzeichen'],[/^([\d,. ]+) Officer Badges still required$/,'Noch $1 Offiziersabzeichen erforderlich'],[/^([\d,. ]+) Officer Star value still required$/,'Noch $1 Offiziers-Sternwert erforderlich'],[/^([\d,. ]+) XP still required$/,'Noch $1 XP erforderlich'],[/^(.+?) Badges Held$/,'$1 — Vorhandene Abzeichen'],[/^(.+) progress saved\.$/,'Fortschritt für $1 gespeichert.'],[/^(.+) is now saved as MAXED\.$/,'$1 ist jetzt als MAX gespeichert.']],
+it:[[/^Need ([\d,. ]+) more Officer Star value$/,'Servono ancora $1 di valore Stelle Ufficiale'],[/^Need ([\d,. ]+) more Officer Badges$/,'Servono ancora $1 Badge Ufficiale'],[/^([\d,. ]+) Officer Badges still required$/,'Servono ancora $1 Badge Ufficiale'],[/^([\d,. ]+) Officer Star value still required$/,'Serve ancora $1 di valore Stelle Ufficiale'],[/^([\d,. ]+) XP still required$/,'Servono ancora $1 XP'],[/^(.+?) Badges Held$/,'$1 — Badge posseduti'],[/^(.+) progress saved\.$/,'Progressi di $1 salvati.'],[/^(.+) is now saved as MAXED\.$/,'$1 è ora salvato come MAX.']]};
+function tr(s,lang=active){if(lang==='en'||!s)return s;const d=D()[lang]||{};if(Object.prototype.hasOwnProperty.call(d,s))return d[s];let o=s;for(const [rx,rp] of R[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const k of Object.keys(d).filter(k=>k.length>=5&&o.includes(k)).sort((a,b)=>b.length-a.length)){o=o.split(k).join(d[k])}return o}
+function tn(n){const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|TEXTAREA)$/i.test(p.tagName)||p.closest('#appLanguage'))return;const c=n.nodeValue;if(!base.has(n))base.set(n,c);else if(active!=='en'&&last.has(n)&&c!==last.get(n))base.set(n,c);const b=base.get(n),lead=(b.match(/^\s*/)||[''])[0],trail=(b.match(/\s*$/)||[''])[0],core=b.trim(),o=active==='en'?b:lead+tr(core)+trail;last.set(n,o);if(c!==o)n.nodeValue=o}
+function root(r=document.body){if(!r)return;busy=true;try{const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))tn(n);r.querySelectorAll?.('[placeholder],[title],[aria-label],[alt]').forEach(e=>{if(e.closest('#appLanguage'))return;for(const a of ['placeholder','title','aria-label','alt'])if(e.hasAttribute(a)){const k='data-kow-'+a.replace('aria-','aria');if(!e.hasAttribute(k))e.setAttribute(k,e.getAttribute(a));e.setAttribute(a,active==='en'?e.getAttribute(k):tr(e.getAttribute(k)))}})}finally{busy=false}}
+function apply(l){active=LANGS.includes(l)?l:'en';localStorage.setItem(KEY,active);document.documentElement.lang=active;const s=document.getElementById('appLanguage');if(s)s.value=active;const h=document.querySelector('#help');if(h){if(!h.dataset.englishHtml)h.dataset.englishHtml=h.innerHTML;if(active==='en')h.innerHTML=h.dataset.englishHtml;else{const x=window.KOW_HELP_HTML_V450?.[active];if(x)h.innerHTML=x}}root(document.body)}
+function ui(){if(!document.getElementById('multilingualTestBanner')){const b=document.createElement('div');b.id='multilingualTestBanner';b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA11 — NOT LIVE';b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px';document.body.insertBefore(b,document.body.firstChild)}const s=document.getElementById('appLanguage');if(s&&!s.dataset.kowLanguageWired){s.dataset.kowLanguageWired='1';s.addEventListener('change',e=>apply(e.target.value))}}
+function watch(){if(obs)return;obs=new MutationObserver(ms=>{if(busy||active==='en')return;for(const m of ms){if(m.type==='characterData')tn(m.target);else for(const n of m.addedNodes){if(n.nodeType===3)tn(n);else if(n.nodeType===1)root(n)}}});obs.observe(document.body,{subtree:true,childList:true,characterData:true})}
+const A=window.alert.bind(window),C=window.confirm.bind(window),P=window.prompt.bind(window);window.alert=m=>A(tr(String(m)));window.confirm=m=>C(tr(String(m)));window.prompt=(m,d)=>P(tr(String(m)),d);
+window.KOW_PRESENTATION_I18N={apply,translateRoot:root,getLanguage:()=>active,translateString:(s,l)=>tr(s,l||active),canTranslate:(s,l)=>tr(s,l||active)!==s};
+function init(){ui();apply(active);watch()}if(document.readyState==='complete')setTimeout(init,0);else window.addEventListener('load',()=>setTimeout(init,0),{once:true});
 })();
