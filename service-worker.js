@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.6.0-qa9b-helpfix';
+const CACHE='kow-multilingual-test-v4.6.0-qa9c-runnerfix-20260826';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
