@@ -57,10 +57,99 @@ function helpAudit(code){
  };
 }
 
-function build(){const original=lang(),results={};for(const L of LANGS){setLang(L.code);const roots=ROOTS.map(id=>scanRoot(L.code,id)),cov=coverage(L.code),bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`)),broken=roots.flatMap(r=>r.broken_text.map(x=>`${r.root}: ${x.text}`)),missing=roots.filter(r=>!r.present).map(r=>r.root),popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code)),dyn=dynamicAudit(L.code),dq=dictQuality(L.code),ha=helpAudit(L.code);results[L.label]={status:(bleed.length||broken.length||missing.length||cov.missing_keys.length||popup.length||dyn.english_dynamic_literals.length||dq.empty_values.length||dq.identical_to_english.length||dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',translation_coverage:cov,dynamic_source_audit:dyn,dictionary_quality:dq,help_source_audit:ha,rendered_english_bleed:bleed,broken_or_invalid_text:broken,missing_roots:missing,popup_english_literals:popup,roots_scanned:roots.filter(r=>r.present).length,per_root:roots}}setLang(original);return{generated_at:new Date().toISOString(),app_version:'4.6.0 STABLE English Truth',qa_version:'Language QA9B READ-ONLY Dynamic Proof',scope_note:'Rendered DOM plus dynamic text-source, dictionary-quality and Help-source audit; application workflows are not executed.',read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:false},expected_roots:ROOTS,ui_integrity:integrity(),results}}
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA9B-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function render(rep){let p=document.getElementById('languageQaPanel');if(!p){const b=document.getElementById('backupStatus');if(!b)return;p=document.createElement('div');p.id='languageQaPanel';p.style.marginTop='16px';b.insertAdjacentElement('afterend',p)}p.innerHTML='<h3>🧪 Language QA9 / Read-Only Whole-App Audit</h3><p class="notice">Rendered text, attributes, dropdowns, popup literals, dictionary coverage and UI controls. QA9 does not click controls or change application state.</p><div class="two"><button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA9</button><button id="downloadLanguageQaReport" class="app-action-secondary" type="button">↓ Download QA9 Report</button></div><div id="languageQaStatus" class="notice" style="margin-top:10px">QA9 complete.</div><div id="languageQaResults" style="margin-top:10px"></div>';document.getElementById('languageQaResults').innerHTML=LANGS.map(L=>{const r=rep.results[L.label];return`<div class="qa-row"><strong>${L.label}</strong><span style="float:right">${r.status}</span><br><small>Roots ${r.roots_scanned}/${ROOTS.length} · English bleed ${r.rendered_english_bleed.length} · Missing translations ${r.translation_coverage.missing_keys.length} · Popup literals ${r.popup_english_literals.length} · Dynamic bleed ${r.dynamic_source_audit.english_dynamic_literals.length} · Same-as-English ${r.dictionary_quality.identical_to_english.length}</small></div>`}).join('')+`<div class="notice" style="margin-top:10px">UI integrity: ${rep.ui_integrity.missing_controls.length===0?'PASS':'FAIL'} · Missing controls: ${rep.ui_integrity.missing_controls.length}</div>`;document.getElementById('runLanguageQa').onclick=run;document.getElementById('downloadLanguageQaReport').onclick=()=>download(window.KOW_LAST_LANGUAGE_QA9)}
-function run(){const rep=build();window.KOW_LAST_LANGUAGE_QA9=rep;render(rep);return rep}
-function wire(){const b=document.getElementById('backupStatus');if(!b||document.getElementById('languageQaPanel'))return;const p=document.createElement('div');p.id='languageQaPanel';p.style.marginTop='16px';p.innerHTML='<h3>🧪 Language QA9 / Read-Only Whole-App Audit</h3><p class="notice">Read-only rendered-language and UI-integrity audit.</p><div class="two"><button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA9</button><button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA9 Report</button></div><div id="languageQaStatus" class="notice" style="margin-top:10px">Ready.</div><div id="languageQaResults"></div>';b.insertAdjacentElement('afterend',p);document.getElementById('runLanguageQa').onclick=run}
-if(document.readyState==='complete')setTimeout(wire,0);else window.addEventListener('load',()=>setTimeout(wire,0),{once:true});window.KOW_LANGUAGE_QA9={run,report:()=>window.KOW_LAST_LANGUAGE_QA9||null};
+function build(){const original=lang(),results={};for(const L of LANGS){setLang(L.code);const roots=ROOTS.map(id=>scanRoot(L.code,id)),cov=coverage(L.code),bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`)),broken=roots.flatMap(r=>r.broken_text.map(x=>`${r.root}: ${x.text}`)),missing=roots.filter(r=>!r.present).map(r=>r.root),popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code)),dyn=dynamicAudit(L.code),dq=dictQuality(L.code),ha=helpAudit(L.code);results[L.label]={status:(bleed.length||broken.length||missing.length||cov.missing_keys.length||popup.length||dyn.english_dynamic_literals.length||dq.empty_values.length||dq.identical_to_english.length||dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',translation_coverage:cov,dynamic_source_audit:dyn,dictionary_quality:dq,help_source_audit:ha,rendered_english_bleed:bleed,broken_or_invalid_text:broken,missing_roots:missing,popup_english_literals:popup,roots_scanned:roots.filter(r=>r.present).length,per_root:roots}}setLang(original);return{generated_at:new Date().toISOString(),app_version:'4.6.0 STABLE English Truth',qa_version:'Language QA9C READ-ONLY Dynamic Proof',scope_note:'Rendered DOM plus dynamic text-source, dictionary-quality and Help-source audit; application workflows are not executed.',read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:false},expected_roots:ROOTS,ui_integrity:integrity(),results}}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA9C-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function render(rep){
+ let p=document.getElementById('languageQaPanel');
+ if(!p)return;
+ const status=document.getElementById('languageQaStatus');
+ const results=document.getElementById('languageQaResults');
+ const dl=document.getElementById('downloadLanguageQaReport');
+ if(status)status.textContent='QA9C complete.';
+ if(results){
+   results.innerHTML=LANGS.map(L=>{
+     const r=rep.results[L.label];
+     return `<div class="qa-row"><strong>${L.label}</strong><span style="float:right">${r.status}</span><br><small>`+
+       `Roots ${r.roots_scanned}/${ROOTS.length} · English bleed ${r.rendered_english_bleed.length} · `+
+       `Missing translations ${r.translation_coverage.missing_keys.length} · Popup literals ${r.popup_english_literals.length} · `+
+       `Dynamic bleed ${r.dynamic_source_audit.english_dynamic_literals.length} · `+
+       `Same-as-English ${r.dictionary_quality.identical_to_english.length}</small></div>`;
+   }).join('')+
+   `<div class="notice" style="margin-top:10px">UI integrity: ${rep.ui_integrity.missing_controls.length===0?'PASS':'FAIL'} · Missing controls: ${rep.ui_integrity.missing_controls.length}</div>`;
+ }
+ if(dl){
+   dl.disabled=false;
+   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA9C);
+ }
+}
+
+function showQaError(err){
+ const status=document.getElementById('languageQaStatus');
+ const results=document.getElementById('languageQaResults');
+ if(status)status.textContent='QA9C FAILED TO RUN — see details below.';
+ if(results)results.innerHTML=`<div class="notice"><b>QA runner error:</b> ${String(err&&err.message||err)}</div>`;
+ console.error('KoW Language QA9C runner error',err);
+}
+
+function run(){
+ const status=document.getElementById('languageQaStatus');
+ const results=document.getElementById('languageQaResults');
+ const btn=document.getElementById('runLanguageQa');
+ const dl=document.getElementById('downloadLanguageQaReport');
+
+ if(status)status.textContent='Running QA9C across EN / FR / DE / IT…';
+ if(results)results.innerHTML='<div class="notice">Scanning rendered UI, dictionaries, dynamic text sources and Help…</div>';
+ if(btn)btn.disabled=true;
+ if(dl)dl.disabled=true;
+
+ // Yield one frame so the user sees "Running..." before the synchronous read-only audit starts.
+ setTimeout(()=>{
+   try{
+     const rep=build();
+     window.KOW_LAST_LANGUAGE_QA9C=rep;
+     render(rep);
+   }catch(err){
+     showQaError(err);
+   }finally{
+     const b=document.getElementById('runLanguageQa');
+     if(b)b.disabled=false;
+   }
+ },25);
+}
+
+function wire(){
+ const backup=document.getElementById('backupStatus');
+ if(!backup)return;
+
+ // Always rebuild the QA panel from this exact QA9C script so an older cached panel cannot survive.
+ const old=document.getElementById('languageQaPanel');
+ if(old)old.remove();
+
+ const p=document.createElement('div');
+ p.id='languageQaPanel';
+ p.style.marginTop='16px';
+ p.innerHTML=
+   '<h3>🧪 Language QA9C / Read-Only Dynamic-Language Proof</h3>'+
+   '<p class="notice">Detailed read-only audit of rendered language, dynamic text sources, dictionaries, Help and UI integrity. Application workflows are not executed.</p>'+
+   '<div class="two">'+
+     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA9C</button>'+
+     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA9C Report</button>'+
+   '</div>'+
+   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA9C ready.</div>'+
+   '<div id="languageQaResults" style="margin-top:10px"></div>';
+
+ backup.insertAdjacentElement('afterend',p);
+
+ const runBtn=document.getElementById('runLanguageQa');
+ if(runBtn)runBtn.onclick=run;
+}
+
+if(document.readyState==='complete')setTimeout(wire,0);
+else window.addEventListener('load',()=>setTimeout(wire,0),{once:true});
+
+window.KOW_LANGUAGE_QA9C={
+ run,
+ report:()=>window.KOW_LAST_LANGUAGE_QA9C||null,
+ version:'QA9C'
+};
 })();
