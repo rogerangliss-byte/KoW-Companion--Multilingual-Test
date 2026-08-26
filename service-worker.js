@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.6.0-qa11-robust-translation-20260826';
+const CACHE='kow-multilingual-test-v4.6.0-qa12-report-closure-20260826';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(

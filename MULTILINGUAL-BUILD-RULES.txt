@@ -30,3 +30,6 @@ Language QA is read-only and may not click controls, dispatch events, change for
 
 PERMANENT ROBUST LANGUAGE QA RELEASE GATE
 QA11 or later is mandatory before every Multilingual Live promotion. It must check rendered English bleed, EN→FR/DE/IT unchanged text, dynamic-source translation coverage, dictionary quality, Help and the EN/FR/DE/IT selector. A generic/lightweight QA PASS is not sufficient. Functional code remains inherited from English Stable.
+
+QA12 REPORT-DRIVEN CLOSURE
+Every returned robust QA JSON is the authoritative translation defect list. All FR/DE/IT FAIL findings must be closed or explicitly classified as proper nouns/game terminology before Live. Robust QA may not be weakened to obtain PASS.
