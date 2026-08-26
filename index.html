@@ -1428,6 +1428,17 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
         <label id="restoreAppDataLabel" class="button-like app-action-danger">⬆ Restore App Backup<input id="restoreAppData" type="file" accept=".json,application/json" hidden></label>
       </div>
       <div id="backupStatus" class="notice" style="margin-top:10px">No backup created yet.</div>
+
+      <div id="languageQaPanel" style="margin-top:16px">
+        <h3>🧪 Language QA6 / Whole-App Render Test</h3>
+        <p class="notice">QA6 scans every application view one at a time, including dynamic content, modals, translated attributes, dropdown options and popup text. Missing views or timeouts fail the audit.</p>
+        <div class="two">
+          <button id="runLanguageQa" class="app-action-primary" type="button">Run Whole-App QA6</button>
+          <button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA6 Report</button>
+        </div>
+        <div id="languageQaStatus" class="notice" style="margin-top:10px">Ready to run Whole-App QA6.</div>
+        <div id="languageQaResults" style="margin-top:10px"></div>
+      </div>
 </article>
   </section>
 
