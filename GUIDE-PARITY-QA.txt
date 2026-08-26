@@ -1,6 +1,0 @@
-KoW Companion Multilingual v4.6.0 TEST — QA2 Guide Parity
-Baseline: working QA2 multilingual architecture retained.
-Change: User Guide content only.
-English master: full v4.6.0 guide.
-French/German/Italian: same HTML section structure and content coverage translated.
-No language-engine simplification performed.
