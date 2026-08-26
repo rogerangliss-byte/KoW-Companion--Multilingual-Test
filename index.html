@@ -764,7 +764,6 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 @media(max-width:760px){.v440-summary,.v440-scenario-grid{grid-template-columns:1fr}}
 </style>
 
-
 <style id="multilingual-clean-test-style">
 #multilingualTestBanner{position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px;letter-spacing:.04em;border-bottom:2px solid #ff6b6b}
 </style>
@@ -899,7 +898,7 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 
       <div class="officer-experience-grid">
         <div class="officer-portrait-panel">
-          <img id="officerPortrait" class="officer-portrait" alt="Portrait de l’Officier sélectionné">
+          <img id="officerPortrait" class="officer-portrait" alt="Selected Officer portrait">
           <div id="officerPortraitPlaceholder" class="officer-portrait-placeholder">
             <span>👤</span>
             <b>Portrait not added yet</b>
@@ -1593,19 +1592,10 @@ function skillCostStatusText(o=currentOfficer()){
  const total=c.reduce((a,b)=>a+b,0);
  const spent=c.slice(0,n).reduce((a,b)=>a+b,0);
  const remaining=Math.max(0,total-spent);
- const lang=(window.KOW_CLEAN_I18N?.current?.()||document.getElementById('appLanguage')?.value||localStorage.getItem('kow-language-v460')||'en');
- const strandWord=lang==='fr'?'Branche':lang==='de'?'Strang':lang==='it'?'Ramo':'Strand';
- const state=levels.map((lvl,i)=>`${strandWord} ${i+1}: Lv${lvl}`).join(' · ');
- if(n>=16){
-   if(lang==='fr')return `${state} · Compétences terminées · ${spent}/${total} Badges utilisés · 0 restant.`;
-   if(lang==='de')return `${state} · Fertigkeiten abgeschlossen · ${spent}/${total} Abzeichen verwendet · 0 verbleibend.`;
-   if(lang==='it')return `${state} · Abilità completate · ${spent}/${total} Badge utilizzati · 0 rimanenti.`;
-   return `${state} · Skills complete · ${spent}/${total} badges used · 0 remaining.`;
- }
- if(lang==='fr')return `${state} · Coût suivant : ${next} Badges · ${spent}/${total} utilisés · ${remaining} restants.`;
- if(lang==='de')return `${state} · Nächste Kosten: ${next} Abzeichen · ${spent}/${total} verwendet · ${remaining} verbleibend.`;
- if(lang==='it')return `${state} · Costo successivo: ${next} Badge · ${spent}/${total} utilizzati · ${remaining} rimanenti.`;
- return `${state} · Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`;
+ const state=levels.map((lvl,i)=>`Strand ${i+1}: Lv${lvl}`).join(' · ');
+ return n>=16
+   ? `${state} · Skills complete · ${spent}/${total} badges used · 0 remaining.`
+   : `${state} · Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`;
 }
 function updateSkillCostSummaries(){
  const o=currentOfficer();
@@ -2129,17 +2119,6 @@ function updateProfileStatus(d){
  if(n)n.textContent=o?officerDisplayName(o):'—';
  if(st)st.textContent=d?.savedAt ? `Saved ${new Date(d.savedAt).toLocaleString()}` : 'Not saved yet';
 }
-
-function kowL10n(raw){
-  try{
-    const api=window.KOW_CLEAN_I18N;
-    if(!api)return String(raw);
-    const lang=api.current?api.current():'en';
-    const dict=api.getDictionaries?api.getDictionaries()[lang]:{};
-    return api.translateStructured?api.translateStructured(String(raw),dict,lang):String(raw);
-  }catch(e){ return String(raw); }
-}
-
 function saveOfficerProfile(silent=false,index=null){
  const idx=index==null ? +$('officerSelect').value : +index;
  if(!Number.isFinite(idx)||!officers[idx])return;
@@ -2149,7 +2128,7 @@ function saveOfficerProfile(silent=false,index=null){
  saveGlobalResources();
  loadedOfficerProfileIndex=idx;
  updateProfileStatus(d);
- if(!silent)alert(kowL10n(`${officerDisplayName(officers[idx])} progress saved.`));
+ if(!silent)alert(`${officerDisplayName(officers[idx])} progress saved.`);
 }
 function loadOfficerProfile(index){
  const idx=+index, profiles=getOfficerProfiles(), d=profiles[officerProfileKey(idx)]||null;
@@ -2166,7 +2145,7 @@ function maxSelectedOfficerProfile(){
  if(!o)return;
 
  const label=officerDisplayName(o);
- if(!confirm(kowL10n(`Set ${label} to fully MAXED?\n\nThis will set:\n• 5 Stars\n• Level 70\n• Unlocked\n• All 4 Skill Strands at Level 5\n• Training Level 180\n\nShared ORV, SRV, badges, stars and XP inventory will not be spent or changed.`)))return;
+ if(!confirm(`Set ${label} to fully MAXED?\n\nThis will set:\n• 5 Stars\n• Level 70\n• Unlocked\n• All 4 Skill Strands at Level 5\n• Training Level 180\n\nShared ORV, SRV, badges, stars and XP inventory will not be spent or changed.`))return;
 
  $('currentStar').value=5;
  $('targetStar').value=5;
@@ -2192,12 +2171,12 @@ function maxSelectedOfficerProfile(){
  if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
  if(typeof renderProgressTable==='function')renderProgressTable();
 
- alert(kowL10n(`${label} is now saved as MAXED.`));
+ alert(`${label} is now saved as MAXED.`);
 }
 
 function resetOfficerProfile(){
  const idx=+$('officerSelect').value,o=officers[idx];if(!o)return;
- if(!confirm(kowL10n(`Reset saved progress for ${officerDisplayName(o)}? Shared resources will not be changed.`)))return;
+ if(!confirm(`Reset saved progress for ${officerDisplayName(o)}? Shared resources will not be changed.`))return;
  const profiles=getOfficerProfiles();
  delete profiles[officerProfileKey(idx)];
  localStorage.setItem(OFFICER_PROFILE_KEY,JSON.stringify(profiles));
@@ -2483,7 +2462,7 @@ async function restoreFullBackup(file){
  // device from surviving when they were not present in the source-device backup.
  localStorage.clear();
  Object.entries(payload.localStorage).forEach(([k,v])=>{if(v!==null&&v!==undefined)localStorage.setItem(k,String(v));});
- alert(kowL10n('Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.'));location.reload();
+ alert('Backup restored successfully. Officer profiles, Officer Badges Held and shared resources have been imported. The app will reload now.');location.reload();
 }
 
 let multiPlanOfficers=[];
@@ -2573,15 +2552,15 @@ function refreshMultiSavedPlans(selectName=''){
  if(selectName&&plans[selectName])sel.value=selectName;
 }
 function saveMultiPlan(){
- const name=String($('multiPlanName').value||'').trim();if(!name){alert(kowL10n('Enter a plan name.'));return}
+ const name=String($('multiPlanName').value||'').trim();if(!name){alert('Enter a plan name.');return}
  const plans=getMultiPlans();plans[name]={name,orv:+$('multiOrv').value||0,universal:+$('multiUniversal').value||0,chests:+$('multiChests').value||0,selectionChests:+$('multiSelectionChests').value||0,chestMode:$('multiChestMode').value,officers:multiPlanOfficers};
- localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans(name);alert(kowL10n('Plan saved.'));
+ localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans(name);alert('Plan saved.');
 }
 function loadMultiPlan(name){
  const p=getMultiPlans()[name];if(!p)return;$('multiPlanName').value=p.name||name;$('multiOrv').value=p.orv||0;$('multiUniversal').value=p.universal||0;$('multiChests').value=p.chests||0;if($('multiSelectionChests'))$('multiSelectionChests').value=p.selectionChests||0;$('multiChestMode').value=p.chestMode||'optimise';multiPlanOfficers=Array.isArray(p.officers)?p.officers:[];renderMultiPlanner();savePlannerWorkingState();
 }
 function deleteMultiPlan(){
- const name=$('multiSavedPlans').value;if(!name)return;const plans=getMultiPlans();delete plans[name];localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans();alert(kowL10n('Saved plan deleted.'));
+ const name=$('multiSavedPlans').value;if(!name)return;const plans=getMultiPlans();delete plans[name];localStorage.setItem('kow_multi_plans_v430',JSON.stringify(plans));refreshMultiSavedPlans();alert('Saved plan deleted.');
 }
 
 
@@ -2824,10 +2803,10 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
  if($('maxOfficerProfile'))$('maxOfficerProfile').onclick=maxSelectedOfficerProfile;
  if($('resetOfficerProfile'))$('resetOfficerProfile').onclick=resetOfficerProfile;
  $('dbSearch').oninput=renderDb;$('dbSeason').onchange=renderDb;$('dbAdd').onclick=()=>{officers.unshift({name:'New Officer',season:'S8',orv:1,srv:1,notes:''});renderDb();renderOfficerOptions('New Officer');calculate()};
- $('dbSave').onclick=()=>{const e=validateDb();if(e.length){alert(kowL10n('Fix validation issues first.'));return}saveOfficers();renderOfficerFilters();renderOfficerOptions();alert(kowL10n('Officer database saved.'))};
+ $('dbSave').onclick=()=>{const e=validateDb();if(e.length){alert('Fix validation issues first.');return}saveOfficers();renderOfficerFilters();renderOfficerOptions();alert('Officer database saved.')};
  $('dbExport').onclick=exportCsv;
- $('dbImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const parsed=parseCsv(r.result);if(validateDb(parsed).length){alert(kowL10n('CSV validation failed.'));return}officers=parsed;saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions();calculate();alert(kowL10n('CSV imported.'))};r.readAsText(f);e.target.value=''};
- $('dbRestore').onclick=()=>{if(confirm(kowL10n('Restore default officer database?'))){officers=clone(window.KOW_PUBLISHED_OFFICERS||DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions('S7 Liora');calculate()}};
+ $('dbImport').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const parsed=parseCsv(r.result);if(validateDb(parsed).length){alert('CSV validation failed.');return}officers=parsed;saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions();calculate();alert('CSV imported.')};r.readAsText(f);e.target.value=''};
+ $('dbRestore').onclick=()=>{if(confirm('Restore default officer database?')){officers=clone(window.KOW_PUBLISHED_OFFICERS||DEFAULT_OFFICERS).map(normalizeOfficer).filter(o=>o.name);saveOfficers();renderDb();renderOfficerFilters();renderOfficerOptions('S7 Liora');calculate()}};
 
 
  if($('multiAddOfficer'))$('multiAddOfficer').onclick=()=>{multiPlanOfficers.push({officerIndex:0,badgesNeeded:1600});renderMultiPlanner();savePlannerWorkingState()};
@@ -2852,7 +2831,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
  if(savedLandscape){$('landscapeBgStatus').textContent='Custom landscape'}
  applyResponsivePageBackground();
  $('appName').oninput=e=>{const n=e.target.value||'GODS OF WAR 371';localStorage.setItem('kow_app_name_v4',n);$('appTitle').textContent=n;document.title=n};
- const setBackground=(inputId,key,statusId,label)=>{$(inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{localStorage.setItem(key,r.result);$(statusId).textContent=label+' · '+f.name;applyResponsivePageBackground()}catch(err){alert(kowL10n('This image is too large for browser storage. Try a smaller JPG or PNG.'))}};r.readAsDataURL(f)}};
+ const setBackground=(inputId,key,statusId,label)=>{$(inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{localStorage.setItem(key,r.result);$(statusId).textContent=label+' · '+f.name;applyResponsivePageBackground()}catch(err){alert('This image is too large for browser storage. Try a smaller JPG or PNG.')}};r.readAsDataURL(f)}};
  setBackground('portraitBackgroundPicker','kow_bg_portrait_v401','portraitBgStatus','Custom portrait');
  setBackground('landscapeBackgroundPicker','kow_bg_landscape_v401','landscapeBgStatus','Custom landscape');
  $('resetAppearance').onclick=()=>{
@@ -2861,7 +2840,7 @@ document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>{saveAc
   $('portraitBgStatus').textContent='Built-in default portrait';$('landscapeBgStatus').textContent='Built-in default landscape';
   $('portraitBackgroundPicker').value='';$('landscapeBackgroundPicker').value='';
    applyResponsivePageBackground();
-  alert(kowL10n('Appearance and backgrounds restored to defaults.'));
+  alert('Appearance and backgrounds restored to defaults.');
  };
 
  $('checkUpdates').onclick=async()=>{
@@ -3144,31 +3123,24 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 (function(){
  const q=id=>document.getElementById(id);
- const mlText=s=>window.KOW_CLEAN_I18N?.translateStructured?window.KOW_CLEAN_I18N.translateStructured(String(s)):String(s);
- function buildQuickSkills(forceLevels=null){
+ function buildQuickSkills(){
  const box=q('quickSkills'); if(!box)return;
- const previous=[...box.querySelectorAll('.quick-strand-row')].map(row=>Math.max(1,Math.min(5,Number(row.dataset.selectedLevel)||1)));
- const levels=Array.isArray(forceLevels)?forceLevels:(previous.length===4?previous:getSkillStrandLevels());
  box.innerHTML='';
  box.style.display='grid';
  box.style.gap='10px';
-
- const quickStars=Math.max(0,Math.min(5,Number(q('quickStarLevel')?.value)||0));
- const quickUnlocked=!!q('quickUnlocked')?.checked;
+ const levels=getSkillStrandLevels();
+ const quickStars=Number(q('quickStarLevel')?.value??q('currentStar')?.value??0);
+ const quickUnlocked=!!(q('quickUnlocked')?.checked??q('unlocked')?.checked);
 
  for(let strand=0;strand<4;strand++){
-   // Canonical rule: unlocked officer; S1 at 0★, S2 at 1★, S3 at 2★, S4 at 3★+.
-   const requiredStars=strand;
-   const available=quickUnlocked && quickStars>=requiredStars;
-
+   const available=strandIsAvailable(strand,quickStars,quickUnlocked);
    const row=document.createElement('div');
    row.className='quick-strand-row'+(available?'':' locked');
    row.dataset.quickStrand=strand;
 
    const label=document.createElement('label');
    label.className='skill-strand-label';
-   const requirement=!quickUnlocked?'Requires Officer unlock':`Requires ${requiredStars}★`;
-   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${requirement}</span>`}`;
+   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${strandRequirementText(strand,quickStars,quickUnlocked)}</span>`}`;
    row.appendChild(label);
 
    const select=document.createElement('select');
@@ -3181,40 +3153,40 @@ document.addEventListener('DOMContentLoaded',()=>{
      opt.textContent=level===1?'Level 1 — Free':`Level ${level}`;
      select.appendChild(opt);
    }
-   const level=Math.max(1,Math.min(5,Number(levels[strand])||1));
-   select.value=String(level);
-   row.dataset.selectedLevel=String(level);
-   select.title=available?`Set Strand ${strand+1} level`:requirement;
+   select.value=levels[strand];
+   row.dataset.selectedLevel=levels[strand];
+   select.title=available?`Set Strand ${strand+1} level`:strandRequirementText(strand,quickStars,quickUnlocked);
    select.onchange=()=>{
-     row.dataset.selectedLevel=select.value;
-     updateQuickSkillSummary();
-   };
+ row.dataset.selectedLevel=select.value;
+ const paid=[...document.querySelectorAll('#quickSkills .quick-strand-select')].reduce((sum,x)=>sum+Math.max(0,(Number(x.value)||1)-1),0);
+ const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
+ const summaryBox=document.getElementById('quickNextSkillCostSummary');
+ if(summaryBox){
+ const total=cc.reduce((a,b)=>a+b,0);
+ const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
+ const remaining=Math.max(0,total-spent);
+ summaryBox.innerHTML=paid>=16
+  ? `<b>Skills complete · ${spent}/${total} badges used · 0 remaining.</b>`
+  : `<b>Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.</b>`;
+}
+};
    row.appendChild(select);
    box.appendChild(row);
  }
- updateQuickSkillSummary();
+ const paid=levels.reduce((sum,lvl)=>sum+Math.max(0,lvl-1),0);
+ const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
+ const summary=document.getElementById('quickNextSkillCostSummary');
+ if(summary){
+ const total=cc.reduce((a,b)=>a+b,0);
+ const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
+ const remaining=Math.max(0,total-spent);
+ summary.innerHTML=paid>=16
+  ? `<b>Skills complete · ${spent}/${total} badges used · 0 remaining.</b>`
+  : `<b>Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.</b>`;
 }
-
- function updateQuickSkillSummary(){
-   const rows=[...document.querySelectorAll('#quickSkills .quick-strand-row')];
-   const paid=rows.reduce((sum,row)=>{
-     const sel=row.querySelector('.quick-strand-select');
-     const lvl=Math.max(1,Math.min(5,Number(row.dataset.selectedLevel||sel?.value)||1));
-     return sum+Math.max(0,lvl-1);
-   },0);
-   const cc=skillCostsForOfficer();
-   const next=paid>=16?0:cc[paid];
-   const summary=document.getElementById('quickNextSkillCostSummary');
-   if(summary){
-     const total=cc.reduce((a,b)=>a+b,0);
-     const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
-     const remaining=Math.max(0,total-spent);
-     summary.innerHTML=paid>=16
-       ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
-       : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
-   }
 }
  function openQuickProgress(){
+   buildQuickSkills();
    const o=typeof currentOfficer==='function'?currentOfficer():null;
    q('quickProgressOfficer').textContent=o?officerDisplayName(o):'Selected Officer';
    q('quickStarLevel').value=q('currentStar')?.value??0;
@@ -3223,7 +3195,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    q('quickTraining').value=q('training')?.value??0;
    q('quickTrainingValue').textContent=q('quickTraining').value;
    if(q('quickTrainingExact'))q('quickTrainingExact').value=q('quickTraining').value;
-   buildQuickSkills(getSkillStrandLevels());
+   buildQuickSkills();
    q('quickProgressModal').style.display='block';
  }
  function closeQuickProgress(){q('quickProgressModal').style.display='none';}
@@ -3248,11 +3220,11 @@ document.addEventListener('DOMContentLoaded',()=>{
    if(typeof renderProgressCompareChoices==='function')renderProgressCompareChoices();
    closeQuickProgress();
    const o=typeof currentOfficer==='function'?currentOfficer():null;
-   alert(kowL10n(`${o?officerDisplayName(o):'Officer'} progress saved.`));
+   alert(`${o?officerDisplayName(o):'Officer'} progress saved.`);
  }
  q('quickProgressBtn')?.addEventListener('click',openQuickProgress);
- q('quickStarLevel')?.addEventListener('change',()=>buildQuickSkills());
- q('quickUnlocked')?.addEventListener('change',()=>buildQuickSkills());
+ q('quickStarLevel')?.addEventListener('change',buildQuickSkills);
+ q('quickUnlocked')?.addEventListener('change',buildQuickSkills);
  q('skillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
  q('quickSkillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
  q('skillCostInfoClose')?.addEventListener('click',closeSkillCostInfo);
@@ -3280,50 +3252,13 @@ document.addEventListener('DOMContentLoaded',()=>{
  });
  q('quickProgressSave')?.addEventListener('click',applyQuickProgress);
  q('quickProgressMax')?.addEventListener('click',()=>{
-   q('quickStarLevel').value='5';
-   q('quickOfficerLevel').value='70';
-   q('quickUnlocked').checked=true;
-   q('quickTraining').value='180';
-   q('quickTrainingValue').textContent='180';
-   if(q('quickTrainingExact'))q('quickTrainingExact').value='180';
-
-   // Rebuild after setting 5★ + unlocked so all four strands are enabled.
-   buildQuickSkills([5,5,5,5]);
-   document.querySelectorAll('#quickSkills .quick-strand-row').forEach(row=>{
-     row.dataset.selectedLevel='5';
-     const sel=row.querySelector('.quick-strand-select');
-     if(sel){ sel.disabled=false; sel.value='5'; }
-     row.classList.remove('locked');
-   });
-   updateQuickSkillSummary();
-
-   // MAX is an action, not just a preview: commit and save immediately.
-   applyQuickProgress();
+   q('quickStarLevel').value='5';q('quickOfficerLevel').value='70';q('quickUnlocked').checked=true;
+   q('quickTraining').value='180';q('quickTrainingValue').textContent='180';if(q('quickTrainingExact'))q('quickTrainingExact').value='180';
+   document.querySelectorAll('#quickSkills .quick-strand-row').forEach(row=>{row.dataset.selectedLevel='5';const sel=row.querySelector('.quick-strand-select');if(sel)sel.value='5';});
  });
  q('quickProgressModal')?.addEventListener('click',e=>{if(e.target===q('quickProgressModal'))closeQuickProgress();});
 })();;
 
-
-
-window.KOW_OFFICER_EDIT_REGRESSION={
-  strandAvailability(stars,unlocked=true){
-    stars=Math.max(0,Math.min(5,Number(stars)||0));
-    return [0,1,2,3].map(required=>!!unlocked && stars>=required);
-  },
-  expectedMax(){ return {stars:5,level:70,unlocked:true,strands:[5,5,5,5],training:180}; },
-  selfTest(){
-    const cases=[
-      [0,[true,false,false,false]],
-      [1,[true,true,false,false]],
-      [2,[true,true,true,false]],
-      [3,[true,true,true,true]],
-      [4,[true,true,true,true]],
-      [5,[true,true,true,true]]
-    ];
-    return cases.every(([s,expect])=>JSON.stringify(this.strandAvailability(s,true))===JSON.stringify(expect))
-      && this.strandAvailability(5,false).every(v=>v===false);
-  }
-};
 
 // v4.3.58 FIX7 — explicit bridge for non-module Advanced Planner code.
 // This prevents the Planner from seeing module-scoped data/functions as undefined.
@@ -3405,10 +3340,10 @@ onclick="(function(){
 
     q('quickProgressModal').style.display='none';
     var o=(typeof currentOfficer==='function')?currentOfficer():null;
-    alert(kowL10n((o&&typeof officerDisplayName==='function'?officerDisplayName(o):'Officer')+' progress saved.'));
+    alert((o&&typeof officerDisplayName==='function'?officerDisplayName(o):'Officer')+' progress saved.');
   }catch(err){
     console.error('Quick Progress save failed',err);
-    alert(kowL10n('Progress could not be saved. Please refresh and try again.'));
+    alert('Progress could not be saved. Please refresh and try again.');
   }
 })();return false;">💾 Save Progress</button><button id="quickProgressMax" class="primary" type="button">⭐ MAX Officer</button><button id="quickProgressCancel" class="app-action-secondary" type="button" onclick="document.getElementById('quickProgressModal').style.display='none';return false;">Cancel</button></div>
   <div class="notice">Officer-specific progress only. Shared resources remain on Stars, Develop and XP.</div>
@@ -3482,7 +3417,7 @@ function kowInvApply(x){
 function kowInvSave(){const old=kowInvGet(),x={officerBadges:old.officerBadges||{},savedAt:new Date().toISOString()};KOW_INV_IDS.forEach(id=>x[id]=Math.max(0,+document.getElementById(id)?.value||0));localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvApply(x);kowInvLoad();}
 document.addEventListener('click',e=>{
  if(e.target?.id==='saveInventory')kowInvSave();
- if(e.target?.id==='resetInventory'&&confirm(kowL10n('Reset Central Inventory?'))){localStorage.removeItem(KOW_INV_KEY);kowInvLoad();kowInvApply({});}
+ if(e.target?.id==='resetInventory'&&confirm('Reset Central Inventory?')){localStorage.removeItem(KOW_INV_KEY);kowInvLoad();kowInvApply({});}
  if(e.target?.id==='invSetOfficer'){const n=document.getElementById('invOfficerName')?.value;if(!n)return;const x=kowInvGet();x.officerBadges=x.officerBadges||{};x.officerBadges[n]=Math.max(0,+document.getElementById('invOfficerQty').value||0);x.savedAt=new Date().toISOString();localStorage.setItem(KOW_INV_KEY,JSON.stringify(x));kowInvList(x.officerBadges);kowInvApply(x);}
 });
 document.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('invOfficerName'),b=document.getElementById('officerSelect');if(a&&b)a.innerHTML=b.innerHTML;const x=kowInvLoad();if(x.savedAt)kowInvApply(x);});
@@ -4046,19 +3981,17 @@ window.kowRenderPlanningReadiness=render;
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-
-<!-- v4.6.0 CLEAN MULTILINGUAL TEST: one translation engine -->
 <script src="./v460-features.js?v=460-live"></script><script src="./planner-season-sync.js?v=460-live"></script><script src="./release-forecast-sync.js?v=460-live"></script>
-
-<script src="./lang/v460-en.js?v=460stable1"></script>
-<script src="./lang/v460-fr.js?v=460qa8"></script>
-<script src="./lang/v460-de.js?v=460qa8"></script>
-<script src="./lang/v460-it.js?v=460qa8"></script>
-<script src="./lang/v460-full-help.js?v=460qa8"></script>
-<script src="./lang/v460-i18n.js?v=460qa8"></script>
-<script src="./lang/v460-popup-i18n.js?v=460stable1"></script>
-<script src="./lang/v460-release-calendar-i18n.js?v=460qa8"></script>
-<script src="./lang/v460-language-qa.js?v=460qa7"></script>
+<!-- Multilingual/QA layer only. Functional application above is English v4.6.0 LIVE HOTFIX-2. -->
+<script src="./lang/v460-en.js?v=460master1"></script>
+<script src="./lang/v460-fr.js?v=460master1"></script>
+<script src="./lang/v460-de.js?v=460master1"></script>
+<script src="./lang/v460-it.js?v=460master1"></script>
+<script src="./lang/v460-full-help.js?v=460master1"></script>
+<script src="./lang/v460-i18n.js?v=460master1"></script>
+<script src="./lang/v460-popup-i18n.js?v=460master1"></script>
+<script src="./lang/v460-release-calendar-i18n.js?v=460master1"></script>
+<script src="./lang/v460-language-qa.js?v=460master1"></script>
 
 </body>
 </html>
