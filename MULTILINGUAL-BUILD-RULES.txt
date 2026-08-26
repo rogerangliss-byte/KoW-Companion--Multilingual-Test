@@ -24,3 +24,6 @@ FORBIDDEN
 - No functional patch may be made only in Multilingual.
 Any functional correction must be made in English Stable/Test first, validated there,
 then inherited unchanged by Multilingual.
+
+QA8 RULE:
+Language QA is read-only and may not click controls, dispatch events, change form values, or invoke application functions.
