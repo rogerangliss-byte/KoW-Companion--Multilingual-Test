@@ -3,7 +3,43 @@
 'use strict';
 const $=id=>document.getElementById(id), wait=ms=>new Promise(r=>setTimeout(r,ms));
 const LABEL={en:'English',fr:'Français',de:'Deutsch',it:'Italiano'};
-const ROOTS=['home','progress','officer','inventory','stars','development','xp','planner','database','releases','settings','help'];
+const ROOTS=['dashboard','progress','officer','inventory','stars','development','xp','planner','database','releases','settings','help','skillCostInfoModal','quickProgressModal'];
+
+function qa4CoverageManifest(){
+  return ROOTS.map(id=>{
+    const el=document.getElementById(id);
+    return {id,exists:!!el,kind:el?(el.classList.contains('view')?'view':(el.getAttribute('role')||el.tagName.toLowerCase())):'missing'};
+  });
+}
+function qa4DynamicRenderers(){
+  const names=['renderDashboard','renderProgress','renderOfficer','renderInventory','renderStars','renderDevelopment','renderXP','renderPlanner','renderDatabase','renderReleaseCalendar','renderReleases','renderSettings','renderHelp','renderQuickProgress','refreshReleaseCalendar','refreshReleaseForecast'];
+  const invoked=[];
+  names.forEach(name=>{try{if(typeof window[name]==='function'){window[name]();invoked.push(name);}}catch(e){}});
+  return invoked;
+}
+function qa4ExtraVisibleStrings(){
+  const out=[];
+  ROOTS.forEach(id=>{
+    const root=document.getElementById(id); if(!root)return;
+    root.querySelectorAll('select option').forEach(o=>{const t=(o.textContent||'').trim();if(t)out.push({root:id,kind:'option',text:t});});
+    root.querySelectorAll('input[type="button"],input[type="submit"],input[type="reset"]').forEach(e=>{const t=(e.value||'').trim();if(t)out.push({root:id,kind:'input-value',text:t});});
+    root.querySelectorAll('[alt]').forEach(e=>{const t=(e.getAttribute('alt')||'').trim();if(t)out.push({root:id,kind:'alt',text:t});});
+  });
+  return out;
+}
+function qa4PopupLiterals(){
+  const src=document.documentElement.innerHTML, out=[];
+  const rx=/(?:alert|confirm|prompt)\s*\(\s*([`'"])([\s\S]{3,220}?)\1\s*\)/g;
+  let m; while((m=rx.exec(src))){const t=m[2].replace(/\$\{[^}]+\}/g,'{value}').trim();if(t)out.push(t);}
+  return [...new Set(out)];
+}
+window.KOW_QA4_COVERAGE={
+  manifest:qa4CoverageManifest,
+  renderDynamic:qa4DynamicRenderers,
+  extraVisibleStrings:qa4ExtraVisibleStrings,
+  popupLiterals:qa4PopupLiterals
+};
+
 const TECH=new Set('xp orv srv csv max maxed firestorm kow s2 s3 s4 s5 s6 s7 s8'.split(' '));
 const ENWORDS=new Set(('the and or to from with without for of in on at by is are was were be been being this that these those your you can cannot could should would will current next previous latest saved save load reset restore export import download upload select selected choose enter required remaining held available shortfall still more less total value level levels target targets training skill skills strand strands officer officers badge badges star stars inventory planner planning plan plans database release releases forecast growth month scheduled schedule resource resources development progress readiness ready partially fully funded upgrade upgrades action suggested open close calculate average priority showing shown created updated last first second third fourth guide user settings backup check refresh version search add delete name result results displayed universal chest chests selection book books point points used use using per only preview published replace confirmed cost costs approximately requirement achieve what how all no yes not started completed complete currently locally individual shared against future expected actual data global recommended order step workflow summary status upcoming').split(/\s+/));
 const PHRASES=['Central Inventory','saved Officers','Highest progress','Still required','Suggested next action','Current readiness','Preview only','Training point','Promotion badges','Strand 1','Strand 2','Strand 3','Strand 4','Use Current Held Resources','Shared Legendary badge resources detected','Remaining badge shortfall','Planning Scenario','Current month','Next scheduled release','Check for Updates','Refresh Latest Version','Backup & Restore','Officer Upgrade Summary','Legendary Officer Badge Chest','Legendary Officer Badge Selection Chest'];
@@ -16,7 +52,14 @@ function bleed(code){if(code==='en')return[];return [...new Set(nodes().filter(x
 function dictMissing(code){if(code==='en')return[];const ds=window.KOW_CLEAN_I18N?.getDictionaries?.()||{},en=ds.en||{},d=ds[code]||{};return Object.keys(en).filter(k=>{const v=d[k];if(v==null||String(v).trim()==='')return true;if(String(v).trim()===String(k).trim()&&!TECH.has(String(k).toLowerCase()))return true;return false})}
 function details(title,a){return a.length?`<details><summary>${esc(title)} (${a.length})</summary><div style="max-height:320px;overflow:auto;font-size:.78rem">${a.map(x=>`<div>${esc(x)}</div>`).join('')}</div></details>`:''}
 let lastReport=null;
-async function run(){const out=$('v460QaResults');if(!out)return;const api=window.KOW_CLEAN_I18N,original=api.current();out.innerHTML='<div class="notice">Running CLEAN QA across every rendered application view…</div>';const report={generated_at:new Date().toISOString(),app_version:'4.6.0',qa_version:'QA3 CLEAN comprehensive rendered audit',results:{}};let h='';try{for(const code of ['en','fr','de','it']){api.setLanguage(code);await wait(350);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.();await wait(250);const d=dictMissing(code),r=bleed(code),ok=code==='en'||(!d.length&&!r.length);report.results[LABEL[code]]={status:ok?'PASS':'FAIL',dictionary:d,rendered_english_bleed:r};h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?'PASS':'FAIL'}</strong></div>`;if(code!=='en')h+=`<div>Dictionary: <b>${d.length}</b> · Rendered English bleed: <b>${r.length}</b></div>${details('Dictionary',d)}${details('Rendered English bleed',r)}`;h+='</div>'}}finally{api.setLanguage(original);await wait(200)}lastReport=report;out.innerHTML=h+'<div class="notice"><b>CLEAN QA:</b> PASS requires zero untranslated dictionary entries and zero high-confidence English UI text.</div>'}
+async function run(){const out=$('v460QaResults');if(!out)return;const api=window.KOW_CLEAN_I18N,original=api.current();out.innerHTML='<div class="notice">Running CLEAN QA across every rendered application view…</div>';const report={
+    coverage_manifest,
+    dynamic_renderers_invoked,
+    popup_literals,coverage_manifest:qa4_coverage_manifest,
+      dynamic_renderers_invoked:qa4_dynamic_renderers,
+      extra_visible_strings_audited:qa4_extra_visible_strings,
+      popup_literals_inventory:qa4_popup_literals,
+      generated_at:new Date().toISOString(),app_version:'4.6.0',qa_version:'QA3 CLEAN comprehensive rendered audit',results:{}};let h='';try{for(const code of ['en','fr','de','it']){api.setLanguage(code);await wait(350);window.kowRefreshDynamicReleaseForecast?.();window.kowRenderLocalizedReleaseCalendar?.();await wait(250);const d=dictMissing(code),r=bleed(code),ok=code==='en'||(!d.length&&!r.length);report.results[LABEL[code]]={status:ok?'PASS':'FAIL',dictionary:d,rendered_english_bleed:r};h+=`<div style="margin:10px 0;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(0,0,0,.25)"><div style="display:flex;justify-content:space-between"><b>${LABEL[code]}</b><strong style="color:${ok?'#9ee493':'#ff9d86'}">${ok?'PASS':'FAIL'}</strong></div>`;if(code!=='en')h+=`<div>Dictionary: <b>${d.length}</b> · Rendered English bleed: <b>${r.length}</b></div>${details('Dictionary',d)}${details('Rendered English bleed',r)}`;h+='</div>'}}finally{api.setLanguage(original);await wait(200)}lastReport=report;out.innerHTML=h+'<div class="notice"><b>CLEAN QA:</b> PASS requires zero untranslated dictionary entries and zero high-confidence English UI text.</div>'}
 function download(){const r=lastReport||{generated_at:new Date().toISOString(),error:'Run QA first'};const b=new Blob([JSON.stringify(r,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA-CLEAN-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 function inject(){const old=$('v460QaCard');if(old)old.remove();const s=$('settings');if(!s)return;const d=document.createElement('div');d.id='v460QaCard';d.className='card wide';d.style.marginTop='12px';d.innerHTML='<h2>🧪 Language QA / Rendered Translation Test — CLEAN</h2><p class="notice">Scans visible text and translated attributes across the complete app.</p><button id="v460QaRun" class="app-action-primary" type="button">Run Full Rendered QA</button> <button id="v460QaDownload" class="app-action-secondary" type="button">⬇ Download QA Report</button><div id="v460QaResults"></div>';s.appendChild(d);$('v460QaRun').onclick=run;$('v460QaDownload').onclick=download}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(inject,500));else setTimeout(inject,300);
