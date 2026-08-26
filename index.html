@@ -3145,24 +3145,30 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
  const q=id=>document.getElementById(id);
  const mlText=s=>window.KOW_CLEAN_I18N?.translateStructured?window.KOW_CLEAN_I18N.translateStructured(String(s)):String(s);
- function buildQuickSkills(){
+ function buildQuickSkills(forceLevels=null){
  const box=q('quickSkills'); if(!box)return;
+ const previous=[...box.querySelectorAll('.quick-strand-row')].map(row=>Math.max(1,Math.min(5,Number(row.dataset.selectedLevel)||1)));
+ const levels=Array.isArray(forceLevels)?forceLevels:(previous.length===4?previous:getSkillStrandLevels());
  box.innerHTML='';
  box.style.display='grid';
  box.style.gap='10px';
- const levels=getSkillStrandLevels();
- const quickStars=Number(q('quickStarLevel')?.value??q('currentStar')?.value??0);
- const quickUnlocked=!!(q('quickUnlocked')?.checked??q('unlocked')?.checked);
+
+ const quickStars=Math.max(0,Math.min(5,Number(q('quickStarLevel')?.value)||0));
+ const quickUnlocked=!!q('quickUnlocked')?.checked;
 
  for(let strand=0;strand<4;strand++){
-   const available=strandIsAvailable(strand,quickStars,quickUnlocked);
+   // Canonical rule: unlocked officer; S1 at 0★, S2 at 1★, S3 at 2★, S4 at 3★+.
+   const requiredStars=strand;
+   const available=quickUnlocked && quickStars>=requiredStars;
+
    const row=document.createElement('div');
    row.className='quick-strand-row'+(available?'':' locked');
    row.dataset.quickStrand=strand;
 
    const label=document.createElement('label');
    label.className='skill-strand-label';
-   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${strandRequirementText(strand,quickStars,quickUnlocked)}</span>`}`;
+   const requirement=!quickUnlocked?'Requires Officer unlock':`Requires ${requiredStars}★`;
+   label.innerHTML=`Strand ${strand+1}${available?'':`<span class="strand-requirement">${requirement}</span>`}`;
    row.appendChild(label);
 
    const select=document.createElement('select');
@@ -3175,40 +3181,40 @@ document.addEventListener('DOMContentLoaded',()=>{
      opt.textContent=level===1?'Level 1 — Free':`Level ${level}`;
      select.appendChild(opt);
    }
-   select.value=levels[strand];
-   row.dataset.selectedLevel=levels[strand];
-   select.title=available?`Set Strand ${strand+1} level`:strandRequirementText(strand,quickStars,quickUnlocked);
+   const level=Math.max(1,Math.min(5,Number(levels[strand])||1));
+   select.value=String(level);
+   row.dataset.selectedLevel=String(level);
+   select.title=available?`Set Strand ${strand+1} level`:requirement;
    select.onchange=()=>{
- row.dataset.selectedLevel=select.value;
- const paid=[...document.querySelectorAll('#quickSkills .quick-strand-select')].reduce((sum,x)=>sum+Math.max(0,(Number(x.value)||1)-1),0);
- const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
- const summaryBox=document.getElementById('quickNextSkillCostSummary');
- if(summaryBox){
- const total=cc.reduce((a,b)=>a+b,0);
- const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
- const remaining=Math.max(0,total-spent);
- summaryBox.innerHTML=paid>=16
-  ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
-  : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
-}
-};
+     row.dataset.selectedLevel=select.value;
+     updateQuickSkillSummary();
+   };
    row.appendChild(select);
    box.appendChild(row);
  }
- const paid=levels.reduce((sum,lvl)=>sum+Math.max(0,lvl-1),0);
- const cc=skillCostsForOfficer(); const next=paid>=16?0:cc[paid];
- const summary=document.getElementById('quickNextSkillCostSummary');
- if(summary){
- const total=cc.reduce((a,b)=>a+b,0);
- const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
- const remaining=Math.max(0,total-spent);
- summary.innerHTML=paid>=16
-  ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
-  : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
+ updateQuickSkillSummary();
 }
+
+ function updateQuickSkillSummary(){
+   const rows=[...document.querySelectorAll('#quickSkills .quick-strand-row')];
+   const paid=rows.reduce((sum,row)=>{
+     const sel=row.querySelector('.quick-strand-select');
+     const lvl=Math.max(1,Math.min(5,Number(row.dataset.selectedLevel||sel?.value)||1));
+     return sum+Math.max(0,lvl-1);
+   },0);
+   const cc=skillCostsForOfficer();
+   const next=paid>=16?0:cc[paid];
+   const summary=document.getElementById('quickNextSkillCostSummary');
+   if(summary){
+     const total=cc.reduce((a,b)=>a+b,0);
+     const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
+     const remaining=Math.max(0,total-spent);
+     summary.innerHTML=paid>=16
+       ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
+       : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
+   }
 }
  function openQuickProgress(){
-   buildQuickSkills();
    const o=typeof currentOfficer==='function'?currentOfficer():null;
    q('quickProgressOfficer').textContent=o?officerDisplayName(o):'Selected Officer';
    q('quickStarLevel').value=q('currentStar')?.value??0;
@@ -3217,7 +3223,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    q('quickTraining').value=q('training')?.value??0;
    q('quickTrainingValue').textContent=q('quickTraining').value;
    if(q('quickTrainingExact'))q('quickTrainingExact').value=q('quickTraining').value;
-   buildQuickSkills();
+   buildQuickSkills(getSkillStrandLevels());
    q('quickProgressModal').style.display='block';
  }
  function closeQuickProgress(){q('quickProgressModal').style.display='none';}
@@ -3245,8 +3251,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    alert(kowL10n(`${o?officerDisplayName(o):'Officer'} progress saved.`));
  }
  q('quickProgressBtn')?.addEventListener('click',openQuickProgress);
- q('quickStarLevel')?.addEventListener('change',buildQuickSkills);
- q('quickUnlocked')?.addEventListener('change',buildQuickSkills);
+ q('quickStarLevel')?.addEventListener('change',()=>buildQuickSkills());
+ q('quickUnlocked')?.addEventListener('change',()=>buildQuickSkills());
  q('skillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
  q('quickSkillCostInfoBtn')?.addEventListener('click',openSkillCostInfo);
  q('skillCostInfoClose')?.addEventListener('click',closeSkillCostInfo);
@@ -3274,13 +3280,50 @@ document.addEventListener('DOMContentLoaded',()=>{
  });
  q('quickProgressSave')?.addEventListener('click',applyQuickProgress);
  q('quickProgressMax')?.addEventListener('click',()=>{
-   q('quickStarLevel').value='5';q('quickOfficerLevel').value='70';q('quickUnlocked').checked=true;
-   q('quickTraining').value='180';q('quickTrainingValue').textContent='180';if(q('quickTrainingExact'))q('quickTrainingExact').value='180';
-   document.querySelectorAll('#quickSkills .quick-strand-row').forEach(row=>{row.dataset.selectedLevel='5';const sel=row.querySelector('.quick-strand-select');if(sel)sel.value='5';});
+   q('quickStarLevel').value='5';
+   q('quickOfficerLevel').value='70';
+   q('quickUnlocked').checked=true;
+   q('quickTraining').value='180';
+   q('quickTrainingValue').textContent='180';
+   if(q('quickTrainingExact'))q('quickTrainingExact').value='180';
+
+   // Rebuild after setting 5★ + unlocked so all four strands are enabled.
+   buildQuickSkills([5,5,5,5]);
+   document.querySelectorAll('#quickSkills .quick-strand-row').forEach(row=>{
+     row.dataset.selectedLevel='5';
+     const sel=row.querySelector('.quick-strand-select');
+     if(sel){ sel.disabled=false; sel.value='5'; }
+     row.classList.remove('locked');
+   });
+   updateQuickSkillSummary();
+
+   // MAX is an action, not just a preview: commit and save immediately.
+   applyQuickProgress();
  });
  q('quickProgressModal')?.addEventListener('click',e=>{if(e.target===q('quickProgressModal'))closeQuickProgress();});
 })();;
 
+
+
+window.KOW_OFFICER_EDIT_REGRESSION={
+  strandAvailability(stars,unlocked=true){
+    stars=Math.max(0,Math.min(5,Number(stars)||0));
+    return [0,1,2,3].map(required=>!!unlocked && stars>=required);
+  },
+  expectedMax(){ return {stars:5,level:70,unlocked:true,strands:[5,5,5,5],training:180}; },
+  selfTest(){
+    const cases=[
+      [0,[true,false,false,false]],
+      [1,[true,true,false,false]],
+      [2,[true,true,true,false]],
+      [3,[true,true,true,true]],
+      [4,[true,true,true,true]],
+      [5,[true,true,true,true]]
+    ];
+    return cases.every(([s,expect])=>JSON.stringify(this.strandAvailability(s,true))===JSON.stringify(expect))
+      && this.strandAvailability(5,false).every(v=>v===false);
+  }
+};
 
 // v4.3.58 FIX7 — explicit bridge for non-module Advanced Planner code.
 // This prevents the Planner from seeing module-scoped data/functions as undefined.
