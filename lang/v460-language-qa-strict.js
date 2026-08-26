@@ -13,7 +13,7 @@ function looksEnglish(t,l){if(l==='en')return false;t=String(t||'').trim();if(t.
 function coverage(l){if(l==='en')return{dictionary_size:Object.keys(window.KOW_I18N_EN||{}).length,missing_keys:[]};const en=window.KOW_I18N_EN||{};const d=l==='fr'?(window.KOW_I18N_FR||{}):l==='de'?(window.KOW_I18N_DE||{}):(window.KOW_I18N_IT||{});return{dictionary_size:Object.keys(d).length,missing_keys:Object.keys(en).filter(k=>!(k in d))}}
 function scanRoot(l,id){const r=document.getElementById(id),res={root:id,present:!!r,strings_scanned:0,english_bleed:[],broken_text:[]};if(!r)return res;const ss=strings(r);res.strings_scanned=ss.length;for(const s of ss){if(looksEnglish(s.text,l))res.english_bleed.push({kind:s.kind,text:s.text});if(/\\bundefined\\b|\\bnull\\b|\\[object Object\\]/i.test(s.text))res.broken_text.push({kind:s.kind,text:s.text})}return res}
 function popups(){const html=document.documentElement.innerHTML,out=[],rx=/(?:alert|confirm|prompt)\\s*\\(\\s*([`'"])([\\s\\S]{3,260}?)\\1\\s*\\)/g;let m;while((m=rx.exec(html))){const t=m[2].replace(/\\$\\{[^}]+\\}/g,'{value}').replace(/\\s+/g,' ').trim();if(t)out.push(t)}return[...new Set(out)]}
-function integrity(){const req=['officerSelect','quickProgressBtn','maxOfficerProfile','saveOfficerProfile','saveInventory','resetInventory','quickProgressModal','quickProgressMax','quickProgressSave','quickProgressCancel','quickStarLevel','quickOfficerLevel','quickUnlocked','quickTraining','settings','help'];return{required_controls:req.length,missing_controls:req.filter(id=>!document.getElementById(id))}}
+function integrity(){const req=['officerSelect','quickProgressBtn','maxOfficerProfile','saveOfficerProfile','saveInventory','resetInventory','quickProgressModal','quickProgressMax','quickProgressSave','quickProgressCancel','quickStarLevel','quickOfficerLevel','quickUnlocked','quickTraining','settings','help','appLanguage'];const missing=req.filter(id=>!document.getElementById(id));const sel=document.getElementById('appLanguage');if(sel){const vals=[...sel.options].map(o=>o.value);if(!['en','fr','de','it'].every(v=>vals.includes(v)))missing.push('appLanguage-options-en-fr-de-it')}return{required_controls:req.length,missing_controls:missing}}
 
 function dynamicAudit(code){
  const html=document.documentElement.innerHTML,out=[],issues=[];
@@ -57,15 +57,15 @@ function helpAudit(code){
  };
 }
 
-function build(){const original=lang(),results={};for(const L of LANGS){setLang(L.code);const roots=ROOTS.map(id=>scanRoot(L.code,id)),cov=coverage(L.code),bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`)),broken=roots.flatMap(r=>r.broken_text.map(x=>`${r.root}: ${x.text}`)),missing=roots.filter(r=>!r.present).map(r=>r.root),popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code)),dyn=dynamicAudit(L.code),dq=dictQuality(L.code),ha=helpAudit(L.code);results[L.label]={status:(bleed.length||broken.length||missing.length||cov.missing_keys.length||popup.length||dyn.english_dynamic_literals.length||dq.empty_values.length||dq.identical_to_english.length||dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',translation_coverage:cov,dynamic_source_audit:dyn,dictionary_quality:dq,help_source_audit:ha,rendered_english_bleed:bleed,broken_or_invalid_text:broken,missing_roots:missing,popup_english_literals:popup,roots_scanned:roots.filter(r=>r.present).length,per_root:roots}}setLang(original);return{generated_at:new Date().toISOString(),app_version:'4.6.0 STABLE English Truth',qa_version:'Language QA9D READ-ONLY Dynamic Proof',scope_note:'Rendered DOM plus dynamic text-source, dictionary-quality and Help-source audit; application workflows are not executed.',read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:false},expected_roots:ROOTS,ui_integrity:integrity(),results}}
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA9D-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function build(){const original=lang(),results={};for(const L of LANGS){setLang(L.code);const roots=ROOTS.map(id=>scanRoot(L.code,id)),cov=coverage(L.code),bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`)),broken=roots.flatMap(r=>r.broken_text.map(x=>`${r.root}: ${x.text}`)),missing=roots.filter(r=>!r.present).map(r=>r.root),popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code)),dyn=dynamicAudit(L.code),dq=dictQuality(L.code),ha=helpAudit(L.code);results[L.label]={status:(bleed.length||broken.length||missing.length||cov.missing_keys.length||popup.length||dyn.english_dynamic_literals.length||dq.empty_values.length||dq.identical_to_english.length||dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',translation_coverage:cov,dynamic_source_audit:dyn,dictionary_quality:dq,help_source_audit:ha,rendered_english_bleed:bleed,broken_or_invalid_text:broken,missing_roots:missing,popup_english_literals:popup,roots_scanned:roots.filter(r=>r.present).length,per_root:roots}}setLang(original);return{generated_at:new Date().toISOString(),app_version:'4.6.0 STABLE English Truth',qa_version:'Language QA9F READ-ONLY Dynamic Proof',scope_note:'Rendered DOM plus dynamic text-source, dictionary-quality and Help-source audit; application workflows are not executed.',read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:false},expected_roots:ROOTS,ui_integrity:integrity(),results}}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA9F-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function render(rep){
  let p=document.getElementById('languageQaPanel');
  if(!p)return;
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
  const dl=document.getElementById('downloadLanguageQaReport');
- if(status)status.textContent='QA9D complete.';
+ if(status)status.textContent='QA9F complete.';
  if(results){
    results.innerHTML=LANGS.map(L=>{
      const r=rep.results[L.label];
@@ -79,16 +79,16 @@ function render(rep){
  }
  if(dl){
    dl.disabled=false;
-   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA9D);
+   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA9F);
  }
 }
 
 function showQaError(err){
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
- if(status)status.textContent='QA9D FAILED TO RUN — see details below.';
+ if(status)status.textContent='QA9F FAILED TO RUN — see details below.';
  if(results)results.innerHTML=`<div class="notice"><b>QA runner error:</b> ${String(err&&err.message||err)}</div>`;
- console.error('KoW Language QA9D runner error',err);
+ console.error('KoW Language QA9F runner error',err);
 }
 
 function run(){
@@ -97,7 +97,7 @@ function run(){
  const btn=document.getElementById('runLanguageQa');
  const dl=document.getElementById('downloadLanguageQaReport');
 
- if(status)status.textContent='Running QA9D across EN / FR / DE / IT…';
+ if(status)status.textContent='Running QA9F across EN / FR / DE / IT…';
  if(results)results.innerHTML='<div class="notice">Scanning rendered UI, dictionaries, dynamic text sources and Help…</div>';
  if(btn)btn.disabled=true;
  if(dl)dl.disabled=true;
@@ -106,7 +106,7 @@ function run(){
  setTimeout(()=>{
    try{
      const rep=build();
-     window.KOW_LAST_LANGUAGE_QA9D=rep;
+     window.KOW_LAST_LANGUAGE_QA9F=rep;
      render(rep);
    }catch(err){
      showQaError(err);
@@ -129,13 +129,13 @@ function wire(){
  p.id='languageQaPanel';
  p.style.marginTop='16px';
  p.innerHTML=
-   '<h3>🧪 Language QA9D / Read-Only Dynamic-Language Proof</h3>'+
+   '<h3>🧪 Language QA9F / Read-Only Dynamic-Language Proof</h3>'+
    '<p class="notice">Detailed read-only audit of rendered language, dynamic text sources, dictionaries, Help and UI integrity. Application workflows are not executed.</p>'+
    '<div class="two">'+
-     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA9D</button>'+
-     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA9D Report</button>'+
+     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA9F</button>'+
+     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA9F Report</button>'+
    '</div>'+
-   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA9D ready.</div>'+
+   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA9F ready.</div>'+
    '<div id="languageQaResults" style="margin-top:10px"></div>';
 
  backup.insertAdjacentElement('afterend',p);
@@ -147,9 +147,9 @@ function wire(){
 if(document.readyState==='complete')setTimeout(wire,0);
 else window.addEventListener('load',()=>setTimeout(wire,0),{once:true});
 
-window.KOW_LANGUAGE_QA9D={
+window.KOW_LANGUAGE_QA9F={
  run,
- report:()=>window.KOW_LAST_LANGUAGE_QA9D||null,
- version:'QA9D'
+ report:()=>window.KOW_LAST_LANGUAGE_QA9F||null,
+ version:'QA9F'
 };
 })();

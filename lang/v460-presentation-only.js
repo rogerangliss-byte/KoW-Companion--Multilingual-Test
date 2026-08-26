@@ -58,21 +58,27 @@ function apply(lang){
 function addUi(){
   if(!document.getElementById('multilingualTestBanner')){
     const b=document.createElement('div'); b.id='multilingualTestBanner';
-    b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA9D — NOT LIVE';
+    b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA9F — NOT LIVE';
     b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px;border-bottom:2px solid #ff6b6b';
     document.body.insertBefore(b,document.body.firstChild);
   }
-  const settings=document.querySelector('#settings article.card');
+  const settings=document.querySelector('#settings article.card')||document.querySelector('#settings .card')||document.getElementById('settings');
   if(settings && !document.getElementById('appLanguage')){
     const h=settings.querySelector('h2'), wrap=document.createElement('div');
     wrap.id='languageSelectorCard'; wrap.style.marginBottom='14px';
     wrap.innerHTML='<label for="appLanguage">Language / Langue / Sprache / Lingua</label><select id="appLanguage"><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option></select>';
     h?.insertAdjacentElement('afterend',wrap);
-    wrap.querySelector('select').addEventListener('change',e=>apply(e.target.value));
+  }
+  const languageSelect=document.getElementById('appLanguage');
+  if(languageSelect && !languageSelect.dataset.kowLanguageWired){
+    languageSelect.dataset.kowLanguageWired='1';
+    languageSelect.addEventListener('change',e=>apply(e.target.value));
   }
   const help=document.querySelector('#help');
   if(help && !help.dataset.englishHtml) help.dataset.englishHtml=help.innerHTML;
 }
 window.KOW_PRESENTATION_I18N={apply,translateRoot,getLanguage:()=>active};
-window.addEventListener('load',()=>{addUi();apply(active);},{once:true});
+function initialisePresentation(){addUi();apply(active);}
+if(document.readyState==='complete') setTimeout(initialisePresentation,0);
+else window.addEventListener('load',()=>setTimeout(initialisePresentation,0),{once:true});
 })();
