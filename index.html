@@ -3157,8 +3157,8 @@ document.addEventListener('DOMContentLoaded',()=>{
  const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
  const remaining=Math.max(0,total-spent);
  summaryBox.innerHTML=paid>=16
-  ? `<b>${mlText(`Skills complete · ${spent}/${total} badges used · 0 remaining.`)}</b>`
-  : `<b>${mlText(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`)}</b>`;
+  ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
+  : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
 }
 };
    row.appendChild(select);
@@ -3172,8 +3172,8 @@ document.addEventListener('DOMContentLoaded',()=>{
  const spent=cc.slice(0,paid).reduce((a,b)=>a+b,0);
  const remaining=Math.max(0,total-spent);
  summary.innerHTML=paid>=16
-  ? `<b>${mlText(`Skills complete · ${spent}/${total} badges used · 0 remaining.`)}</b>`
-  : `<b>${mlText(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`)}</b>`;
+  ? `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Skills complete · ${spent}/${total} badges used · 0 remaining.`) || `Skills complete · ${spent}/${total} badges used · 0 remaining.`}</b>`
+  : `<b>${window.KOW_CLEAN_I18N?.translateStructured?.(`Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`) || `Next cost: ${next} badges · ${spent}/${total} used · ${remaining} remaining.`}</b>`;
 }
 }
  function openQuickProgress(){
@@ -3975,9 +3975,9 @@ window.kowRenderPlanningReadiness=render;
 
 <!-- v4.6.0 CLEAN MULTILINGUAL TEST: one translation engine -->
 <script src="./lang/en.js?v=460clean"></script>
-<script src="./lang/fr.js?v=460freshrc1"></script>
-<script src="./lang/de.js?v=460freshrc1"></script>
-<script src="./lang/it-base-v4357.js?v=460freshrc1"></script>
+<script src="./lang/fr.js?v=460freshrc2"></script>
+<script src="./lang/de.js?v=460freshrc2"></script>
+<script src="./lang/it-base-v4357.js?v=460freshrc2"></script>
 <script src="./lang/v440-runtime-language-overrides.js?v=460clean"></script>
 <script src="./lang/v450-language-additions.js?v=460clean"></script>
 <script src="./lang/v460-language-additions.js?v=460clean"></script>
