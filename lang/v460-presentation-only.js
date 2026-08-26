@@ -58,7 +58,7 @@ function apply(lang){
 function addUi(){
   if(!document.getElementById('multilingualTestBanner')){
     const b=document.createElement('div'); b.id='multilingualTestBanner';
-    b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA9C — NOT LIVE';
+    b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA9D — NOT LIVE';
     b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px;border-bottom:2px solid #ff6b6b';
     document.body.insertBefore(b,document.body.firstChild);
   }
