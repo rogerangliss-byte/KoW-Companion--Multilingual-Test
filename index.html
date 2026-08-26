@@ -1582,7 +1582,7 @@ function skillCostStatusText(o=currentOfficer()){
  const total=c.reduce((a,b)=>a+b,0);
  const spent=c.slice(0,n).reduce((a,b)=>a+b,0);
  const remaining=Math.max(0,total-spent);
- const lang=window.KOW_CLEAN_I18N?.current?.()||'en';
+ const lang=(window.KOW_CLEAN_I18N?.current?.()||document.getElementById('appLanguage')?.value||localStorage.getItem('kow-language-v460')||'en');
  const strandWord=lang==='fr'?'Branche':lang==='de'?'Strang':lang==='it'?'Ramo':'Strand';
  const state=levels.map((lvl,i)=>`${strandWord} ${i+1}: Lv${lvl}`).join(' · ');
  if(n>=16){
@@ -3983,18 +3983,17 @@ window.kowRenderPlanningReadiness=render;
 </script>
 
 <!-- v4.6.0 CLEAN MULTILINGUAL TEST: one translation engine -->
-<script src="./lang/en.js?v=460clean"></script>
-<script src="./lang/fr.js?v=460freshrc2"></script>
-<script src="./lang/de.js?v=460freshrc2"></script>
-<script src="./lang/it-base-v4357.js?v=460freshrc2"></script>
-<script src="./lang/v440-runtime-language-overrides.js?v=460clean"></script>
-<script src="./lang/v450-language-additions.js?v=460clean"></script>
-<script src="./lang/v460-language-additions.js?v=460clean"></script>
-<script src="./lang/v460-full-help.js?v=460freshrc1"></script>
-<script src="./lang/clean-i18n.js?v=460clean"></script>
 <script src="./v460-features.js?v=460-live"></script><script src="./planner-season-sync.js?v=460-live"></script><script src="./release-forecast-sync.js?v=460-live"></script>
-<script src="./lang/v460-popup-i18n.js?v=460clean"></script>
-<script src="./lang/v460-release-calendar-i18n.js?v=460clean"></script>
-<script src="./lang/clean-language-qa.js?v=460freshrc1"></script>
+
+<script src="./lang/v460-en.js?v=460stable1"></script>
+<script src="./lang/v460-fr.js?v=460stable1"></script>
+<script src="./lang/v460-de.js?v=460stable1"></script>
+<script src="./lang/v460-it.js?v=460stable1"></script>
+<script src="./lang/v460-full-help.js?v=460stable1"></script>
+<script src="./lang/v460-i18n.js?v=460stable1"></script>
+<script src="./lang/v460-popup-i18n.js?v=460stable1"></script>
+<script src="./lang/v460-release-calendar-i18n.js?v=460stable1"></script>
+<script src="./lang/v460-language-qa.js?v=460stable1"></script>
+
 </body>
 </html>
