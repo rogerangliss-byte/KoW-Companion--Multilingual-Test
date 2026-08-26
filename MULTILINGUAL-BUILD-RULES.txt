@@ -1,0 +1,15 @@
+KoW Companion v4.6.0 Multilingual TEST — STRICT ENGLISH TRUTH
+Functional master: KoW-Companion-English-v4.6.0-LIVE-HOTFIX-2(3).zip
+English index SHA256: d5ed9f7a7f3658a525964fa2fb902ed148814c22270a07347449362dd9578ff0
+Multilingual functional core SHA256 after removing one bootstrap tag: d5ed9f7a7f3658a525964fa2fb902ed148814c22270a07347449362dd9578ff0
+
+PERMITTED DIFFERENCES ONLY:
+1. CNAME = multilingualtest.firestorm-companion.uk
+2. service-worker cache namespace isolated for Multilingual Test
+3. /lang data/presentation/QA files
+4. one final bootstrap script tag immediately before </body>
+5. English release/admin markdown documents omitted from deployment package
+
+FUNCTIONAL RULE:
+No Multilingual script may implement, replace, invoke, dispatch to, or mutate application functionality.
+English Stable remains the only functional implementation.
