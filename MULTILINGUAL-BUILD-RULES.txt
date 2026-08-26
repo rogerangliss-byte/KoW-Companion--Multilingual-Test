@@ -1,15 +1,26 @@
-KoW Companion v4.6.0 Multilingual TEST — STRICT ENGLISH TRUTH
-Functional master: KoW-Companion-English-v4.6.0-LIVE-HOTFIX-2(3).zip
-English index SHA256: d5ed9f7a7f3658a525964fa2fb902ed148814c22270a07347449362dd9578ff0
-Multilingual functional core SHA256 after removing one bootstrap tag: d5ed9f7a7f3658a525964fa2fb902ed148814c22270a07347449362dd9578ff0
+KoW Companion v4.6.0 — Multilingual Build Rules
 
-PERMITTED DIFFERENCES ONLY:
+SINGLE SOURCE OF TRUTH
+----------------------
+KoW-Companion-English-v4.6.0-STABLE.zip is the complete functional application.
+
+PERMITTED MULTILINGUAL DIFFERENCES ONLY
+---------------------------------------
 1. CNAME = multilingualtest.firestorm-companion.uk
-2. service-worker cache namespace isolated for Multilingual Test
-3. /lang data/presentation/QA files
-4. one final bootstrap script tag immediately before </body>
-5. English release/admin markdown documents omitted from deployment package
+2. Multilingual-Test service-worker cache namespace
+3. /lang presentation-only dictionaries, translated Help, language selector and QA
+4. One final bootstrap <script> immediately before </body>
+5. Multilingual TEST identity/banner
+6. English-Live-only release note may be omitted
 
-FUNCTIONAL RULE:
-No Multilingual script may implement, replace, invoke, dispatch to, or mutate application functionality.
-English Stable remains the only functional implementation.
+FORBIDDEN
+---------
+- No Multilingual copy/rewrite of Officer Edit, MAX Officer, strands, Stars, XP,
+  Inventory, Planner, Database, Progress, Releases, calculations, persistence,
+  save/load, forecasting, backup/restore or any other application function.
+- No Multilingual MutationObserver over application controls.
+- No Multilingual dispatchEvent/click automation into application functionality.
+- No duplicate MAX implementation.
+- No functional patch may be made only in Multilingual.
+Any functional correction must be made in English Stable/Test first, validated there,
+then inherited unchanged by Multilingual.
