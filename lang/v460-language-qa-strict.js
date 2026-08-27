@@ -137,7 +137,7 @@ function build(){
  return{
    generated_at:new Date().toISOString(),
    app_version:'4.6.0 STABLE English Truth',
-   qa_version:'Language QA19 ROBUST BLEED',
+   qa_version:'Language QA20 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
    expected_roots:ROOTS,
@@ -145,7 +145,7 @@ function build(){
    results
  };
 }
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA19-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA20-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function render(rep){
  let p=document.getElementById('languageQaPanel');
  if(!p)return;
@@ -220,8 +220,8 @@ function wire(){
    '<h3>🧪 Language QA19 / Read-Only Dynamic-Language Proof</h3>'+
    '<p class="notice">Strict read-only audit. FR/DE/IT now FAIL when rendered user-facing text remains unchanged from English, when obvious English is detected, or when dynamic/dictionary/Help bleed remains.</p>'+
    '<div class="two">'+
-     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA19</button>'+
-     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA19 Report</button>'+
+     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA20</button>'+
+     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA20 Report</button>'+
    '</div>'+
    '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA19 ready.</div>'+
    '<div id="languageQaResults" style="margin-top:10px"></div>';
