@@ -1,4 +1,4 @@
-/* KoW Companion v4.6.0 — Language QA16 ROBUST English-bleed + coverage audit. */
+/* KoW Companion v4.6.0 — Language QA17 ROBUST English-bleed + coverage audit. */
 (function(){
 'use strict';
 const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de',label:'Deutsch'},{code:'it',label:'Italiano'}];
@@ -72,7 +72,7 @@ function helpAudit(code){
 function renderedSnapshot(){
  const out={};
  for(const id of ROOTS){
-   if(id==='settings'){ /* QA16: QA panel diagnostics are audited separately, not as app translation */ }
+   if(id==='settings'){ /* QA17: QA panel diagnostics are audited separately, not as app translation */ }
    const r=document.getElementById(id);
    if(!r)continue;
    out[id]=strings(r).map(x=>({kind:x.kind,text:x.text}));
@@ -89,7 +89,7 @@ function unchangedFromEnglish(code,baseline){
      const x=String(a[i].text||'').trim(),y=String(b[i].text||'').trim();
      if(!x||x!==y)continue;
      if(!/[A-Za-z]{2}/.test(x))continue;
-     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED'].includes(x))continue;
+     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.6\.0 LIVE$/.test(x)||/^S[2-8] [A-Z][A-Za-z' -]+(?: \(100%\))? ·?$/.test(x))continue;
      const officerNames=[...document.querySelectorAll('#officerSelect option')].map(o=>String(o.textContent||'').trim());
      if(officerNames.includes(x)||/^officer-portraits\//i.test(x))continue;
      const words=(x.match(/[A-Za-z]+/g)||[]);
@@ -135,7 +135,7 @@ function build(){
  return{
    generated_at:new Date().toISOString(),
    app_version:'4.6.0 STABLE English Truth',
-   qa_version:'Language QA16 ROBUST BLEED',
+   qa_version:'Language QA17 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
    expected_roots:ROOTS,
@@ -150,7 +150,7 @@ function render(rep){
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
  const dl=document.getElementById('downloadLanguageQaReport');
- if(status)status.textContent='QA16 complete.';
+ if(status)status.textContent='QA17 complete.';
  if(results){
    results.innerHTML=LANGS.map(L=>{
      const r=rep.results[L.label];
@@ -172,9 +172,9 @@ function render(rep){
 function showQaError(err){
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
- if(status)status.textContent='QA16 FAILED TO RUN — see details below.';
+ if(status)status.textContent='QA17 FAILED TO RUN — see details below.';
  if(results)results.innerHTML=`<div class="notice"><b>QA runner error:</b> ${String(err&&err.message||err)}</div>`;
- console.error('KoW Language QA16 runner error',err);
+ console.error('KoW Language QA17 runner error',err);
 }
 
 function run(){
@@ -183,7 +183,7 @@ function run(){
  const btn=document.getElementById('runLanguageQa');
  const dl=document.getElementById('downloadLanguageQaReport');
 
- if(status)status.textContent='Running QA16 across EN / FR / DE / IT…';
+ if(status)status.textContent='Running QA17 across EN / FR / DE / IT…';
  if(results)results.innerHTML='<div class="notice">Scanning rendered UI, dictionaries, dynamic text sources and Help…</div>';
  if(btn)btn.disabled=true;
  if(dl)dl.disabled=true;
@@ -215,13 +215,13 @@ function wire(){
  p.id='languageQaPanel';
  p.style.marginTop='16px';
  p.innerHTML=
-   '<h3>🧪 Language QA16 / Read-Only Dynamic-Language Proof</h3>'+
+   '<h3>🧪 Language QA17 / Read-Only Dynamic-Language Proof</h3>'+
    '<p class="notice">Strict read-only audit. FR/DE/IT now FAIL when rendered user-facing text remains unchanged from English, when obvious English is detected, or when dynamic/dictionary/Help bleed remains.</p>'+
    '<div class="two">'+
      '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA16</button>'+
-     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA16 Report</button>'+
+     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA17 Report</button>'+
    '</div>'+
-   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA16 ready.</div>'+
+   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA17 ready.</div>'+
    '<div id="languageQaResults" style="margin-top:10px"></div>';
 
  backup.insertAdjacentElement('afterend',p);

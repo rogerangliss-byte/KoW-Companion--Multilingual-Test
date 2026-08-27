@@ -4,8 +4,8 @@
 function load(src){return new Promise((ok,bad)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=bad;document.body.appendChild(s);});}
 async function start(){
  for(const src of [
- './lang/v460-en.js?v=qa16-rendered-app-closure-20260827','./lang/v460-fr.js?v=qa16-rendered-app-closure-20260827','./lang/v460-de.js?v=qa16-rendered-app-closure-20260827','./lang/v460-it.js?v=qa16-rendered-app-closure-20260827',
- './lang/v460-full-help.js?v=qa16-rendered-app-closure-20260827','./lang/v460-presentation-only.js?v=qa16-rendered-app-closure-20260827','./lang/v460-language-qa-strict.js?v=qa16-rendered-app-closure-20260827'
+ './lang/v460-en.js?v=qa17-source-pipeline-closure-20260827','./lang/v460-fr.js?v=qa17-source-pipeline-closure-20260827','./lang/v460-de.js?v=qa17-source-pipeline-closure-20260827','./lang/v460-it.js?v=qa17-source-pipeline-closure-20260827',
+ './lang/v460-full-help.js?v=qa17-source-pipeline-closure-20260827','./lang/v460-presentation-only.js?v=qa17-source-pipeline-closure-20260827','./lang/v460-language-qa-strict.js?v=qa17-source-pipeline-closure-20260827'
  ]) await load(src);
 }
 if(document.readyState==='complete') setTimeout(start,0);
