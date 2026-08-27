@@ -53,3 +53,9 @@ QA18 PIPELINE PRECEDENCE RULE
 - Canonical source-level complete-message translation rules MUST execute before legacy/exact dictionary lookup.
 - Legacy dictionary entries may never override a newer canonical complete-message translation.
 - QA labels, run button, report filename and internal version must always match the active QA version.
+
+QA19 SELF-AUDIT EXCLUSION RULE
+- Robust language QA must not fail on its own QA panel labels/status text.
+- Officer names and version/product identifiers are proper nouns/identifiers, not translation defects.
+- Accessibility labels such as Application language must still be genuinely localized.
+- Genuine rendered bleed remains blocking.
