@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.6.0-qa15-full-reconcile-20260827';
+const CACHE='kow-multilingual-test-v4.6.0-qa16-rendered-app-closure-20260827';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
