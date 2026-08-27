@@ -539,6 +539,12 @@ html[lang="it"] #help *{
   text-shadow:none !important;
 }
 
+/* QA15 canonical multilingual User Guide surface */
+html[lang="fr"] #help,html[lang="de"] #help,html[lang="it"] #help{
+background:#050505!important;border:1px solid rgba(213,167,47,.35)!important;
+border-radius:18px!important;padding:18px!important;box-shadow:0 14px 36px rgba(0,0,0,.55)!important;
+}
+html[lang="fr"] #help .card,html[lang="de"] #help .card,html[lang="it"] #help .card{background:#090909!important;}
 </style>
 <script>
 (function(){
@@ -4045,6 +4051,6 @@ window.kowEditOfficerMax=function(){
 </script>
 
 <!-- MULTILINGUAL TEST presentation layer only. Stable English v4.6.0 functional code above remains unchanged. -->
-<script src="./lang/v460-multilingual-bootstrap-strict.js?v=qa14-qa13closure-20260827"></script>
+<script src="./lang/v460-multilingual-bootstrap-strict.js?v=qa15-full-reconcile-20260827"></script>
 </body>
 </html>

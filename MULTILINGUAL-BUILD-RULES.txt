@@ -39,3 +39,12 @@ QA14 PERMANENT USER GUIDE + ROBUST QA RELEASE GATE
 - FR/DE/IT User Guide must render over an opaque/dark black reading surface on desktop, tablet and mobile.
 - Robust QA14 or later must PASS EN/FR/DE/IT before Multilingual Live promotion.
 - QA may not be weakened to obtain PASS; residual findings must be fixed or explicitly classified as proper nouns/game terms.
+
+
+QA15 PERMANENT FULL-RECONCILIATION RULE
+- Every Multilingual release starts from the Stable English functional source of truth.
+- Before QA, reconcile the complete user-facing English string inventory: static DOM, dynamic templates,
+  alerts/confirms/prompts, generated planner/release text, Settings, modals and the complete User Guide.
+- FR/DE/IT User Guides are canonical complete translated HTML and MUST NOT be run through partial phrase substitution.
+- Robust Language QA15 or later remains mandatory and may not be weakened to obtain PASS.
+- User Guide readability requires an opaque black/dark reading surface in FR/DE/IT on desktop/tablet/mobile.
