@@ -524,46 +524,19 @@ html.ios-safari{
 /* v4.6.0 LIVE — Upgrade Targets & Recommendations */
 .v460-target-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v460-target-result{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.28)}.v460-target-result strong{color:var(--gold2)}@media(max-width:760px){.v460-target-grid{grid-template-columns:1fr}}
 
-
-/* QA13B — multilingual User Guide readability lock.
-   FR/DE/IT Help must render on a continuous opaque black reading surface,
-   never directly over the tank artwork. */
-html[lang="fr"] #help.view.active,
-html[lang="de"] #help.view.active,
-html[lang="it"] #help.view.active{
-  background:#090909 !important;
-  border:1px solid rgba(213,167,47,.38);
+/* QA14 permanent multilingual User Guide readability rule */
+html[lang="fr"] #help,
+html[lang="de"] #help,
+html[lang="it"] #help{
+  background:#050505 !important;
   border-radius:18px;
-  padding:18px !important;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  padding:18px;
+  box-shadow:0 14px 36px rgba(0,0,0,.45);
 }
-html[lang="fr"] #help.view.active > *,
-html[lang="de"] #help.view.active > *,
-html[lang="it"] #help.view.active > *{
-  position:relative;
-  z-index:1;
-}
-html[lang="fr"] #help.view.active p,
-html[lang="fr"] #help.view.active li,
-html[lang="fr"] #help.view.active h2,
-html[lang="fr"] #help.view.active h3,
-html[lang="fr"] #help.view.active h4,
-html[lang="de"] #help.view.active p,
-html[lang="de"] #help.view.active li,
-html[lang="de"] #help.view.active h2,
-html[lang="de"] #help.view.active h3,
-html[lang="de"] #help.view.active h4,
-html[lang="it"] #help.view.active p,
-html[lang="it"] #help.view.active li,
-html[lang="it"] #help.view.active h2,
-html[lang="it"] #help.view.active h3,
-html[lang="it"] #help.view.active h4{
-  text-shadow:0 1px 2px #000;
-}
-@media(max-width:760px){
-  html[lang="fr"] #help.view.active,
-  html[lang="de"] #help.view.active,
-  html[lang="it"] #help.view.active{padding:14px !important;border-radius:14px;}
+html[lang="fr"] #help *,
+html[lang="de"] #help *,
+html[lang="it"] #help *{
+  text-shadow:none !important;
 }
 
 </style>
@@ -4072,6 +4045,6 @@ window.kowEditOfficerMax=function(){
 </script>
 
 <!-- MULTILINGUAL TEST presentation layer only. Stable English v4.6.0 functional code above remains unchanged. -->
-<script src="./lang/v460-multilingual-bootstrap-strict.js?v=qa13-exact-residual-20260826"></script>
+<script src="./lang/v460-multilingual-bootstrap-strict.js?v=qa14-qa13closure-20260827"></script>
 </body>
 </html>
