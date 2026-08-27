@@ -1,4 +1,4 @@
-/* KoW Companion v4.6.0 — Language QA18 ROBUST English-bleed + coverage audit. */
+/* KoW Companion v4.6.0 — Language QA19 ROBUST English-bleed + coverage audit. */
 (function(){
 'use strict';
 const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de',label:'Deutsch'},{code:'it',label:'Italiano'}];
@@ -72,13 +72,15 @@ function helpAudit(code){
 function renderedSnapshot(){
  const out={};
  for(const id of ROOTS){
-   if(id==='settings'){ /* QA18: QA panel diagnostics are audited separately, not as app translation */ }
    const r=document.getElementById(id);
    if(!r)continue;
-   out[id]=strings(r).map(x=>({kind:x.kind,text:x.text}));
+   const target=(id==='settings')?r.cloneNode(true):r;
+   if(id==='settings')target.querySelector('#languageQaPanel')?.remove();
+   out[id]=strings(target).map(x=>({kind:x.kind,text:x.text}));
  }
  return out;
 }
+
 function unchangedFromEnglish(code,baseline){
  if(code==='en')return[];
  const now=renderedSnapshot(),out=[];
@@ -89,7 +91,7 @@ function unchangedFromEnglish(code,baseline){
      const x=String(a[i].text||'').trim(),y=String(b[i].text||'').trim();
      if(!x||x!==y)continue;
      if(!/[A-Za-z]{2}/.test(x))continue;
-     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.6\.0 LIVE$/.test(x)||/^S[2-8] [A-Z][A-Za-z' -]+(?: \(100%\))? ·?$/.test(x))continue;
+     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.6\.0 LIVE$/.test(x)||/^S\d+\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]+(?:\s+\(100%\))?\s*·?$/.test(x))continue;
      const officerNames=[...document.querySelectorAll('#officerSelect option')].map(o=>String(o.textContent||'').trim());
      if(officerNames.includes(x)||/^officer-portraits\//i.test(x))continue;
      const words=(x.match(/[A-Za-z]+/g)||[]);
@@ -135,7 +137,7 @@ function build(){
  return{
    generated_at:new Date().toISOString(),
    app_version:'4.6.0 STABLE English Truth',
-   qa_version:'Language QA18 ROBUST BLEED',
+   qa_version:'Language QA19 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
    expected_roots:ROOTS,
@@ -143,14 +145,14 @@ function build(){
    results
  };
 }
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA18-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA19-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function render(rep){
  let p=document.getElementById('languageQaPanel');
  if(!p)return;
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
  const dl=document.getElementById('downloadLanguageQaReport');
- if(status)status.textContent='QA18 complete.';
+ if(status)status.textContent='QA19 complete.';
  if(results){
    results.innerHTML=LANGS.map(L=>{
      const r=rep.results[L.label];
@@ -165,16 +167,16 @@ function render(rep){
  }
  if(dl){
    dl.disabled=false;
-   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA18);
+   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA19);
  }
 }
 
 function showQaError(err){
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
- if(status)status.textContent='QA18 FAILED TO RUN — see details below.';
+ if(status)status.textContent='QA19 FAILED TO RUN — see details below.';
  if(results)results.innerHTML=`<div class="notice"><b>QA runner error:</b> ${String(err&&err.message||err)}</div>`;
- console.error('KoW Language QA18 runner error',err);
+ console.error('KoW Language QA19 runner error',err);
 }
 
 function run(){
@@ -183,7 +185,7 @@ function run(){
  const btn=document.getElementById('runLanguageQa');
  const dl=document.getElementById('downloadLanguageQaReport');
 
- if(status)status.textContent='Running QA18 across EN / FR / DE / IT…';
+ if(status)status.textContent='Running QA19 across EN / FR / DE / IT…';
  if(results)results.innerHTML='<div class="notice">Scanning rendered UI, dictionaries, dynamic text sources and Help…</div>';
  if(btn)btn.disabled=true;
  if(dl)dl.disabled=true;
@@ -192,7 +194,7 @@ function run(){
  setTimeout(()=>{
    try{
      const rep=build();
-     window.KOW_LAST_LANGUAGE_QA18=rep;
+     window.KOW_LAST_LANGUAGE_QA19=rep;
      render(rep);
    }catch(err){
      showQaError(err);
@@ -215,13 +217,13 @@ function wire(){
  p.id='languageQaPanel';
  p.style.marginTop='16px';
  p.innerHTML=
-   '<h3>🧪 Language QA18 / Read-Only Dynamic-Language Proof</h3>'+
+   '<h3>🧪 Language QA19 / Read-Only Dynamic-Language Proof</h3>'+
    '<p class="notice">Strict read-only audit. FR/DE/IT now FAIL when rendered user-facing text remains unchanged from English, when obvious English is detected, or when dynamic/dictionary/Help bleed remains.</p>'+
    '<div class="two">'+
-     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA18</button>'+
-     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA18 Report</button>'+
+     '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA19</button>'+
+     '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA19 Report</button>'+
    '</div>'+
-   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA18 ready.</div>'+
+   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA19 ready.</div>'+
    '<div id="languageQaResults" style="margin-top:10px"></div>';
 
  backup.insertAdjacentElement('afterend',p);
@@ -233,9 +235,9 @@ function wire(){
 if(document.readyState==='complete')setTimeout(wire,0);
 else window.addEventListener('load',()=>setTimeout(wire,0),{once:true});
 
-window.KOW_LANGUAGE_QA18={
+window.KOW_LANGUAGE_QA19={
  run,
- report:()=>window.KOW_LAST_LANGUAGE_QA18||null,
- version:'QA18'
+ report:()=>window.KOW_LAST_LANGUAGE_QA19||null,
+ version:'QA19'
 };
 })();
