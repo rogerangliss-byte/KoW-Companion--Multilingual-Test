@@ -48,3 +48,8 @@ QA15 PERMANENT FULL-RECONCILIATION RULE
 - FR/DE/IT User Guides are canonical complete translated HTML and MUST NOT be run through partial phrase substitution.
 - Robust Language QA15 or later remains mandatory and may not be weakened to obtain PASS.
 - User Guide readability requires an opaque black/dark reading surface in FR/DE/IT on desktop/tablet/mobile.
+
+QA18 PIPELINE PRECEDENCE RULE
+- Canonical source-level complete-message translation rules MUST execute before legacy/exact dictionary lookup.
+- Legacy dictionary entries may never override a newer canonical complete-message translation.
+- QA labels, run button, report filename and internal version must always match the active QA version.
