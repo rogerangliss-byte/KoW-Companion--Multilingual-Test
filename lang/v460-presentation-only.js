@@ -44,6 +44,32 @@ it:[
 ]};
 
 
+
+/* QA18 canonical source rules.
+   IMPORTANT: these run BEFORE locale dictionary exact lookup so legacy dictionary
+   entries cannot override the corrected complete-sentence translation. */
+const Q18={
+fr:[
+[/^S6 Red Queen — 1,600 badges \+ 1 more$/i,'S6 Red Queen — 1 600 insignes + 1 autre'],
+[/^\.?\s*Every Officer is listed even when the player currently holds 0 badges\. Each value is stored separately for that Officer and is used throughout the app\.$/i,'. Chaque Officier est répertorié même lorsque le joueur ne possède actuellement aucun insigne. Chaque valeur est enregistrée séparément pour cet Officier et utilisée dans toute l’application.'],
+[/^Application language$/,'Langue de l’application']
+],
+de:[
+[/^\.?\s*The saved inventory is then used throughout the app\. Items are displayed in the game list order defined by the Inventory master list\.$/i,'. Das gespeicherte Inventar wird anschließend in der gesamten Anwendung verwendet. Die Elemente werden in der durch die Inventar-Masterliste festgelegten Spielreihenfolge angezeigt.'],
+[/^\.?\s*Every Officer is listed even when the player currently holds 0 badges\. Each value is stored separately for that Officer and is used throughout the app\.$/i,'. Jeder Offizier wird angezeigt, auch wenn der Spieler derzeit keine Abzeichen besitzt. Jeder Wert wird für diesen Offizier separat gespeichert und in der gesamten Anwendung verwendet.'],
+[/^Application language$/,'Anwendungssprache']
+],
+it:[
+[/^S6 Red Queen — 1,600 badges \+ 1 more$/i,'S6 Red Queen — 1.600 distintivi + 1 altro'],
+[/^Elite Officer Badge$/i,'Distintivo Ufficiale Élite'],
+[/^Universal Elite Badges Held$/i,'Distintivi Élite universali posseduti'],
+[/^\.?\s*Every Officer is listed even when the player currently holds 0 badges\. Each value is stored separately for that Officer and is used throughout the app\.$/i,'. Ogni Ufficiale è elencato anche quando il giocatore non possiede attualmente alcun distintivo. Ogni valore viene memorizzato separatamente per quell’Ufficiale ed è utilizzato in tutta l’applicazione.'],
+[/^ORV \/ Badge Forecast$/i,'Previsione ORV / distintivi'],
+[/^⬇ Export App Backup$/i,'⬇ Esporta backup dell’applicazione'],
+[/^⬆ Restore App Backup$/i,'⬆ Ripristina backup dell’applicazione'],
+[/^Application language$/,'Lingua dell’applicazione']
+]};
+
 /* QA17 source-pipeline closure: translate complete rendered messages before dictionary substring fallback. */
 const Q17={
 fr:[
@@ -86,11 +112,11 @@ it:[
 [/^Strict read-only audit\..*$/,'Controllo rigoroso in sola lettura. FR/DE/IT falliscono se il testo visibile resta in inglese o se persistono residui di traduzione.']
 ]};
 
-function tr(s,lang=active){if(lang==='en'||!s)return s;const d=D()[lang]||{};if(Object.prototype.hasOwnProperty.call(d,s))return d[s];let o=s;for(const [rx,rp] of Q17[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of Q12[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of R[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const k of Object.keys(d).filter(k=>k.length>=5&&o.includes(k)).sort((a,b)=>b.length-a.length)){o=o.split(k).join(d[k])}return o}
+function tr(s,lang=active){if(lang==='en'||!s)return s;const d=D()[lang]||{};let o=s;for(const [rx,rp] of Q18[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;if(Object.prototype.hasOwnProperty.call(d,s))return d[s];for(const [rx,rp] of Q17[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of Q12[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of R[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const k of Object.keys(d).filter(k=>k.length>=5&&o.includes(k)).sort((a,b)=>b.length-a.length)){o=o.split(k).join(d[k])}return o}
 function tn(n){const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|TEXTAREA)$/i.test(p.tagName)||p.closest('#appLanguage')||p.closest('#help'))return;const c=n.nodeValue;if(!base.has(n))base.set(n,c);else if(active!=='en'&&last.has(n)&&c!==last.get(n))base.set(n,c);const b=base.get(n),lead=(b.match(/^\s*/)||[''])[0],trail=(b.match(/\s*$/)||[''])[0],core=b.trim(),o=active==='en'?b:lead+tr(core)+trail;last.set(n,o);if(c!==o)n.nodeValue=o}
 function root(r=document.body){if(!r)return;busy=true;try{const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))tn(n);r.querySelectorAll?.('[placeholder],[title],[aria-label],[alt]').forEach(e=>{if(e.closest('#appLanguage')||e.closest('#help'))return;for(const a of ['placeholder','title','aria-label','alt'])if(e.hasAttribute(a)){const k='data-kow-'+a.replace('aria-','aria');if(!e.hasAttribute(k))e.setAttribute(k,e.getAttribute(a));e.setAttribute(a,active==='en'?e.getAttribute(k):tr(e.getAttribute(k)))}})}finally{busy=false}}
 function apply(l){active=LANGS.includes(l)?l:'en';localStorage.setItem(KEY,active);document.documentElement.lang=active;const s=document.getElementById('appLanguage');if(s)s.value=active;const h=document.querySelector('#help');if(h){if(!h.dataset.englishHtml)h.dataset.englishHtml=h.innerHTML;if(active==='en')h.innerHTML=h.dataset.englishHtml;else{const x=window.KOW_HELP_HTML_V450?.[active];if(x)h.innerHTML=x}}root(document.body)}
-function ui(){if(!document.getElementById('multilingualTestBanner')){const b=document.createElement('div');b.id='multilingualTestBanner';b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA17 — NOT LIVE';b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px';document.body.insertBefore(b,document.body.firstChild)}const s=document.getElementById('appLanguage');if(s&&!s.dataset.kowLanguageWired){s.dataset.kowLanguageWired='1';s.addEventListener('change',e=>apply(e.target.value))}}
+function ui(){if(!document.getElementById('multilingualTestBanner')){const b=document.createElement('div');b.id='multilingualTestBanner';b.textContent='MULTILINGUAL TEST — STABLE ENGLISH TRUTH — QA18 — NOT LIVE';b.style.cssText='position:sticky;top:0;z-index:9999;background:#a50000;color:#fff;text-align:center;font-weight:800;padding:8px 12px';document.body.insertBefore(b,document.body.firstChild)}const s=document.getElementById('appLanguage');if(s&&!s.dataset.kowLanguageWired){s.dataset.kowLanguageWired='1';s.addEventListener('change',e=>apply(e.target.value))}}
 function watch(){if(obs)return;obs=new MutationObserver(ms=>{if(busy||active==='en')return;for(const m of ms){if(m.type==='characterData')tn(m.target);else for(const n of m.addedNodes){if(n.nodeType===3)tn(n);else if(n.nodeType===1)root(n)}}});obs.observe(document.body,{subtree:true,childList:true,characterData:true})}
 const A=window.alert.bind(window),C=window.confirm.bind(window),P=window.prompt.bind(window);window.alert=m=>A(tr(String(m)));window.confirm=m=>C(tr(String(m)));window.prompt=(m,d)=>P(tr(String(m)),d);
 window.KOW_PRESENTATION_I18N={apply,translateRoot:root,getLanguage:()=>active,translateString:(s,l)=>tr(s,l||active),canTranslate:(s,l)=>tr(s,l||active)!==s};
