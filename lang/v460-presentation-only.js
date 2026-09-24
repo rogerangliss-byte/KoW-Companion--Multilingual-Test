@@ -118,17 +118,17 @@ it:[
 const QA20_DYNAMIC={
 fr:[
 [/^Scenario saved:$/,'Scénario enregistré :'],[/^Inventory snapshot used:$/,'Instantané d’inventaire utilisé :'],[/^Badges held:$/,'Badges détenus :'],[/^Stars held:$/,'Étoiles détenues :'],[/^XP held:$/,'XP détenu :'],
-[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\\.$/,'Branche 1 : Nv$1 · Branche 2 : Nv$2 · Branche 3 : Nv$3 · Branche 4 : Nv$4 · Prochain coût : $5 insignes · $6/$7 utilisés · $8 restants.'],
+[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\.$/,'Branche 1 : Nv$1 · Branche 2 : Nv$2 · Branche 3 : Nv$3 · Branche 4 : Nv$4 · Prochain coût : $5 insignes · $6/$7 utilisés · $8 restants.'],
 [/^Officer Readiness Vouchers are not available for Original Officers$/,'Les Bons de préparation d’Officier ne sont pas disponibles pour les Officiers d’origine'],[/^Star Readiness Vouchers are not available for Original Officers$/,'Les Bons de préparation d’Étoile ne sont pas disponibles pour les Officiers d’origine']
 ],
 de:[
 [/^Scenario saved:$/,'Szenario gespeichert:'],[/^Inventory snapshot used:$/,'Verwendeter Inventar-Schnappschuss:'],[/^Badges held:$/,'Vorhandene Abzeichen:'],[/^Stars held:$/,'Vorhandene Sterne:'],[/^XP held:$/,'Vorhandene XP:'],
-[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\\.$/,'Strang 1: St$1 · Strang 2: St$2 · Strang 3: St$3 · Strang 4: St$4 · Nächste Kosten: $5 Abzeichen · $6/$7 verwendet · $8 verbleibend.'],
+[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\.$/,'Strang 1: St$1 · Strang 2: St$2 · Strang 3: St$3 · Strang 4: St$4 · Nächste Kosten: $5 Abzeichen · $6/$7 verwendet · $8 verbleibend.'],
 [/^Officer Readiness Vouchers are not available for Original Officers$/,'Offiziers-Bereitschaftsgutscheine sind für Original-Offiziere nicht verfügbar'],[/^Star Readiness Vouchers are not available for Original Officers$/,'Sternbereitschaftsgutscheine sind für Original-Offiziere nicht verfügbar']
 ],
 it:[
 [/^Scenario saved:$/,'Scenario salvato:'],[/^Inventory snapshot used:$/,'Istantanea inventario utilizzata:'],[/^Badges held:$/,'Badge posseduti:'],[/^Stars held:$/,'Stelle possedute:'],[/^XP held:$/,'XP posseduti:'],
-[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\\.$/,'Ramo 1: Lv$1 · Ramo 2: Lv$2 · Ramo 3: Lv$3 · Ramo 4: Lv$4 · Costo successivo: $5 distintivi · $6/$7 usati · $8 rimanenti.'],
+[/^Strand 1: Lv(\d+) · Strand 2: Lv(\d+) · Strand 3: Lv(\d+) · Strand 4: Lv(\d+) · Next cost: ([\d,.]+) badges · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\.$/,'Ramo 1: Lv$1 · Ramo 2: Lv$2 · Ramo 3: Lv$3 · Ramo 4: Lv$4 · Costo successivo: $5 distintivi · $6/$7 usati · $8 rimanenti.'],
 [/^Officer Readiness Vouchers are not available for Original Officers$/,'I Buoni di preparazione Ufficiale non sono disponibili per gli Ufficiali Originali'],[/^Star Readiness Vouchers are not available for Original Officers$/,'I Buoni di preparazione Stella non sono disponibili per gli Ufficiali Originali']
 ]};
 
