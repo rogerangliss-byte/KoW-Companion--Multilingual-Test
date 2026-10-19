@@ -29,27 +29,21 @@
   }
 
   function latestKnownRelease(){
-    if(typeof officers==='undefined'||!Array.isArray(officers))return {season:7,slot:4,orv:600,srv:300,source:'S7 Tank Destroyer'};
-
-    const rows=officers
-      .filter(o=>seasonNumber(o.season)>0)
-      .filter(o=>String(o.rarity||'Legendary')==='Legendary')
-      .map(o=>({o,season:seasonNumber(o.season),slot:releaseSlot(o)}))
-      .filter(x=>x.slot>0&&Number(x.o.orv)>0&&Number(x.o.srv)>0);
-
-    if(!rows.length)return {season:7,slot:4,orv:600,srv:300,source:'S7 Tank Destroyer'};
-
-    const maxSeason=Math.max(...rows.map(x=>x.season));
-    const seasonRows=rows.filter(x=>x.season===maxSeason);
-    const maxSlot=Math.max(...seasonRows.map(x=>x.slot));
-    const latest=seasonRows.filter(x=>x.slot===maxSlot);
-
-    // If a release contains two Officers, use the highest confirmed cost as the
-    // conservative common forecasting baseline.
-    const orv=Math.max(...latest.map(x=>Number(x.o.orv)||0));
-    const srv=Math.max(...latest.map(x=>Number(x.o.srv)||0));
-    const slotName=SLOT[maxSlot]?.type||'Officer';
-    return {season:maxSeason,slot:maxSlot,orv,srv,source:`S${maxSeason} ${slotName}`};
+    // Read the confirmed seasonal release and cost from the live Officer data bridge.
+    const rows = window.KOW_PLANNER_BRIDGE?.officers?.() || [];
+    const known = rows.map(o => {
+      const season = seasonNumber(o?.season || String(o?.name || '').match(/^S\\d+/i)?.[0]);
+      const slot = releaseSlot(o);
+      return {season, slot, orv:Number(o?.orv), srv:Number(o?.srv)};
+    }).filter(o => o.season > 0 && o.slot > 0 && o.orv > 0 && o.srv > 0)
+      .sort((a,b) => b.season-a.season || b.slot-a.slot);
+    if (known.length) {
+      const latest = known[0];
+      const meta = SLOT[latest.slot];
+      return {...latest, source:`Confirmed S${latest.season} ${meta.type} cost`};
+    }
+    // Safe fallback for older cached pages that do not expose the data bridge.
+    return {season:7,slot:1,orv:600,srv:300,source:'Fallback S7 Rally / Garrison cost'};
   }
 
   function advance(season,slot,steps){
