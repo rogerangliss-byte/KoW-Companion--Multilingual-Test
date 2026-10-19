@@ -1335,7 +1335,7 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
       <p>To publish new or edited Officers for everyone, update the published <b>officers.json</b> and <b>officers.csv</b> files in the GitHub repository.</p>
 
       <h3>10. Recurring Release Calendar</h3>
-      <p>The <b>Releases</b> tab shows the recurring August → July annual KoW release cycle. The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.</p>
+      <p>The <b>Releases</b> tab shows the recurring annual KoW release cycle in calendar order (January → December). The current month and next scheduled release are highlighted automatically, so the calendar does not require a yearly reset.</p>
 
       <h3>11. Settings, Backup & Restore</h3>
       <p>Settings contains the app name, portrait and landscape backgrounds, update controls and <b>Backup & Restore</b>.</p>
@@ -1354,16 +1354,16 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 <section id="releases" class="view">
 <article class="card" id="futureOfficerForecastCard">
   <h2>🔮 Future Officer Cost Forecast</h2>
-  <p class="muted">Forecast future Officer costs from the established Officer-release sequence. The model uses the latest known S7 Tank Destroyer release (600 ORV / 300 SRV) and compounds approximately 20% for each future Officer release.</p>
+  <p class="muted">Forecast future Officer costs from the confirmed S8 Rally / Garrison baseline (720 ORV / 360 SRV), compounding the selected growth rate for each subsequent Officer release.</p>
 
   <div class="two">
     <div>
       <label>Future Officer release</label>
       <select id="forecastRelease">
-        <option value="1">October — S8 Rally / Garrison</option>
-        <option value="2">January — S8 Infantry</option>
-        <option value="3" selected>April — S8 Tanks</option>
-        <option value="4">July — S8 Tank Destroyers</option>
+        <option value="1" selected>January — S8 Infantry</option>
+        <option value="2">April — S8 Tanks</option>
+        <option value="3">July — S8 Tank Destroyers</option>
+        <option value="4">October — S9 Rally / Garrison</option>
       </select>
     </div>
     <div>
