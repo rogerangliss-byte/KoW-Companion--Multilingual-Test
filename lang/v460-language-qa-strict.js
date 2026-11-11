@@ -1,4 +1,4 @@
-/* KoW Companion v4.6.0 — Language QA19 ROBUST English-bleed + coverage audit. */
+/* KoW Companion v4.6.0 — Language QA20 ROBUST English-bleed + coverage audit. */
 (function(){
 'use strict';
 const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de',label:'Deutsch'},{code:'it',label:'Italiano'}];
@@ -136,7 +136,7 @@ function build(){
  setLang(original);
  return{
    generated_at:new Date().toISOString(),
-   app_version:'4.6.0 STABLE English Truth',
+   app_version:'4.7.0 STABLE English Truth',
    qa_version:'Language QA20 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
@@ -145,14 +145,14 @@ function build(){
    results
  };
 }
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA20-v4.6.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA20-v4.7.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function render(rep){
  let p=document.getElementById('languageQaPanel');
  if(!p)return;
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
  const dl=document.getElementById('downloadLanguageQaReport');
- if(status)status.textContent='QA19 complete.';
+ if(status)status.textContent='QA20 complete.';
  if(results){
    results.innerHTML=LANGS.map(L=>{
      const r=rep.results[L.label];
@@ -167,16 +167,16 @@ function render(rep){
  }
  if(dl){
    dl.disabled=false;
-   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA19);
+   dl.onclick=()=>download(window.KOW_LAST_LANGUAGE_QA20);
  }
 }
 
 function showQaError(err){
  const status=document.getElementById('languageQaStatus');
  const results=document.getElementById('languageQaResults');
- if(status)status.textContent='QA19 FAILED TO RUN — see details below.';
+ if(status)status.textContent='QA20 FAILED TO RUN — see details below.';
  if(results)results.innerHTML=`<div class="notice"><b>QA runner error:</b> ${String(err&&err.message||err)}</div>`;
- console.error('KoW Language QA19 runner error',err);
+ console.error('KoW Language QA20 runner error',err);
 }
 
 function run(){
@@ -185,7 +185,7 @@ function run(){
  const btn=document.getElementById('runLanguageQa');
  const dl=document.getElementById('downloadLanguageQaReport');
 
- if(status)status.textContent='Running QA19 across EN / FR / DE / IT…';
+ if(status)status.textContent='Running QA20 across EN / FR / DE / IT…';
  if(results)results.innerHTML='<div class="notice">Scanning rendered UI, dictionaries, dynamic text sources and Help…</div>';
  if(btn)btn.disabled=true;
  if(dl)dl.disabled=true;
@@ -194,7 +194,7 @@ function run(){
  setTimeout(()=>{
    try{
      const rep=build();
-     window.KOW_LAST_LANGUAGE_QA19=rep;
+     window.KOW_LAST_LANGUAGE_QA20=rep;
      render(rep);
    }catch(err){
      showQaError(err);
@@ -217,13 +217,13 @@ function wire(){
  p.id='languageQaPanel';
  p.style.marginTop='16px';
  p.innerHTML=
-   '<h3>🧪 Language QA19 / Read-Only Dynamic-Language Proof</h3>'+
+   '<h3>🧪 Language QA20 / Read-Only Dynamic-Language Proof</h3>'+
    '<p class="notice">Strict read-only audit. FR/DE/IT now FAIL when rendered user-facing text remains unchanged from English, when obvious English is detected, or when dynamic/dictionary/Help bleed remains.</p>'+
    '<div class="two">'+
      '<button id="runLanguageQa" class="app-action-primary" type="button">Run Language QA20</button>'+
      '<button id="downloadLanguageQaReport" class="app-action-secondary" type="button" disabled>↓ Download QA20 Report</button>'+
    '</div>'+
-   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA19 ready.</div>'+
+   '<div id="languageQaStatus" class="notice" style="margin-top:10px">QA20 ready.</div>'+
    '<div id="languageQaResults" style="margin-top:10px"></div>';
 
  backup.insertAdjacentElement('afterend',p);
@@ -235,9 +235,9 @@ function wire(){
 if(document.readyState==='complete')setTimeout(wire,0);
 else window.addEventListener('load',()=>setTimeout(wire,0),{once:true});
 
-window.KOW_LANGUAGE_QA19={
+window.KOW_LANGUAGE_QA20={
  run,
- report:()=>window.KOW_LAST_LANGUAGE_QA19||null,
- version:'QA19'
+ report:()=>window.KOW_LAST_LANGUAGE_QA20||null,
+ version:'QA20'
 };
 })();
