@@ -791,6 +791,15 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
 </head>
 <body>
 <div class="test-build-banner">⚠ MULTILINGUAL TEST — LANGUAGE QA / DEVELOPMENT ONLY — NOT LIVE</div>
+<div id="multilingualLanguageBar" style="position:relative;z-index:9;display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:10px 18px;background:rgba(12,16,20,.96);border-bottom:1px solid var(--line)">
+  <label for="appLanguage" style="display:inline;margin:0;color:var(--text);font-weight:700;white-space:nowrap">App language</label>
+  <select id="appLanguage" aria-label="App language" title="Choose the language used by the app interface. Officer names and game data are not translated." style="width:auto;min-width:160px;padding:9px 12px">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+  </select>
+</div>
 
 <header class="topbar">
   <div>
@@ -798,15 +807,6 @@ button:disabled,.app-action-primary:disabled,.app-action-save:disabled,.app-acti
     <p>Officer Companion <span id="headerVersion"></span></p>
   </div>
   <div class="creator-credit">Created by FireStorm</div>
-  <div class="language-control" style="display:flex;align-items:center;gap:8px;margin-top:2px">
-    <label for="appLanguage" style="display:inline;margin:0;white-space:nowrap">Language</label>
-    <select id="appLanguage" aria-label="App language" title="Choose the language used by the app interface. Officer names and game data are not translated." style="width:auto;min-width:128px;padding:8px 10px">
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="it">Italiano</option>
-    </select>
-  </div>
 </header>
 
 <main class="app">
