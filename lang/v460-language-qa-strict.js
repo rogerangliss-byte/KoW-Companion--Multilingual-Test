@@ -1,4 +1,4 @@
-/* KoW Companion v4.7.0 — Language QA20 ROBUST English-bleed + coverage audit. */
+/* KoW Companion v4.7.0 — Language QA21 ROBUST English-bleed + coverage audit. */
 (function(){
 'use strict';
 const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de',label:'Deutsch'},{code:'it',label:'Italiano'}];
@@ -137,7 +137,7 @@ function build(){
  return{
    generated_at:new Date().toISOString(),
    app_version:'4.7.0 STABLE English Truth',
-   qa_version:'Language QA20 ROBUST BLEED',
+   qa_version:'Language QA21 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
    expected_roots:ROOTS,
