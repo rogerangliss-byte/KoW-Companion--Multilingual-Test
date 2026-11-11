@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.7.0-skill-level10-20261111';
+const CACHE='kow-multilingual-test-v4.7.0-language-qa21-20261111';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
