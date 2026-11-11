@@ -1,4 +1,4 @@
-/* KoW Companion v4.6.0 — Language QA20 ROBUST English-bleed + coverage audit. */
+/* KoW Companion v4.7.0 — Language QA20 ROBUST English-bleed + coverage audit. */
 (function(){
 'use strict';
 const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de',label:'Deutsch'},{code:'it',label:'Italiano'}];
@@ -91,7 +91,7 @@ function unchangedFromEnglish(code,baseline){
      const x=String(a[i].text||'').trim(),y=String(b[i].text||'').trim();
      if(!x||x!==y)continue;
      if(!/[A-Za-z]{2}/.test(x))continue;
-     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.6\.0 LIVE$/.test(x)||/^S\d+\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]+(?:\s+\(100%\))?\s*·?$/.test(x))continue;
+     if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.7\.0 LIVE$/.test(x)||/^S\d+\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]+(?:\s+\(100%\))?\s*·?$/.test(x))continue;
      const officerNames=[...document.querySelectorAll('#officerSelect option')].map(o=>String(o.textContent||'').trim());
      if(officerNames.includes(x)||/^officer-portraits\//i.test(x))continue;
      const words=(x.match(/[A-Za-z]+/g)||[]);
@@ -209,7 +209,7 @@ function wire(){
  const backup=document.getElementById('backupStatus');
  if(!backup)return;
 
- // Always rebuild the QA panel from this exact QA9C script so an older cached panel cannot survive.
+ // Always rebuild the QA panel from this exact QA20 script so an older cached panel cannot survive.
  const old=document.getElementById('languageQaPanel');
  if(old)old.remove();
 
