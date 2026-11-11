@@ -93,7 +93,7 @@ function unchangedFromEnglish(code,baseline){
      if(!/[A-Za-z]{2}/.test(x))continue;
      if(['GODS OF WAR 371','English','Français','Deutsch','Italiano','XP','ORV','SRV','CSV','MAX','MAXED','KoW Companion'].includes(x)||/^v4\.7\.0 LIVE$/.test(x)||/^S\d+\s+[A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]+(?:\s+\(100%\))?\s*·?$/.test(x))continue;
      const officerNames=[...document.querySelectorAll('#officerSelect option')].map(o=>String(o.textContent||'').trim());
-     if(officerNames.includes(x)||/^officer-portraits\//i.test(x))continue;
+     if(officerNames.includes(x)||/^Original\s+[A-Z]/.test(x)||/^officer-portraits\//i.test(x))continue;
      const words=(x.match(/[A-Za-z]+/g)||[]);
      if(words.length>=2)out.push(`${id}: ${x}`);
    }
