@@ -163,7 +163,13 @@ function render(rep){
        `Rendered unchanged ${r.unchanged_from_english.length} · `+
        `Dictionary same-as-English ${r.dictionary_quality.identical_to_english.length}</small></div>`;
    }).join('')+
-   `<div class="notice" style="margin-top:10px">UI integrity: ${rep.ui_integrity.missing_controls.length===0?'PASS':'FAIL'} · Missing controls: ${rep.ui_integrity.missing_controls.length}</div>`;
+   `<div class="notice" style="margin-top:10px">UI integrity: ${rep.ui_integrity.missing_controls.length===0?'PASS':'FAIL'} · Missing controls: ${rep.ui_integrity.missing_controls.length}</div>`+
+   LANGS.filter(L=>L.code!=='en').map(L=>{
+     const r=rep.results[L.label];
+     const detail={language:L.label,rendered_english_bleed:r.rendered_english_bleed,unchanged_from_english:r.unchanged_from_english,dynamic_english_literals:r.dynamic_source_audit.english_dynamic_literals};
+     const safe=JSON.stringify(detail,null,2).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+     return `<details style="margin-top:8px"><summary>${L.label} — exact failing strings (${r.rendered_english_bleed.length+r.unchanged_from_english.length+r.dynamic_source_audit.english_dynamic_literals.length})</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;background:rgba(0,0,0,.35);padding:10px;border-radius:8px">${safe}</pre></details>`;
+   }).join('');
  }
  if(dl){
    dl.disabled=false;
