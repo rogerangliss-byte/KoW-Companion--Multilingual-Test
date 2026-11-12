@@ -5,7 +5,7 @@ function load(src){return new Promise((ok,bad)=>{const s=document.createElement(
 async function start(){
  for(const src of [
  './lang/v460-en.js?v=v470-i18n-core-1','./lang/v460-fr.js?v=v470-i18n-core-1','./lang/v460-de.js?v=v470-i18n-core-1','./lang/v460-it.js?v=v470-i18n-core-1',
- './lang/v460-full-help.js?v=v470-help-qa21-20261111','./lang/v470-i18n-core.js?v=v470-i18n-core-1','./lang/v460-language-qa-strict.js?v=qa21-direct-translation-probe-20261112'
+ './lang/v460-full-help.js?v=v470-i18n-core-1','./lang/v470-i18n-core.js?v=v470-i18n-core-1','./lang/v460-language-qa-strict.js?v=qa21-direct-translation-probe-20261112'
  ]) await load(src);
 }
 if(document.readyState==='complete') setTimeout(start,0);
