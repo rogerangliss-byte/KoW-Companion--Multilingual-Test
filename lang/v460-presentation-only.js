@@ -200,27 +200,27 @@ it:[
 /* QA22: close the exact v4.7.0 Gold-skill rendered strings reported by QA21. */
 const Q22={
 fr:[
-[/^Need ([\\d,. ]+) more Skill fragments$/,'Il manque $1 fragments de compétence'],
+[/^Need ([\d,. ]+) more Skill fragments$/,'Il manque $1 fragments de compétence'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Cinquième compétence : VERROUILLÉE — les quatre compétences principales doivent atteindre le niveau 10'],
-[/^([\\d,. ]+) fragments total\\. The fifth skill unlocks when all four primary skills reach Level 10\\.$/,'$1 fragments au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.'],
-[/^S(\\d+) · Infantry$/,'S$1 · Infanterie'],
-[/^Légendaire: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.']
+[/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'$1 fragments au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.'],
+[/^S(\d+) · Infantry$/,'S$1 · Infanterie'],
+[/^Légendaire: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.']
 ],
 de:[
-[/^Need ([\\d,. ]+) more Skill fragments$/,'Es fehlen $1 Fertigkeitsfragmente'],
+[/^Need ([\d,. ]+) more Skill fragments$/,'Es fehlen $1 Fertigkeitsfragmente'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Fünfte Fertigkeit: GESPERRT — alle vier Hauptfertigkeiten müssen Stufe 10 erreichen'],
-[/^([\\d,. ]+) fragments total\\. The fifth skill unlocks when all four primary skills reach Level 10\\.$/,'Insgesamt $1 Fragmente. Die fünfte Fertigkeit wird freigeschaltet, sobald alle vier Hauptfertigkeiten Stufe 10 erreicht haben.'],
-[/^S(\\d+) · Infantry$/,'S$1 · Infanterie'],
-[/^Legendär: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Trainingsabzeichen bis MAX. Für die Fertigkeitsentwicklung werden 690 separate Fragmente benötigt.']
+[/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'Insgesamt $1 Fragmente. Die fünfte Fertigkeit wird freigeschaltet, sobald alle vier Hauptfertigkeiten Stufe 10 erreicht haben.'],
+[/^S(\d+) · Infantry$/,'S$1 · Infanterie'],
+[/^Legendär: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Trainingsabzeichen bis MAX. Für die Fertigkeitsentwicklung werden 690 separate Fragmente benötigt.']
 ],
 it:[
-[/^Need ([\\d,. ]+) more Skill fragments$/,'Servono altri $1 frammenti abilità'],
-[/^Priorità: XP — ([\\d,. ]+) more XP is richiesto\\.$/,'Priorità: XP — sono necessari altri $1 XP.'],
+[/^Need ([\d,. ]+) more Skill fragments$/,'Servono altri $1 frammenti abilità'],
+[/^Priorità: XP — ([\d,. ]+) more XP is richiesto\.$/,'Priorità: XP — sono necessari altri $1 XP.'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Quinta abilità: BLOCCATA — tutte e quattro le abilità principali devono raggiungere il livello 10'],
-[/^([\\d,. ]+) fragments total\\. The fifth skill unlocks when all four primary skills reach Level 10\\.$/,'$1 frammenti in totale. La quinta abilità si sblocca quando tutte e quattro le abilità principali raggiungono il livello 10.'],
-[/^Skill 1: Lv(\\d+) · Skill 2: Lv(\\d+) · Skill 3: Lv(\\d+) · Skill 4: Lv(\\d+) · Costo successivo: ([\\d,.]+) fragments · ([\\d,.]+)\\/([\\d,.]+) used · ([\\d,.]+) rimanenti\\.$/,'Abilità 1: Lv$1 · Abilità 2: Lv$2 · Abilità 3: Lv$3 · Abilità 4: Lv$4 · Costo successivo: $5 frammenti · $6/$7 utilizzati · $8 rimanenti.'],
-[/^Leggendario: 5 Ufficiale Badges per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge di addestramento per raggiungere MAX. La progressione delle abilità utilizza 690 frammenti separati.'],
-[/^S(\\d+) · Infantry$/,'S$1 · Fanteria']
+[/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'$1 frammenti in totale. La quinta abilità si sblocca quando tutte e quattro le abilità principali raggiungono il livello 10.'],
+[/^Skill 1: Lv(\d+) · Skill 2: Lv(\d+) · Skill 3: Lv(\d+) · Skill 4: Lv(\d+) · Costo successivo: ([\d,.]+) fragments · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) rimanenti\.$/,'Abilità 1: Lv$1 · Abilità 2: Lv$2 · Abilità 3: Lv$3 · Abilità 4: Lv$4 · Costo successivo: $5 frammenti · $6/$7 utilizzati · $8 rimanenti.'],
+[/^Leggendario: 5 Ufficiale Badges per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge di addestramento per raggiungere MAX. La progressione delle abilità utilizza 690 frammenti separati.'],
+[/^S(\d+) · Infantry$/,'S$1 · Fanteria']
 ]};
 
 function tr(s,lang=active){if(lang==='en'||!s)return s;const dash=/^S6 Veronica\\s*[—–-]\\s*([\\d,\\s\\u00a0]+)\\s+badges?\\s*\\+\\s*1\\s+more$/i.exec(String(s));if(dash&&lang==='fr')return 'S6 Veronica — '+dash[1].trim()+' insignes + 1 autre';if(dash&&lang==='it')return 'S6 Veronica — '+dash[1].trim()+' Badge + 1 altro';const d=D()[lang]||{};let o=s;for(const [rx,rp] of Q22[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}for(const [rx,rp] of Q21[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}for(const [rx,rp] of QA20_DYNAMIC[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}for(const [rx,rp] of Q18[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;if(Object.prototype.hasOwnProperty.call(d,s))return d[s];for(const [rx,rp] of Q17[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of Q12[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const [rx,rp] of R[lang]||[]){if(rx.test(o)){o=o.replace(rx,rp);break}}if(o!==s)return o;for(const k of Object.keys(d).filter(k=>k.length>=5&&o.includes(k)).sort((a,b)=>b.length-a.length)){o=o.split(k).join(d[k])}return o}
