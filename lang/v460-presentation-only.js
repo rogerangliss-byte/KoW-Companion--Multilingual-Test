@@ -22,6 +22,7 @@ fr:[
 [/^You are up to date — v(.+)\.$/,'Vous êtes à jour — v$1.'],[/^Strand (.+)$/,'Branche $1']
 ],
 de:[
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Trainingsabzeichen bis MAX. Für die Fertigkeitsentwicklung werden 690 separate Fragmente benötigt.'],
 [/^Last updated (.+)$/,'Zuletzt aktualisiert $1'],[/^Saved (.+)$/,'Gespeichert $1'],
 [/^([\d,]+) universal \+ ([\d,]+) chests$/,'$1 universell + $2 Truhen'],[/^📘 Level 70 XP$/,'📘 Stufe 70 XP'],
 [/^S(\d+) · Tank Destroyer$/,'S$1 · Jagdpanzer'],[/^S(\d+) Tank Destroyers$/,'S$1 Jagdpanzer'],
@@ -32,6 +33,9 @@ de:[
 [/^You are up to date — v(.+)\.$/,'Du bist auf dem neuesten Stand — v$1.'],[/^Strand (.+)$/,'Strang $1']
 ],
 it:[
+[/^Priority: XP — ([\\d,.]+) more XP is required\\.$/,'Priorità: XP — sono necessari altri $1 XP.'],
+[/^Skill 1: Lv(\\d+) · Skill 2: Lv(\\d+) · Skill 3: Lv(\\d+) · Skill 4: Lv(\\d+) · Next cost: ([\\d,.]+) fragments · ([\\d,.]+)\\/([\\d,.]+) used · ([\\d,.]+) remaining\\.$/,'Abilità 1: Lv$1 · Abilità 2: Lv$2 · Abilità 3: Lv$3 · Abilità 4: Lv$4 · Costo successivo: $5 frammenti · $6/$7 utilizzati · $8 rimanenti.'],
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge di addestramento per raggiungere MAX. La progressione delle abilità utilizza 690 frammenti separati.'],
 [/^Last updated (.+)$/,'Ultimo aggiornamento $1'],[/^Saved (.+)$/,'Salvato $1'],
 [/^([\d,]+) universal \+ ([\d,]+) chests$/,'$1 universali + $2 casse'],[/^📘 Level 70 XP$/,'📘 XP livello 70'],
 [/^S(\d+) · Tank Destroyer$/,'S$1 · Cacciacarri'],[/^S(\d+) Tank Destroyers$/,'S$1 Cacciacarri'],
@@ -200,6 +204,7 @@ it:[
 /* QA22: close the exact v4.7.0 Gold-skill rendered strings reported by QA21. */
 const Q22={
 fr:[
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.'],
 [/^Need ([\d,. ]+) more Skill fragments$/,'Il manque $1 fragments de compétence'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Cinquième compétence : VERROUILLÉE — les quatre compétences principales doivent atteindre le niveau 10'],
 [/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'$1 fragments au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.'],
