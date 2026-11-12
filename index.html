@@ -4084,7 +4084,7 @@ window.kowRenderPlanningReadiness=render;
 
 
 <script>
-// v4.6.0 LIVE — Upgrade Targets & Recommendations (non-destructive milestone 1)
+// Upgrade Targets & Recommendations — original v4.6.0 feature implementation, retained in v4.7.0
 (function(){
  function n(v,d){v=Number(v);return Number.isFinite(v)?v:d;}
  function selectedOfficerName(){
@@ -4101,7 +4101,7 @@ window.kowRenderPlanningReadiness=render;
    const dl=Math.max(0,tl-cl), ds=Math.max(0,ts-cs), dt=Math.max(0,tt-ct);
    let rec=[]; if(dl)rec.push(dl+' Officer level'+(dl===1?'':'s')); if(ds)rec.push(ds+' Star level'+(ds===1?'':'s')); if(dt)rec.push(dt+' Training stage'+(dt===1?'':'s'));
    const ready=!rec.length;
-   document.getElementById('v460TargetResult').innerHTML='<strong>'+selectedOfficerName()+'</strong><br>Current detected position: Level '+cl+' · '+cs+'★ · Training '+ct+'<br>Target: Level '+tl+' · '+ts+'★ · Training '+tt+'<br><strong>Recommendation:</strong> '+(ready?'Target already achieved.':'Develop '+rec.join(', ')+'. Inventory-aware resource recommendations will be added in the next v4.6.0 milestone.');
+   document.getElementById('v460TargetResult').innerHTML='<strong>'+selectedOfficerName()+'</strong><br>Current detected position: Level '+cl+' · '+cs+'★ · Training '+ct+'<br>Target: Level '+tl+' · '+ts+'★ · Training '+tt+'<br><strong>Recommendation:</strong> '+(ready?'Target already achieved.':'Develop '+rec.join(', ')+'. This recommendation identifies remaining Officer progression only; it does not spend or alter Inventory.');
  }
  function init(){const b=document.getElementById('v460CalculateTarget');if(!b)return;b.addEventListener('click',calc);document.getElementById('v460TargetMode').addEventListener('change',function(){if(this.value==='max'){document.getElementById('v460TargetLevel').value=70;document.getElementById('v460TargetStars').value=5;document.getElementById('v460TargetTraining').value=180;}});}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
