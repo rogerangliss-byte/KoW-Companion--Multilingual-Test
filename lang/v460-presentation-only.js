@@ -212,6 +212,7 @@ fr:[
 [/^Légendaire: 5 Insignes d’officier per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.']
 ],
 de:[
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Trainingsabzeichen bis MAX. Für die Fertigkeitsentwicklung werden 690 separate Fragmente benötigt.'],
 [/^Need ([\d,. ]+) more Skill fragments$/,'Es fehlen $1 Fertigkeitsfragmente'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Fünfte Fertigkeit: GESPERRT — alle vier Hauptfertigkeiten müssen Stufe 10 erreichen'],
 [/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'Insgesamt $1 Fragmente. Die fünfte Fertigkeit wird freigeschaltet, sobald alle vier Hauptfertigkeiten Stufe 10 erreicht haben.'],
@@ -219,6 +220,9 @@ de:[
 [/^Legendär: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Trainingsabzeichen bis MAX. Für die Fertigkeitsentwicklung werden 690 separate Fragmente benötigt.']
 ],
 it:[
+[/^Priority: XP — ([\d,.]+) more XP is required\.$/,'Priorità: XP — sono necessari altri $1 XP.'],
+[/^Skill 1: Lv(\d+) · Skill 2: Lv(\d+) · Skill 3: Lv(\d+) · Skill 4: Lv(\d+) · Next cost: ([\d,.]+) fragments · ([\d,.]+)\/([\d,.]+) used · ([\d,.]+) remaining\.$/,'Abilità 1: Lv$1 · Abilità 2: Lv$2 · Abilità 3: Lv$3 · Abilità 4: Lv$4 · Costo successivo: $5 frammenti · $6/$7 utilizzati · $8 rimanenti.'],
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge di addestramento per raggiungere MAX. La progressione delle abilità utilizza 690 frammenti separati.'],
 [/^Need ([\d,. ]+) more Skill fragments$/,'Servono altri $1 frammenti abilità'],
 [/^Priorità: XP — ([\d,. ]+) more XP is richiesto\.$/,'Priorità: XP — sono necessari altri $1 XP.'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Quinta abilità: BLOCCATA — tutte e quattro le abilità principali devono raggiungere il livello 10'],
