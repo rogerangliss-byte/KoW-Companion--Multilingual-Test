@@ -204,7 +204,7 @@ fr:[
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Cinquième compétence : VERROUILLÉE — les quatre compétences principales doivent atteindre le niveau 10'],
 [/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'$1 fragments au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.'],
 [/^S(\d+) · Infantry$/,'S$1 · Infanterie'],
-[/^Légendaire: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.']
+[/^Légendaire: 5 Insignes d’officier per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.']
 ],
 de:[
 [/^Need ([\d,. ]+) more Skill fragments$/,'Es fehlen $1 Fertigkeitsfragmente'],
