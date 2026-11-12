@@ -37,7 +37,7 @@ function dynamicAudit(code){
    const text=(m[2]||'').replace(/\$\{[^}]+\}/g,'{value}').replace(/<[^>]+>/g,' ').replace(/\\n/g,' ').replace(/\s+/g,' ').trim();
    if(!text||text.length<3)continue;out.push({type,text});
    if(code!=='en'&&looksEnglish(text,code)){
-   const artifact=/\b(function|const|let|var|document\.|querySelector|createElement|return;|=>)\b/.test(text);
+   const artifact=/\$\{|\?\s*['\"]|:\s*['\"]|\b(function|const|let|var|document\.|querySelector|createElement|return;|=>)\b/.test(text);
    const translated=window.KOW_PRESENTATION_I18N?.translateString?.(text,code)??text;
    if(!artifact&&translated===text)issues.push({type,text,reason:'no-translation-coverage'});
  }
