@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-1',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-2',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -63,14 +63,14 @@ function compileTemplate(source){
 }
 const compiled=templates.map(t=>Object.assign({},t,compileTemplate(t.source)));
 function templateTranslate(source,lang){
- source=String(source).replace(/\s+/g,' ').trim();
+ const original=String(source);source=original.replace(/\s+/g,' ').trim();
  for(const t of compiled){
   const m=t.rx.exec(source);
   if(!m||!t[lang])continue;
   let i=0;
   return t[lang].replace(/\{[a-z]+\}/g,()=>m[++i]===undefined?'':m[i]);
  }
- return source;
+ return original;
 }
 function interpolate(value,params){return String(value).replace(/\{([A-Za-z0-9_]+)\}/g,(m,k)=>Object.prototype.hasOwnProperty.call(params||{},k)?String(params[k]):m)}
 function t(key,params,lang){const l=norm(lang||active),entry=byId[key]||bySource[key];return entry?interpolate(entry[l]||entry.en,params||{}):interpolate(String(key),params||{})}
