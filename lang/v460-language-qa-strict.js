@@ -113,6 +113,13 @@ function build(){
    const broken=roots.flatMap(r=>r.broken_text.map(x=>`${r.root}: ${x.text}`));
    const missing=roots.filter(r=>!r.present).map(r=>r.root);
    const popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code));
+   const probeSources={
+     fr:['Légendaire: 5 Insignes d’officier per Training level · 900 Training Badges to MAX. Skill progression uses 690 separate fragments.'],
+     de:['Legendär: 5 Offiziersabzeichen per Training level · 900 Training Badges to MAX. Skill progression uses 690 separate fragments.'],
+     it:['Priorità: XP — 196,817,795 more XP is richiesto.','Skill 1: Lv1 · Skill 2: Lv1 · Skill 3: Lv1 · Skill 4: Lv1 · Costo successivo: 1 fragments · 0/690 used · 690 rimanenti.','Leggendario: 5 Ufficiale Badges per Training level · 900 Training Badges to MAX. Skill progression uses 690 separate fragments.']
+   };
+   const translationProbe=(probeSources[L.code]||[]).map(source=>({source,translated:window.KOW_PRESENTATION_I18N?.translateString?.(source,L.code)??source,changed:(window.KOW_PRESENTATION_I18N?.translateString?.(source,L.code)??source)!==source}));
+   
    const dyn=dynamicAudit(L.code);
    const dq=dictQuality(L.code);
    const ha=helpAudit(L.code);
@@ -123,6 +130,7 @@ function build(){
              dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',
      translation_coverage:cov,
      dynamic_source_audit:dyn,
+     translation_probe:translationProbe,
      dictionary_quality:dq,
      help_source_audit:ha,
      rendered_english_bleed:bleed,
@@ -167,7 +175,7 @@ function render(rep){
    `<div class="notice" style="margin-top:10px">UI integrity: ${rep.ui_integrity.missing_controls.length===0?'PASS':'FAIL'} · Missing controls: ${rep.ui_integrity.missing_controls.length}</div>`+
    LANGS.filter(L=>L.code!=='en').map(L=>{
      const r=rep.results[L.label];
-     const detail={language:L.label,rendered_english_bleed:r.rendered_english_bleed,unchanged_from_english:r.unchanged_from_english,dynamic_english_literals:r.dynamic_source_audit.english_dynamic_literals};
+     const detail={language:L.label,rendered_english_bleed:r.rendered_english_bleed,unchanged_from_english:r.unchanged_from_english,dynamic_english_literals:r.dynamic_source_audit.english_dynamic_literals,translation_probe:r.translation_probe};
      const safe=JSON.stringify(detail,null,2).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
      return `<details style="margin-top:8px"><summary>${L.label} — exact failing strings (${r.rendered_english_bleed.length+r.unchanged_from_english.length+r.dynamic_source_audit.english_dynamic_literals.length})</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;background:rgba(0,0,0,.35);padding:10px;border-radius:8px">${safe}</pre></details>`;
    }).join('');
