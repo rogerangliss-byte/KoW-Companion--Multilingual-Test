@@ -204,7 +204,7 @@ it:[
 /* QA22: close the exact v4.7.0 Gold-skill rendered strings reported by QA21. */
 const Q22={
 fr:[
-[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\\. Skill progression uses 690 separate fragments\\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.'],
+[/^Legendary: 5 Officer Badges per Training level · 900 Training Badges to MAX\. Skill progression uses 690 separate fragments\.$/,'Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’entraînement pour atteindre le MAX. La progression des compétences utilise 690 fragments distincts.'],
 [/^Need ([\d,. ]+) more Skill fragments$/,'Il manque $1 fragments de compétence'],
 [/^Fifth Skill: LOCKED — requires all four primary skills at Level 10$/,'Cinquième compétence : VERROUILLÉE — les quatre compétences principales doivent atteindre le niveau 10'],
 [/^([\d,. ]+) fragments total\. The fifth skill unlocks when all four primary skills reach Level 10\.$/,'$1 fragments au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.'],
