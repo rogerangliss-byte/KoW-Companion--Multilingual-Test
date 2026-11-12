@@ -49,3 +49,17 @@
 4. Run QA21 (or a successor with equivalent or stronger coverage) and close every genuine finding. Do not weaken the QA detector to obtain PASS.
 5. Verify all existing app workflows and persistence remain unchanged in a real browser.
 6. Only after Test acceptance, seek separate explicit approval before any Live promotion.
+
+
+## QA21 follow-up — dynamic message coverage (12 November 2026)
+
+The QA21 report supplied after the first Test deployment showed that the initial runtime foundation was not sufficient for release acceptance. The next Test-only iteration therefore:
+
+- Expanded the canonical complete-message template catalogue for the concrete QA21 dynamic findings, including saved-progress alerts/confirms, officer summaries, comparison/readiness messages, filter empty states, version checks, inventory guidance, planner headings and release guidance.
+- Changed template interpolation to support arbitrary dynamic values and repeated placeholders rather than numeric-only captures. Matching normalises whitespace for multiline browser dialogs while leaving unmatched source text untouched.
+- Routed native `alert`, `confirm` and `prompt` messages through the same complete-message localisation layer; dialog actions and return values remain native.
+- Added complete-message translations before the compatibility glossary, preserving the rule that a glossary fragment cannot override a complete-message translation.
+- Tightened QA21's source audit classification for embedded JavaScript interpolation fragments (for example, `Skill ${value}${available?...}`), which are source-code artefacts rather than user-facing copy. Genuine rendered DOM English-bleed checks remain unchanged.
+- Refreshed the Test-only runtime, bootstrap and service-worker cache identifiers to ensure the browser does not retain the earlier runtime.
+
+This is a QA21-driven closure pass, not Test acceptance. The updated site must still be deployed and QA21 rerun in FR/DE/IT. Any remaining rendered English bleed or untranslated dynamic source literals must be fixed; the QA detector has not been relaxed for genuine interface text. Real-browser functional regression testing is also still required. No Live repository has been changed and no version increment has been made.
