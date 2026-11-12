@@ -59,3 +59,14 @@ QA19 SELF-AUDIT EXCLUSION RULE
 - Officer names and version/product identifiers are proper nouns/identifiers, not translation defects.
 - Accessibility labels such as Application language must still be genuinely localized.
 - Genuine rendered bleed remains blocking.
+
+
+V4.7.0 MULTILINGUAL ARCHITECTURE RULES
+- The v4.7.0 English application remains the sole functional source of truth.
+- The central localisation runtime is lang/v470-i18n-core.js. New interface strings must use stable semantic message keys through KOW_I18N.t(key, params, language); English-source hash keys are a migration bridge, not a reason to add more sentence-matching patches.
+- Exact source lookup must precede parameterised message-template lookup; controlled glossary fallback is last and may not override a complete-message translation.
+- No body-wide MutationObserver is permitted. Re-translation must use explicit render hooks and delegated presentation refreshes only.
+- Localisation code may translate text and accessibility attributes only. It must not modify calculator logic, resource values, application state, persistence, officer data, or control behaviour.
+- Do not reuse obsolete v4.6.0 source strings or values as v4.7.0 truth. Reconcile the locale catalogue against the current v4.7.0 English UI and current officer data.
+- Keep the QA diagnostic read-only and at least as strict as QA21. Verify static and dynamic text, popups, modal content, Help, attributes, and all 14 roots.
+- Test repository changes must remain isolated from both Live repositories. Live promotion requires a separate explicit approval after full Test acceptance.
