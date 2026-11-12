@@ -1,27 +1,24 @@
-# KoW Companion v4.6.0 LIVE
+# KoW Companion v4.7.0 — Multilingual Test
 
-**English Live production release**
+**Development and language QA environment — NOT LIVE**
 
-KoW Companion is an Officer development, Inventory, Progress and planning companion for *Kiss of War*. v4.6.0 adds Upgrade Targets & Recommendations, Dynamic Officer Data and database-driven Future Officer Cost Forecasting while retaining the stable v4.5.0 core.
+This repository is the multilingual Test environment for KoW Companion. Its index.html currently identifies the application as **v4.7.0**.
 
-## v4.6.0 highlights
-- Upgrade Targets & Recommendations (non-destructive)
-- Dynamic Officer dataset in `officers.json`
-- Versioned Officer-data manifest in `officer-data-version.json`
-- Global Officer Data status in Settings
-- Data-driven future Officer cost forecasting
-- Working-state persistence retained
-- Correct Legendary Badge Chest and Selection Chest rules retained
-- Approved Central Inventory ordering retained
-- 50 XP Book remains removed
+## Test site
 
-## Forecast baseline
-At release, the latest confirmed Legendary seasonal baseline is **S7 Tank Destroyers — 600 ORV per Badge / 300 SRV per Exclusive Star**. Future forecast values are estimates until confirmed release data is published.
+https://rogerangliss-byte.github.io/KoW-Companion--Multilingual-Test/
 
-## Deployment
-This package is the clean **English Live v4.6.0** release. `index.html` is a static production entry file; TEST-only build wrappers and obsolete upload instructions are not included.
+The custom domain is configured in CNAME.
 
-See `USER-GUIDE.md` for the full guide.
+## Development and release rules
 
----
-**Created by FireStorm (371)**
+- Use the approved multilingual Live release as the reference baseline.
+- Keep Multilingual Live unchanged while work is being developed and tested here.
+- Preserve existing approved functionality and translations.
+- Inspect the actual repository, language files and dependencies before making changes.
+- Make only requested and approved changes.
+- Run language QA, including checks for missing translations and English text bleed.
+- Verify functionality before proposing progression to Live.
+- Do not change the version or promote anything to Live without explicit approval.
+
+Test-only changes must remain isolated from the Live repositories.
