@@ -1,4 +1,4 @@
-const CACHE='kow-multilingual-test-v4.7.0-i18n-core-1';
+const CACHE='kow-multilingual-test-v4.7.0-i18n-core-2';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil(
