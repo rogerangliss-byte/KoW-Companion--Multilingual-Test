@@ -52,7 +52,26 @@ const templates=[
 {source:'Forecast future Officer costs from the established Officer-release sequence.',fr:'Prévision des coûts des futurs officiers selon le calendrier établi des sorties.',de:'Prognose zukünftiger Offizierskosten anhand der festgelegten Veröffentlichungsreihenfolge.',it:'Previsione dei costi dei futuri Ufficiali in base alla sequenza di rilascio stabilita.'},
 {source:'KoW releases follow this recurring annual cycle, displayed in calendar order from January → December. The current month is highlighted automatically.',fr:'Les sorties KoW suivent ce cycle annuel récurrent, affiché dans l’ordre du calendrier de janvier à décembre. Le mois en cours est automatiquement mis en évidence.',de:'KoW-Veröffentlichungen folgen diesem jährlich wiederkehrenden Zyklus in Kalenderreihenfolge von Januar bis Dezember. Der aktuelle Monat wird automatisch hervorgehoben.',it:'Le uscite KoW seguono questo ciclo annuale ricorrente, visualizzato in ordine da gennaio a dicembre. Il mese corrente viene evidenziato automaticamente.'}
 ];
-function compileTemplate(source){const parts=source.split(/(\{[a-z]+\})/g);let count=0;const pattern=parts.map(part=>{if(/^\{[a-z]+\}$/.test(part)){count++;return'([\\s\\S]*?)'}return escRx(part)}).join('');return{count,rx:new RegExp('^'+pattern+'
+function compileTemplate(source){
+ const parts=source.split(/(\{[a-z]+\})/g);
+ let count=0;
+ const pattern=parts.map(part=>{
+  if(/^\{[a-z]+\}$/.test(part)){count++;return'([\s\S]*?)'}
+  return escRx(part);
+ }).join('');
+ return{count,rx:new RegExp('^'+pattern+'$')};
+}
+const compiled=templates.map(t=>Object.assign({},t,compileTemplate(t.source)));
+function templateTranslate(source,lang){
+ source=String(source).replace(/\s+/g,' ').trim();
+ for(const t of compiled){
+  const m=t.rx.exec(source);
+  if(!m||!t[lang])continue;
+  let i=0;
+  return t[lang].replace(/\{[a-z]+\}/g,()=>m[++i]===undefined?'':m[i]);
+ }
+ return source;
+}
 function interpolate(value,params){return String(value).replace(/\{([A-Za-z0-9_]+)\}/g,(m,k)=>Object.prototype.hasOwnProperty.call(params||{},k)?String(params[k]):m)}
 function t(key,params,lang){const l=norm(lang||active),entry=byId[key]||bySource[key];return entry?interpolate(entry[l]||entry.en,params||{}):interpolate(String(key),params||{})}
 function glossaryTranslate(source,lang){let out=source;const d=glossary[lang]||{};for(const phrase of glossaryKeys[lang]||[]){if(!out.includes(phrase))continue;try{out=out.replace(new RegExp('(^|[^A-Za-zÀ-ÿ0-9])'+escRx(phrase)+'(?=$|[^A-Za-zÀ-ÿ0-9])','gu'),(m,p)=>p+d[phrase])}catch(_){}}return out}
