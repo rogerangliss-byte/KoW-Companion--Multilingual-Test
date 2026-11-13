@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>KoW Companion v4.7.0</title>
+<title>Officer Command Centre v4.7.0</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 :root{
@@ -1788,10 +1788,24 @@ function officerRarity(o){ return ['Legendary','Epic','Elite'].includes(o?.rarit
 function latestLegendaryOrvChestRate(){
  const source=Array.isArray(window.KOW_PUBLISHED_OFFICERS)&&window.KOW_PUBLISHED_OFFICERS.length
    ?window.KOW_PUBLISHED_OFFICERS:officers;
- // Follow the current released seasonal Legendary Officer ORV values,
- // not session/season numbers. Use the highest valid ORV value in the data.
- const values=source.filter(o=>officerRarity(o)==='Legendary'&&Number(o.orv)>0&&String(o.season||'').toLowerCase()!=='original').map(o=>Number(o.orv)).filter(Number.isFinite);
- return values.length?Math.max(...values):0;
+ // Select the latest published seasonal Legendary release by season and release slot.
+ // Do not let an older, more expensive Officer override the newest release's cost.
+ const seasonal=source.filter(o=>officerRarity(o)==='Legendary'&&Number(o.orv)>0&&Number(o.srv)>0&&/^S\d+$/i.test(String(o.season||'')));
+ if(!seasonal.length)return 0;
+ const seasonNumber=o=>Number(String(o.season).match(/^S(\d+)$/i)?.[1]||0);
+ const releaseSlot=o=>{
+   const role=String(o.role||o.notes||'').toLowerCase();
+   if(role.includes('rally')||role.includes('garrison'))return 1;
+   if(role.includes('infantry'))return 2;
+   if(role.includes('tank destroyer'))return 4;
+   if(role.includes('tank'))return 3;
+   return 0;
+ };
+ const latestSeason=Math.max(...seasonal.map(seasonNumber));
+ const latestSeasonRows=seasonal.filter(o=>seasonNumber(o)===latestSeason&&releaseSlot(o)>0);
+ const latestSlot=Math.max(0,...latestSeasonRows.map(releaseSlot));
+ const latest=latestSeasonRows.filter(o=>releaseSlot(o)===latestSlot);
+ return latest.length?Math.max(...latest.map(o=>Number(o.orv)).filter(Number.isFinite)):0;
 }
 function updateLegendaryChestRateLabels(){
  const rate=latestLegendaryOrvChestRate();
@@ -3667,7 +3681,7 @@ document.addEventListener("click",function(e){
     var bridge=window.KOW_PLANNER_BRIDGE||{};
     var g=(typeof bridge.globalResources==='function'?bridge.globalResources():{})||{};
     var denoms=(typeof bridge.xpDenoms==='function'?bridge.xpDenoms():[100,500,1000,5000,10000,20000,50000]);
-    var inv={orv:0,srv:0,universal:0,selection:0,xp:0,starValue:0};
+    var inv={orv:0,srv:0,universal:0,badgeChests:0,selection:0,xp:0,starValue:0};
 
     function liveNum(id,fallback){
       var el=document.getElementById(id);
@@ -3677,7 +3691,8 @@ document.addEventListener("click",function(e){
     inv.orv=liveNum('orvHeld',g.orvHeld);
     inv.srv=liveNum('srvHeld',g.srvHeld);
     inv.universal=liveNum('universalBadgeHeld',g.universalBadgeHeld);
-    inv.selection=liveNum('legendaryBadgeChestHeld',g.legendaryBadgeChestHeld);
+    inv.badgeChests=liveNum('legendaryBadgeChestHeld',g.legendaryBadgeChestHeld);
+    inv.selection=liveNum('legendarySelectionChestHeld',g.legendarySelectionChestHeld);
 
     // Use the same XP Book inputs visible on the XP screen.
     denoms.forEach(function(v){
@@ -3686,10 +3701,10 @@ document.addEventListener("click",function(e){
       inv.xp += qty*v;
     });
 
-    // Shared Legendary/Exclusive Star inventory.
+    // Future Officer projections are Legendary. Epic Star inventory must not
+    // inflate Legendary readiness; keep the rarity-specific resources separate.
     inv.starValue =
-      liveNum('ls1',g.ls1)*110 + liveNum('ls2',g.ls2)*420 + liveNum('ls3',g.ls3)*960 +
-      liveNum('es1',g.es1)*110 + liveNum('es2',g.es2)*420 + liveNum('es3',g.es3)*960;
+      liveNum('ls1',g.ls1)*110 + liveNum('ls2',g.ls2)*420 + liveNum('ls3',g.ls3)*960;
 
     return inv;
   }
@@ -3723,7 +3738,13 @@ document.addEventListener("click",function(e){
       };
     });
   }
-  function score(r,inv){var remaining=Math.max(0,r.need),affordable=inv.universal+inv.selection+(r.orvCost?Math.floor(inv.orv/r.orvCost):0),gap=Math.max(0,remaining-affordable);return (r.pct*1000)-gap;}
+  function score(r,inv){
+    var remaining=Math.max(0,r.need);
+    var eligibleSelection=typeof selectionChestEligibleOfficer==='function'&&selectionChestEligibleOfficer(r.name)?inv.selection:0;
+    var affordable=inv.universal+(inv.badgeChests||0)+eligibleSelection+(r.orvCost?Math.floor(inv.orv/r.orvCost):0);
+    var gap=Math.max(0,remaining-affordable);
+    return (r.pct*1000)-gap;
+  }
   function futureSession(mode){
     var sessions={
       october:{label:'October — S9 Rally / Garrison',types:['Rally','Garrison']},
@@ -3789,61 +3810,47 @@ document.addEventListener("click",function(e){
       season:maxSeason
     };
   }
-  function forecastS8Costs(){
+  function forecastS8Costs(mode){
     var bridge=window.KOW_PLANNER_BRIDGE||{};
     if(typeof bridge.releaseForecast==='function'){
-      var f=bridge.releaseForecast();
-      return {
-        orv:f.orvPerBadge,
-        srv:f.srvPerStar,
-        source:f.source,
-        pct:f.growth
-      };
+      var target={october:{season:9,slot:1},january:{season:8,slot:2},april:{season:8,slot:3},july:{season:8,slot:4}}[mode];
+      var base=typeof bridge.latestKnownRelease==='function'?bridge.latestKnownRelease():{season:8,slot:1};
+      var steps=target?Math.max(1,(target.season-Number(base.season||8))*4+(target.slot-Number(base.slot||1))):1;
+      var f=bridge.releaseForecast(steps);
+      return {orv:f.orvPerBadge,srv:f.srvPerStar,source:f.source+' · '+steps+' future release step'+(steps===1?'':'s'),pct:f.growth};
     }
     return {orv:720,srv:360,source:'Test forecast starting cost (720 ORV / 360 SRV)',pct:20};
   }
-  function projectedResourceHtml(projected,inv){
-    var box=document.getElementById('kowProjectedResourceForecast');
-    if(!box)return;
+function projectedResourceHtml(projected,inv,mode){
+    var box=document.getElementById('kowProjectedResourceForecast');if(!box)return;
     if(!projected.length){box.innerHTML='';return;}
-    var c=forecastS8Costs();
-    var starsPerOfficer=Math.ceil(98000/110); // 891 Exclusive Stars
-    function scenarioRow(count,label){
-      var badges=1600*count, stars=98000*count, xp=199646700*count;
-      var orv=badges*c.orv;
-      var srv=starsPerOfficer*count*c.srv;
-      return '<tr><td><b>'+esc(label)+'</b></td><td>'+badges.toLocaleString()+' badges</td><td>'+stars.toLocaleString()+' Star value</td><td>'+xp.toLocaleString()+' XP</td><td>'+orv.toLocaleString()+' ORV <b>FORECAST</b></td><td>'+srv.toLocaleString()+' SRV <b>FORECAST</b></td></tr>';
+    if(mode==='all'){
+      box.innerHTML='<div class="card" style="margin-top:12px"><h3>🔮 Projected Future Officer Resource Requirement</h3><div class="notice">All Officer sessions includes multiple future release dates, each with a different ORV/SRV forecast. Select January, April, July or October for a specific release. Each Legendary Officer requires 910 Officer Badges plus 690 separate Skill Fragments, 98,000 Star value and 199,646,700 XP. ORV converts into Officer Badges only; it does not pay Skill Fragment costs.</div></div>';return;
     }
-
+    var c=forecastS8Costs(mode),starsPerOfficer=Math.ceil(98000/110);
+    function scenarioRow(count,label){
+      var badges=910*count,fragments=690*count,stars=98000*count,xp=199646700*count,orv=badges*c.orv,srv=starsPerOfficer*count*c.srv;
+      return '<tr><td><b>'+esc(label)+'</b></td><td>'+badges.toLocaleString()+' Officer Badges + '+fragments.toLocaleString()+' Skill Fragments</td><td>'+stars.toLocaleString()+' Star value</td><td>'+xp.toLocaleString()+' XP</td><td>'+orv.toLocaleString()+' ORV <b>FORECAST</b></td><td>'+srv.toLocaleString()+' SRV <b>FORECAST</b></td></tr>';
+    }
     var baseName=projected[0].name.replace(' — PROJECTED','');
-    var badgeEquiv=(inv.universal||0)+(inv.selection||0)+Math.floor((inv.orv||0)/c.orv);
-    var oneBadgeShort=Math.max(0,1600-badgeEquiv), twoBadgeShort=Math.max(0,3200-badgeEquiv);
-    var oneXpShort=Math.max(0,199646700-(inv.xp||0)), twoXpShort=Math.max(0,399293400-(inv.xp||0));
-    var starUnitsFromSrv=c.srv?Math.floor((inv.srv||0)/c.srv):0;
-    var starValueAvailable=(inv.starValue||0)+(starUnitsFromSrv*110);
-    var oneStarShort=Math.max(0,98000-starValueAvailable), twoStarShort=Math.max(0,196000-starValueAvailable);
-
+    var badgeEquiv=(inv.universal||0)+(inv.badgeChests||0)+Math.floor((inv.orv||0)/Math.max(1,c.orv));
+    var oneBadgeShort=Math.max(0,910-badgeEquiv),twoBadgeShort=Math.max(0,1820-badgeEquiv);
+    var oneXpShort=Math.max(0,199646700-(inv.xp||0)),twoXpShort=Math.max(0,399293400-(inv.xp||0));
+    var starUnitsFromSrv=c.srv?Math.floor((inv.srv||0)/c.srv):0,starValueAvailable=(inv.starValue||0)+(starUnitsFromSrv*110);
+    var oneStarShort=Math.max(0,98000-starValueAvailable),twoStarShort=Math.max(0,196000-starValueAvailable);
     box.innerHTML='<div class="card" style="margin-top:12px"><h3>🔮 Projected Future Officer Resource Requirement</h3>'+
-      '<div class="notice">Badge, Star and XP totals are established per Legendary Officer. ORV/SRV are forecast from the Releases growth setting and are clearly marked <b>FORECAST</b>.</div>'+
+      '<div class="notice">Officer Badges and Skill Fragments are separate resources. ORV converts into Officer Badges only. Each Legendary Officer requires 910 Officer Badges, 690 Skill Fragments, 98,000 Star value and 199,646,700 XP. SRV forecasts remain separate.</div>'+
       '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th>Scenario</th><th>Development</th><th>Stars</th><th>XP</th><th>ORV forecast</th><th>SRV forecast</th></tr></thead><tbody>'+
-      scenarioRow(1,'1 × '+baseName)+scenarioRow(2,'2 × '+baseName)+
-      '</tbody></table></div>'+
-      '<div class="two" style="margin-top:10px">'+
-        '<div class="result-box"><b>1 Officer — badge position</b><br>'+(oneBadgeShort===0?'READY':'Short by '+oneBadgeShort.toLocaleString()+' badge equivalents')+'</div>'+
-        '<div class="result-box"><b>2 Officers — badge position</b><br>'+(twoBadgeShort===0?'READY':'Short by '+twoBadgeShort.toLocaleString()+' badge equivalents')+'</div>'+
-      '</div>'+
-      '<div class="two">'+
-        '<div class="result-box"><b>1 Officer — Star position</b><br>'+(oneStarShort===0?'READY':'Short by '+oneStarShort.toLocaleString()+' Star value')+'</div>'+
-        '<div class="result-box"><b>2 Officers — Star position</b><br>'+(twoStarShort===0?'READY':'Short by '+twoStarShort.toLocaleString()+' Star value')+'</div>'+
-      '</div>'+
-      '<div class="two">'+
-        '<div class="result-box"><b>1 Officer — XP position</b><br>'+(oneXpShort===0?'READY':'Short by '+oneXpShort.toLocaleString()+' XP')+'</div>'+
-        '<div class="result-box"><b>2 Officers — XP position</b><br>'+(twoXpShort===0?'READY':'Short by '+twoXpShort.toLocaleString()+' XP')+'</div>'+
-      '</div>'+
-      '<p class="muted" style="margin-top:8px">Forecast basis: '+esc(c.source)+'. Inventory is not changed by this calculation.</p></div>';
+      scenarioRow(1,'1 × '+baseName)+scenarioRow(2,'2 × '+baseName)+'</tbody></table></div>'+
+      '<div class="two" style="margin-top:10px"><div class="result-box"><b>1 Officer — badge position</b><br>'+(oneBadgeShort===0?'READY':'Short by '+oneBadgeShort.toLocaleString()+' Officer Badges')+'</div>'+
+      '<div class="result-box"><b>2 Officers — badge position</b><br>'+(twoBadgeShort===0?'READY':'Short by '+twoBadgeShort.toLocaleString()+' Officer Badges')+'</div></div>'+
+      '<div class="two"><div class="result-box"><b>1 Officer — Star position</b><br>'+(oneStarShort===0?'READY':'Short by '+oneStarShort.toLocaleString()+' Star value')+'</div>'+
+      '<div class="result-box"><b>2 Officers — Star position</b><br>'+(twoStarShort===0?'READY':'Short by '+twoStarShort.toLocaleString()+' Star value')+'</div></div>'+
+      '<div class="two"><div class="result-box"><b>1 Officer — XP position</b><br>'+(oneXpShort===0?'READY':'Short by '+oneXpShort.toLocaleString()+' XP')+'</div>'+
+      '<div class="result-box"><b>2 Officers — XP position</b><br>'+(twoXpShort===0?'READY':'Short by '+twoXpShort.toLocaleString()+' XP')+'</div></div>'+
+      '<p class="muted" style="margin-top:8px">Skill Fragments are stated separately and are not converted from ORV or included in badge readiness. Forecast basis: '+esc(c.source)+'. Inventory is not changed by this calculation.</p></div>';
   }
-
-  window.__kowPlannerShowAll=false;
+window.__kowPlannerShowAll=false;
   window.kowPlannerToggleAll=function(showAll){
     window.__kowPlannerShowAll=!!showAll;
     if(typeof window.kowRunAdvancedPlanner==='function')window.kowRunAdvancedPlanner(true);
@@ -3879,7 +3886,11 @@ document.addEventListener("click",function(e){
     current.sort(function(a,b){return score(b,inv)-score(a,inv)});
 
     var session=futureSession(mode), projected=[];
-    if(mode!=='saved'){
+    // In "All Officer sessions", a selected historical season means analyse
+    // saved/current Officers from that season only. Do not append unrelated
+    // future placeholders (which previously made S5 appear to recommend S8).
+    var historicalSeasonOnly=mode==='all' && seasonChoice!=='all';
+    if(mode!=='saved' && !historicalSeasonOnly){
       var types=typeChoice!=='auto'?[typeChoice]:(session?session.types:[]);
       projected=types.map(function(t){
         var season=projectedSeason(mode,t);
@@ -3895,15 +3906,20 @@ document.addEventListener("click",function(e){
     else rows=projected.concat(current);
 
     if(!rows.length){
-      sum.innerHTML='<b>No eligible Officers are available for the selected filters.</b>';
-      box.innerHTML=''; projectedResourceHtml([],inv);
+      var emptyMessage=historicalSeasonOnly
+        ? '<b>No matching saved Officer progress was found for '+esc(seasonChoice==='original'?'Original':seasonChoice)+'.</b><br><span class="muted">Check that progress has been saved for Officers in this season. Enable “Include Not Started” to include Officers without recorded progress'+(seasonChoice==='original'?'; also enable “Include Original Officers”':'')+'. MAXED Officers remain excluded.</span>'
+        : '<b>No eligible Officers are available for the selected filters.</b><br><span class="muted">Check the session, season and Officer Type filters, or enable “Include Not Started” to include Officers without recorded progress.</span>';
+      sum.innerHTML=emptyMessage;
+      box.innerHTML=''; projectedResourceHtml([],inv,mode);
       if(controls)controls.style.display='none'; return;
     }
 
     var filterBits=[];
-    if(seasonChoice!=='all')filterBits.push(seasonChoice==='original'?'Original':seasonChoice);
+    // A specific future target is not part of a historical saved-Officer season;
+    // do not label it as though the historical season filter constrained it.
+    if(!isSpecificFuture && seasonChoice!=='all')filterBits.push(seasonChoice==='original'?'Original':seasonChoice);
     if(typeChoice!=='auto')filterBits.push(typeChoice);
-    var baseLabel=mode==='saved'?'Saved Officers only':(session?session.label:'Future Officer session');
+    var baseLabel=historicalSeasonOnly?'Saved/current Officers':(mode==='saved'?'Saved Officers only':(session?session.label:'Future Officer session'));
     var label=baseLabel+(filterBits.length?' — '+filterBits.join(' / '):'');
     var best=current[0], futureNames=projected.map(function(x){return x.name.replace(' — PROJECTED','')});
     var decision;
@@ -3912,7 +3928,7 @@ document.addEventListener("click",function(e){
     else decision=best?'Current priority: '+best.name+'.':'No current candidate.';
 
     sum.innerHTML='<b>Planning session: '+esc(label)+'</b><br><b>Recommendation: '+esc(decision)+'</b><br><span class="muted">'+
-      (isSpecificFuture?'Specific future sessions show only the selected projected Officer. Use All Officer sessions to compare against saved Officers.':'MAXED Officers are excluded. Season and Officer Type filters can narrow saved/current candidates, for example S6 + Tank.')+'</span>';
+      (isSpecificFuture?'Specific future sessions show only the selected projected Officer. The historical Season filter does not apply to future placeholders. Use All Officer sessions to compare against saved Officers.':(historicalSeasonOnly?'Historical season filters analyse matching saved/current Officers only; no future Officer is added. MAXED Officers are excluded.':'MAXED Officers are excluded. Season and Officer Type filters can narrow saved/current candidates, for example S6 + Tank.'))+'</span>';
 
     var canCollapse=(mode==='saved'||mode==='all')&&rows.length>10;
     var displayRows=(canCollapse&&!window.__kowPlannerShowAll)?rows.slice(0,10):rows;
@@ -3924,7 +3940,7 @@ document.addEventListener("click",function(e){
     });
     html+='</tbody></table></div><p class="muted" style="margin-top:8px">'+
       (canCollapse&&!window.__kowPlannerShowAll?'Showing top 10 of '+rows.length+' results.':'Showing '+rows.length+' result'+(rows.length===1?'':'s')+'.')+
-      '</p><p class="muted">Inventory detected: ORV '+inv.orv.toLocaleString()+', Universal Badges '+inv.universal.toLocaleString()+', Selection Chests '+inv.selection.toLocaleString()+', XP '+inv.xp.toLocaleString()+'. No Inventory values have been changed.</p>';
+      '</p><p class="muted">Inventory detected: ORV '+inv.orv.toLocaleString()+', Universal Badges '+inv.universal.toLocaleString()+', Badge Chests '+(inv.badgeChests||0).toLocaleString()+', Selection Chests '+inv.selection.toLocaleString()+', XP '+inv.xp.toLocaleString()+'. No Inventory values have been changed.</p>';
     box.innerHTML=html;
 
     if(controls){
@@ -3932,7 +3948,7 @@ document.addEventListener("click",function(e){
       if(showBtn){showBtn.style.display=canCollapse&&!window.__kowPlannerShowAll?'inline-block':'none';showBtn.textContent='Show all '+rows.length;}
       if(collapseBtn)collapseBtn.style.display=canCollapse&&window.__kowPlannerShowAll?'inline-block':'none';
     }
-    projectedResourceHtml(projected,inv);
+    projectedResourceHtml(projected,inv,mode);
   };
 })();
 </script>
@@ -3943,34 +3959,64 @@ document.addEventListener("click",function(e){
 'use strict';
 const KEY='kow_v4359_planning_scenarios';
 const INV_KEY='kow_central_inventory_v1';
-const TOTAL={badges:1600,stars:98000,xp:199646700};
+const TOTAL={badges:910,skillFragments:690,stars:98000,xp:199646700};
 const LABEL={next:'Next Officer session',october:'October — S9 Rally / Garrison',january:'January — S8 Infantry',april:'April — S8 Tanks',july:'July — S8 Tank Destroyers'};
-const STEP={next:1,october:4,january:1,april:2,july:3};
+const SLOT={january:1,april:2,july:3,october:4};
+function targetReleaseIndex(session,year){
+ if(session==='next')return null;
+ return (Number(year||2027)-2027)*4+(SLOT[session]??1);
+}
+function releaseStep(session,year){
+ if(session==='next')return 1;
+ const targetIndex=targetReleaseIndex(session,year);
+ const latest=window.KOW_PLANNER_BRIDGE?.latestKnownRelease?.()||{season:8,slot:1};
+ const baseIndex=(Math.max(8,Number(latest.season)||8)-8)*4+(Math.max(1,Math.min(4,Number(latest.slot)||1))-1);
+ return Math.max(0,targetIndex-baseIndex);
+}
+function sessionLabel(session,year){
+ const index=targetReleaseIndex(session,year);
+ const season=index===null?Number(window.KOW_PLANNER_BRIDGE?.latestKnownRelease?.().season||8):8+Math.floor(index/4);
+ const month={october:'October',january:'January',april:'April',july:'July'}[session]||'Next release';
+ const type={october:'Rally / Garrison',january:'Infantry',april:'Tanks',july:'Tank Destroyers'}[session]||'Officer';
+ return `${month} — S${season} ${type}`;
+}
 let current=null;
 function n(id){return Number(document.getElementById(id)?.value||0);}
 function savedInventory(){try{return JSON.parse(localStorage.getItem(INV_KEY)||'{}')}catch(e){return {}}}
-function getHeld(){
+function getHeld(orvPerBadge){
  const x=savedInventory();
  const val=id=>Math.max(0,Number(x[id]||0));
  // Only genuinely shared badge resources count towards an unassigned future Officer.
- // A Selection Chest gives one specific Officer Badge from its approved list; it is
- // not universal and must not reduce the generic future-Officer badge shortfall.
+ // Selection Chests are Officer-specific; ORV is converted at the selected future
+ // release's forecast cost so the badge shortfall reflects all usable resources.
  const universal=val('invUniversalLegendary');
  const badgeChests=val('invLegendaryBadgeChests');
  const selectionChests=val('invLegendarySelectionChests');
+ const orv=val('invOrv');
+ const orvRate=Math.max(1,Number(orvPerBadge)||Number(latestLegendaryOrvChestRate?.())||720);
+ const orvBadgeEquiv=Math.floor(orv/orvRate);
+ const orvRemainder=orv-(orvBadgeEquiv*orvRate);
  const stars=val('invLegStar1')*110+val('invLegStar2')*420+val('invLegStar3')*960;
  const denoms=[100,500,1000,5000,10000,20000,50000];
  const xp=denoms.reduce((sum,v)=>sum+val('invXp'+v)*v,0);
- return {badges:universal+badgeChests,selectionChests,selectionChestRule:'specific-approved-list-v1',stars,xp,orv:val('invOrv'),srv:val('invSrv'),badgeParts:{universal,badgeChests,selectionChests},savedAt:x.savedAt||null};
+ return {
+  badges:universal+badgeChests+orvBadgeEquiv,
+  selectionChests,selectionChestRule:'specific-approved-list-v1',
+  badgeOrvRule:'forecast-rate-v1',
+  stars,xp,orv,srv:val('invSrv'),
+  badgeParts:{universal,badgeChests,selectionChests,orvBadgeEquiv,orvRate,orvRemainder},
+  savedAt:x.savedAt||null
+ };
 }
-function forecast(session,count){
+function forecast(session,count,year){
  const growth=Math.max(0,Number(document.getElementById('forecastGrowth')?.value||20))/100;
- const steps=STEP[session]||1;
- const orvPerBadge=Math.round(720*Math.pow(1+growth,steps));
- const srvPerStar=Math.round(360*Math.pow(1+growth,steps));
+ const steps=releaseStep(session,year);
+ const latest=window.KOW_PLANNER_BRIDGE?.latestKnownRelease?.()||{orv:720,srv:360,source:'S8 confirmed release'};
+ const orvPerBadge=Math.round(Number(latest.orv)*Math.pow(1+growth,steps));
+ const srvPerStar=Math.round(Number(latest.srv)*Math.pow(1+growth,steps));
  const badges=TOTAL.badges*count;
  const exclusiveStars=Math.ceil((TOTAL.stars*count)/110);
- return {growth,steps,orvPerBadge,srvPerStar,orv:badges*orvPerBadge,srv:exclusiveStars*srvPerStar};
+ return {growth,steps,baseOrv:Number(latest.orv),baseSrv:Number(latest.srv),orvPerBadge,srvPerStar,orv:badges*orvPerBadge,srv:exclusiveStars*srvPerStar};
 }
 function fmt(x){return Math.max(0,Math.round(x)).toLocaleString();}
 function pct(h,r){return r?Math.min(100,(h/r)*100):100}
@@ -3978,45 +4024,58 @@ function statusLine(label,held,req,short,unit=''){
  return `<b>${label}:</b> ${fmt(held)} / ${fmt(req)}${unit} — ${short?'<b>SHORT '+fmt(short)+'</b>':'<b>READY</b>'}`;
 }
 function calculate(){
- const session=document.getElementById('scenarioSession').value;
- const count=n('scenarioOfficerCount')||1;
- const year=n('scenarioYear')||new Date().getFullYear()+1;
- const held=getHeld(), req={badges:TOTAL.badges*count,stars:TOTAL.stars*count,xp:TOTAL.xp*count};
+ const session=document.getElementById('scenarioSession').value,count=n('scenarioOfficerCount')||1,year=n('scenarioYear')||new Date().getFullYear()+1;
+ const fc=forecast(session,count,year),held=getHeld(fc.orvPerBadge);
+ const req={badges:TOTAL.badges*count,skillFragments:TOTAL.skillFragments*count,stars:TOTAL.stars*count,xp:TOTAL.xp*count};
  const short={badges:Math.max(0,req.badges-held.badges),stars:Math.max(0,req.stars-held.stars),xp:Math.max(0,req.xp-held.xp)};
  const overall=Math.min(pct(held.badges,req.badges),pct(held.stars,req.stars),pct(held.xp,req.xp));
- const fc=forecast(session,count);
- current={id:Date.now(),name:document.getElementById('scenarioName').value.trim()||`${LABEL[session]} — ${count} Officer${count>1?'s':''}`,session,count,year,held,req,short,overall,forecast:fc};
+ const additionalOrvForBadgeShortfall=short.badges*fc.orvPerBadge,targetLabel=session==='next'?'Next Officer session':sessionLabel(session,year);
+ current={id:Date.now(),name:document.getElementById('scenarioName').value.trim()||defaultScenarioName(session,year),session,count,year,targetLabel,held,req,short,overall,forecast:fc};
  const invNote=held.savedAt?'Saved Central Inventory: '+new Date(held.savedAt).toLocaleString():'WARNING: Central Inventory has not been saved yet.';
- document.getElementById('scenarioResult').innerHTML=
- `<b>${current.name}</b><br>Target: ${LABEL[session]} ${year} · ${count} projected Officer${count>1?'s':''}<br>`+
- `<b>Current readiness: ${overall.toFixed(1)}%</b><br>`+
- statusLine('Shared badges',held.badges,req.badges,short.badges)+'<br>'+statusLine('Stars',held.stars,req.stars,short.stars,' Star value')+'<br>'+statusLine('XP',held.xp,req.xp,short.xp)+'<br>'+
- `<small>Selection Chests held: ${fmt(held.selectionChests)} — each provides one specific Officer Badge from the approved list and is excluded from the shared future-Officer badge total until an eligible Officer is selected.</small><br><br>`+
- `<b>Projected voucher requirement — FORECAST</b><br>`+
- `ORV: ${fmt(fc.orv)} FORECAST (${fmt(fc.orvPerBadge)} per badge) · Held ${fmt(held.orv)} · ${held.orv>=fc.orv?'<b>READY</b>':'<b>SHORT '+fmt(fc.orv-held.orv)+'</b>'}<br>`+
- `SRV: ${fmt(fc.srv)} FORECAST (${fmt(fc.srvPerStar)} per Exclusive Star) · Held ${fmt(held.srv)} · ${held.srv>=fc.srv?'<b>READY</b>':'<b>SHORT '+fmt(fc.srv-held.srv)+'</b>'}<br>`+
- `<small>${invNote}<br>Preview only. Inventory has not been changed. Future ORV/SRV figures use the Releases growth forecast and remain FORECAST until published.</small>`;
+ document.getElementById('scenarioResult').innerHTML='<b>'+current.name+'</b><br>Target: '+targetLabel+' · '+year+' · '+count+' projected Officer'+(count>1?'s':'')+'<br>'+
+ '<b>Badge / Star / XP readiness: '+overall.toFixed(1)+'%</b><br>'+statusLine('Officer Badges available',held.badges,req.badges,short.badges)+'<br>'+
+ statusLine('Stars',held.stars,req.stars,short.stars,' Star value')+'<br>'+statusLine('XP',held.xp,req.xp,short.xp)+'<br>'+
+ '<b>Separate Skill Fragment requirement:</b> '+fmt(req.skillFragments)+' ('+fmt(TOTAL.skillFragments)+' per Legendary Officer). Skill Fragments are not Officer Badges and cannot be funded by ORV; track Officer skill progress separately in Development.<br>'+
+ '<small>Badge breakdown: '+fmt(held.badgeParts.universal)+' Universal Badges + '+fmt(held.badgeParts.badgeChests)+' ordinary Badge Chests + '+fmt(held.badgeParts.orvBadgeEquiv)+' badge equivalents from '+fmt(held.orv)+' ORV at '+fmt(held.badgeParts.orvRate)+' ORV per badge. ORV remainder: '+fmt(held.badgeParts.orvRemainder)+'. Selection Chests held: '+fmt(held.selectionChests)+' and excluded from shared badge totals.</small><br><br>'+
+ '<b>Additional voucher requirement — FORECAST</b><br>ORV still needed for the remaining '+fmt(short.badges)+' Officer Badges: <b>'+fmt(additionalOrvForBadgeShortfall)+' ORV</b> ('+fmt(fc.orvPerBadge)+' per badge). Held ORV has already been included in the badge-equivalent total above.<br>'+
+ 'SRV: '+fmt(fc.srv)+' FORECAST for '+fmt(Math.ceil((TOTAL.stars*count)/110))+' Exclusive Stars · Held '+fmt(held.srv)+' · '+(held.srv>=fc.srv?'<b>READY</b>':'<b>SHORT '+fmt(fc.srv-held.srv)+'</b>')+'<br>'+
+ '<small>'+invNote+'<br>Preview only. Inventory has not been changed. Skill Fragments are reported separately and are not included in the ORV calculation. Future ORV/SRV figures remain FORECAST until published.</small>';
  return current;
 }
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}}
+function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');let changed=false;a.forEach(s=>{if(s&&s.req&&s.req.skillFragments===undefined){const count=Number(s.count)||1;s.req.badges=910*count;s.req.skillFragments=690*count;s.short=s.short||{};s.short.badges=Math.max(0,s.req.badges-savedScenarioSharedBadges(s.held||{},s.forecast||{}));s.overall=Math.min(pct(savedScenarioSharedBadges(s.held||{},s.forecast||{}),s.req.badges),pct(s.held?.stars,s.req.stars),pct(s.held?.xp,s.req.xp));changed=true;}});if(changed)store(a);return a;}catch{return[]}}
 function store(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function savedScenarioSharedBadges(h,f){
+ const selectionChests=Number(h?.selectionChests??h?.badgeParts?.selectionChests)||0;
+ const baseBadges=h?.selectionChestRule?Math.max(0,Number(h.badges)||0):Math.max(0,(Number(h?.badges)||0)-selectionChests);
+ if(h?.badgeOrvRule==='forecast-rate-v1')return baseBadges;
+ const rate=Math.max(1,Number(h?.badgeParts?.orvRate)||Number(f?.orvPerBadge)||Number(latestLegendaryOrvChestRate?.())||720);
+ return baseBadges+Math.floor(Math.max(0,Number(h?.orv)||0)/rate);
+}
+function savedScenarioOrvRemainder(h,f){
+ const rate=Math.max(1,Number(h?.badgeParts?.orvRate)||Number(f?.orvPerBadge)||Number(latestLegendaryOrvChestRate?.())||720);
+ const orv=Math.max(0,Number(h?.orv)||0);
+ const calculated=orv-Math.floor(orv/rate)*rate;
+ return Number(h?.badgeParts?.orvRemainder??calculated);
+}
 function render(){
- const box=document.getElementById('savedScenarioList'); if(!box)return;
- const a=load(); if(!a.length){box.innerHTML='No planning scenarios saved yet.';return}
+ const box=document.getElementById('savedScenarioList');if(!box)return;
+ const a=load();if(!a.length){box.innerHTML='No planning scenarios saved yet.';return;}
  box.innerHTML=a.map((s,i)=>{
-   const f=s.forecast||{}, h=s.held||{}, req=s.req||{};
-   const selectionChests=Number(h.selectionChests??h.badgeParts?.selectionChests)||0;
-   const sharedBadges=h.selectionChestRule?Number(h.badges)||0:Math.max(0,(Number(h.badges)||0)-selectionChests);
-   const badgeShort=Math.max(0,(Number(req.badges)||0)-sharedBadges);
-   const readiness=Math.min(pct(sharedBadges,req.badges),pct(h.stars,req.stars),pct(h.xp,req.xp));
-   const savedAt=s.id?new Date(Number(s.id)):null;
-   const scenarioSaved=savedAt&&Number.isFinite(savedAt.getTime())?savedAt.toLocaleString():'Unknown';
-   const inventorySaved=h.savedAt?new Date(h.savedAt).toLocaleString():'Not saved';
-   return `<div class="result-box"><b>${s.name}</b><br>${LABEL[s.session]||s.session} ${s.year} · ${s.count} Officer${s.count>1?'s':''} · Readiness ${readiness.toFixed(1)}%<br>`+
-   `<small><b>Scenario saved:</b> ${scenarioSaved}<br><b>Inventory snapshot used:</b> ${inventorySaved}<br>`+
-   `Shared badges held: <b>${fmt(sharedBadges)}</b> · Selection Chests held: <b>${fmt(selectionChests)}</b> · Stars held: <b>${fmt(h.stars)}</b> · XP held: <b>${fmt(h.xp)}</b><br>`+
-   `${badgeShort?'<b>Badges: SHORT '+fmt(badgeShort)+'</b>':'<b>Badges: READY</b>'}<br>${s.short.stars?'<b>Stars: SHORT '+fmt(s.short.stars)+'</b>':'<b>Stars: READY</b>'}<br>${s.short.xp?'<b>XP: SHORT '+fmt(s.short.xp)+'</b>':'<b>XP: READY</b>'}`+
-   (f.orv!==undefined?`<br>ORV: ${fmt(f.orv)} FORECAST · SRV: ${fmt(f.srv)} FORECAST`:'')+`</small><br><button type="button" class="app-action-secondary" data-load-scenario="${i}">Load</button> <button type="button" class="app-action-danger" data-delete-scenario="${i}">Delete</button></div>`;
+  const f=s.forecast||{},h=s.held||{},req=s.req||{},count=Number(s.count)||1,badgeReq=Number(req.badges)||910*count,fragmentReq=Number(req.skillFragments)||690*count;
+  const selectionChests=Number(h.selectionChests??h.badgeParts?.selectionChests)||0,sharedBadges=savedScenarioSharedBadges(h,f),badgeShort=Math.max(0,badgeReq-sharedBadges);
+  const readiness=Math.min(pct(sharedBadges,badgeReq),pct(h.stars,req.stars),pct(h.xp,req.xp));
+  const savedAt=s.id?new Date(Number(s.id)):null,scenarioSaved=savedAt&&Number.isFinite(savedAt.getTime())?savedAt.toLocaleString():'Unknown',inventorySaved=h.savedAt?new Date(h.savedAt).toLocaleString():'Not saved';
+  const target=s.targetLabel||(s.session==='next'?'Next Officer session':sessionLabel(s.session,s.year));
+  const orvEq=h.badgeParts?.orvBadgeEquiv??Math.floor(Math.max(0,Number(h.orv)||0)/Math.max(1,Number(h.badgeParts?.orvRate)||Number(f.orvPerBadge)||Number(latestLegendaryOrvChestRate?.())||720));
+  return '<div class="result-box"><b>'+s.name+'</b><br>'+target+' · '+count+' Officer'+(count>1?'s':'')+' · Badge / Star / XP readiness '+readiness.toFixed(1)+'%<br>'+
+   '<small><b>Scenario saved:</b> '+scenarioSaved+'<br><b>Inventory snapshot used:</b> '+inventorySaved+'<br>'+
+   'Shared Officer Badges held: <b>'+fmt(sharedBadges)+'</b> · ORV badge equivalents: <b>'+fmt(orvEq)+'</b> · ORV remainder: <b>'+fmt(savedScenarioOrvRemainder(h,f))+'</b> · Selection Chests held: <b>'+fmt(selectionChests)+'</b> · Stars held: <b>'+fmt(h.stars)+'</b> · XP held: <b>'+fmt(h.xp)+'</b><br>'+
+   'Separate Skill Fragments required: <b>'+fmt(fragmentReq)+'</b> ('+fmt(690)+' per Legendary Officer; tracked in Development, not converted from ORV)<br>'+
+   (badgeShort?'<b>Officer Badges: SHORT '+fmt(badgeShort)+'</b>':'<b>Officer Badges: READY</b>')+'<br>'+
+   ((Number(s.short?.stars)||0)?'<b>Stars: SHORT '+fmt(s.short.stars)+'</b>':'<b>Stars: READY</b>')+'<br>'+
+   ((Number(s.short?.xp)||0)?'<b>XP: SHORT '+fmt(s.short.xp)+'</b>':'<b>XP: READY</b>')+
+   (f.orv!==undefined?'<br>Additional ORV for badge shortfall: '+fmt(badgeShort*(Number(f.orvPerBadge)||720))+' FORECAST · SRV: '+fmt(f.srv)+' FORECAST':'')+
+   '</small><br><button type="button" class="app-action-secondary" data-load-scenario="'+i+'">Load</button> <button type="button" class="app-action-danger" data-delete-scenario="'+i+'">Delete</button></div>';
  }).join('');
 }
 function save(){const s=calculate();const a=load();a.unshift(s);store(a);render()}
@@ -4026,7 +4085,26 @@ document.addEventListener('click',e=>{
  const li=e.target?.dataset?.loadScenario;if(li!==undefined){const s=load()[Number(li)];if(!s)return;document.getElementById('scenarioSession').value=s.session;document.getElementById('scenarioOfficerCount').value=s.count;document.getElementById('scenarioName').value=s.name;document.getElementById('scenarioYear').value=s.year;calculate();}
  const di=e.target?.dataset?.deleteScenario;if(di!==undefined){const a=load();a.splice(Number(di),1);store(a);render();}
 });
-document.addEventListener('DOMContentLoaded',()=>{const y=document.getElementById('scenarioYear');if(y&&!y.value)y.value=new Date().getFullYear()+1;render()});
+function defaultScenarioName(session,year){
+ if(session==='next')return 'Next Officer';
+ const label=sessionLabel(session,year);
+ const type={october:'Rally / Garrison',january:'Infantry',april:'Tank',july:'Tank Destroyer'}[session];
+ const match=label.match(/S\d+/);
+ return (match?match[0]:'S8')+' '+(type||'Officer');
+}
+function updateScenarioSessionOptions(year){
+ const select=document.getElementById('scenarioSession');if(!select)return;
+ Array.from(select.options).forEach(o=>{o.textContent=o.value==='next'?'Next Officer session':sessionLabel(o.value,year);});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ const y=document.getElementById('scenarioYear'),session=document.getElementById('scenarioSession'),name=document.getElementById('scenarioName');
+ if(y&&!y.value)y.value=new Date().getFullYear()+1;
+ updateScenarioSessionOptions(y?.value);
+ if(session&&name&&!name.value.trim())name.value=defaultScenarioName(session.value,y?.value);
+ if(session&&name)session.addEventListener('change',()=>{updateScenarioSessionOptions(y?.value);name.value=defaultScenarioName(session.value,y?.value);savePlannerWorkingState();});
+ if(y&&session&&name)y.addEventListener('change',()=>{updateScenarioSessionOptions(y.value);const generated=/^S\d+ (Rally \/ Garrison|Infantry|Tank|Tank Destroyer)$|^Next Officer$/.test(name.value.trim());if(generated)name.value=defaultScenarioName(session.value,y.value);savePlannerWorkingState();});
+ render();
+});
 })();
 </script>
 
