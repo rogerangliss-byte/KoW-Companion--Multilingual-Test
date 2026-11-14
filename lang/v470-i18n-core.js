@@ -208,9 +208,9 @@ function targetedTranslate(raw,lang){
  }
  if(fragmentResult!==raw)return fragmentResult;
  const rules=[
- [/^\\([\\d,]+ ORV \\/ [\\d,]+ SRV\\)\\. For ([\\d,]+) Officer Badges \\(including the ([\\d,]+) Officer Badges for Skills within the ([\\d,]+) total\\) and ([\\d,]+) Star value \\(([\\d,]+) Exclusive Stars\\), plan for approximately$/,[
-  '\\\\($1 ORV / $2 SRV\\\\). Pour $3 insignes d’officier (dont $4 pour les compétences dans le total de $5) et une valeur de $6 étoiles ($7 étoiles exclusives), prévoyez environ',
-  '\\\\($1 ORV / $2 SRV\\\\). Für $3 Offiziersabzeichen (davon $4 für Fertigkeiten innerhalb der Gesamtzahl von $5) und einen Sternwert von $6 ($7 Exklusivsterne) werden ungefähr benötigt',
+ [/^\([\d,]+ ORV \/ [\d,]+ SRV\)\. For ([\d,]+) Officer Badges \(including the ([\d,]+) Officer Badges for Skills within the ([\d,]+) total\) and ([\d,]+) Star value \(([\d,]+) Exclusive Stars\), plan for approximately$/,[
+  '($1 ORV / $2 SRV). Pour $3 insignes d’officier (dont $4 pour les compétences dans le total de $5) et une valeur de $6 étoiles ($7 étoiles exclusives), prévoyez environ',
+  '($1 ORV / $2 SRV). Für $3 Offiziersabzeichen (davon $4 für Fertigkeiten innerhalb der Gesamtzahl von $5) und einen Sternwert von $6 ($7 Exklusivsterne) werden ungefähr benötigt',
   '($1 ORV / $2 SRV). Per $3 distintivi ufficiali (di cui $4 per le abilità nel totale di $5) e un valore Stelle di $6 ($7 Stelle esclusive), pianifica circa'
  ]],
  [/^Need ([\d,. ]+) more Officer Badges$/,['Il manque encore $1 insignes d’officier','Es fehlen noch $1 Offiziersabzeichen','Servono ancora $1 Badge Ufficiale']],
