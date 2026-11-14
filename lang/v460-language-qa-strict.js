@@ -114,9 +114,9 @@ function build(){
    const missing=roots.filter(r=>!r.present).map(r=>r.root);
    const popup=L.code==='en'?[]:popups().filter(t=>looksEnglish(t,L.code));
    const probeSources={
-     fr:['Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes d’officier pour l’entraînement jusqu’au MAX. La progression des compétences utilise 690 badges d’officier, inclus dans le total de 1 600.'],
-     de:['Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Offiziersabzeichen für das Training bis MAX. Für Fertigkeiten werden 690 Offiziersabzeichen benötigt, enthalten in den insgesamt 1.600.'],
-     it:['Priorità: XP — 196,817,795 more XP is richiesto.','Skill 1: Lv1 · Skill 2: Lv1 · Skill 3: Lv1 · Skill 4: Lv1 · Costo successivo: 1 Badge Ufficiale · 0/690 utilizzati · 690 rimanenti.','Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge Ufficiale per l’Addestramento fino a MAX. La progressione delle abilità usa 690 Badge Ufficiale, inclusi nel totale di 1.600.']
+     fr:['Legendary: 5 Officer Badges per Training level · 900 Officer Badges for Training to MAX. Skill progression uses 690 Officer Badges, included in the 1,600 total.'],
+     de:['Legendary: 5 Officer Badges per Training level · 900 Officer Badges for Training to MAX. Skill progression uses 690 Officer Badges, included in the 1,600 total.'],
+     it:['Priority: XP — 196,817,795 more XP is required.','Skill 1: Lv1 · Skill 2: Lv1 · Skill 3: Lv1 · Skill 4: Lv1 · Next cost: 1 Officer Badges · 0/690 used · 690 remaining.','Legendary: 5 Officer Badges per Training level · 900 Officer Badges for Training to MAX. Skill progression uses 690 Officer Badges, included in the 1,600 total.']
    };
    const translationProbe=(probeSources[L.code]||[]).map(source=>({source,translated:window.KOW_PRESENTATION_I18N?.translateString?.(source,L.code)??source,changed:(window.KOW_PRESENTATION_I18N?.translateString?.(source,L.code)??source)!==source}));
    
