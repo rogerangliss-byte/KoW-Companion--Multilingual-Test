@@ -3445,6 +3445,11 @@ function kowInvList(m){const e=document.getElementById('invOfficerList');if(!e)r
 function kowInvLoad(){const x=kowInvGet();KOW_INV_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=+x[id]||0});const s=document.getElementById('inventorySavedStatus');if(s)s.textContent=x.savedAt?'Last saved: '+new Date(x.savedAt).toLocaleString():'Inventory not yet saved.';kowInvList(x.officerBadges);return x;}
 function kowInvApply(x){
  [['orvHeld','invOrv'],['multiOrv','invOrv'],['srvHeld','invSrv'],['universalBadgeHeld','invUniversalLegendary'],['universalEpicBadgeHeld','invUniversalEpic'],['universalEliteBadgeHeld','invUniversalElite'],['multiUniversal','invUniversalLegendary'],['legendaryBadgeChestHeld','invLegendaryBadgeChests'],['multiChests','invLegendaryBadgeChests'],['legendarySelectionChestHeld','invLegendarySelectionChests'],['multiSelectionChests','invLegendarySelectionChests']].forEach(a=>kowInvField(a[0],x[a[1]]));
+ // Keep Star Planner Held fields aligned with Central Inventory in both Test builds.
+ [['ls1','invLegStar1'],['ls2','invLegStar2'],['ls3','invLegStar3'],
+  ['es1','invEpicStar1'],['es2','invEpicStar2'],['es3','invEpicStar3'],
+  ['bs1','invEliteStar1'],['bs2','invEliteStar2'],['bs3','invEliteStar3']]
+  .forEach(a=>kowInvField(a[0],x[a[1]]));
  [100,500,1000,5000,10000,20000,50000].forEach(v=>kowInvField('xp'+v,x['invXp'+v]));
  const sel=document.getElementById('officerSelect');if(sel){const name=sel.options[sel.selectedIndex]?.textContent?.trim()||'';kowInvField('badgeHeld',x.officerBadges?.[name]||0);}
  try{calculate()}catch(e){}
