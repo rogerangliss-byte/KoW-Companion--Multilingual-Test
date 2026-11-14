@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-5',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-6',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -128,6 +128,13 @@ function targetedTranslate(raw,lang){
  'Fully funded':['Entièrement financé','Vollständig finanziert','Completamente finanziato'],
  'S6 · Infantry':['S6 · Infanterie','S6 · Infanterie','S6 · Fanteria'],
  'Officer Stars':['Étoiles d’officier','Offizierssterne','Stelle Ufficiale'],
+ 'Highest actual progress:':['Progression réelle la plus élevée :','Höchster tatsächlicher Fortschritt:','Progressi effettivi più alti:'],
+ 'Convert to ORV (':['Convertir en ORV (','In ORV umwandeln (','Converti in ORV ('],
+ '🟢 READY TO MAX — {value}':['🟢 PRÊT À MAX — {value}','🟢 BEREIT FÜR MAX — {value}','🟢 PRONTO PER MAX — {value}'],
+ '{value}: {value} Officer Badges per Training level · {value} Officer Badges for Training to MAX. Skill progression uses {value} Officer Badges, included in the total badge requirement.':['{value} : {value} insignes d’officier par niveau d’entraînement · {value} insignes pour entraîner jusqu’au MAX. La progression des compétences utilise {value} insignes, inclus dans le besoin total.','{value}: {value} Offiziersabzeichen pro Trainingsstufe · {value} Offiziersabzeichen für Training bis MAX. Für Fertigkeiten werden {value} Abzeichen benötigt, die im Gesamtbedarf enthalten sind.','{value}: {value} Badge Ufficiale per livello di addestramento · {value} Badge per l’addestramento fino a MAX. La progressione delle abilità usa {value} Badge, inclusi nel totale richiesto.'],
+ 'Priority: Development — {value} more Officer Badges are required.':['Priorité : Développement — {value} insignes d’officier supplémentaires sont nécessaires.','Priorität: Entwicklung — weitere {value} Offiziersabzeichen werden benötigt.','Priorità: Sviluppo — servono altri {value} Badge Ufficiale.'],
+ 'Update available: v{value}. Tap Refresh Latest Version to install it.':['Mise à jour disponible : v{value}. Appuyez sur « Actualiser vers la dernière version » pour l’installer.','Update verfügbar: v{value}. Wähle „Auf neueste Version aktualisieren“, um sie zu installieren.','Aggiornamento disponibile: v{value}. Tocca «Aggiorna all’ultima versione» per installarlo.'],
+ 'You are up to date — v{value}.':['Votre application est à jour — v{value}.','Du verwendest die aktuelle Version — v{value}.','L’app è aggiornata — v{value}.'],
  'Legendary Skill Badge progression:':['Progression des badges de compétence légendaires :','Fortschritt bei legendären Fertigkeitsabzeichen:','Progressione Badge abilità Leggendaria:'],
  'Badge Elite Universal Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Badge Elite universali posseduti'],
  'Four primary skills unlock with the Officer’s Current Star Level: 0★ = Skill 1, 1★ = Skills 1–2, 2★ = Skills 1–3, and 3★+ = all four. Each starts at Level 1.':['Les quatre compétences principales se débloquent selon le niveau d’étoiles actuel de l’officier : 0★ = compétence 1, 1★ = compétences 1–2, 2★ = compétences 1–3 et 3★+ = les quatre. Chacune commence au niveau 1.','Die vier Hauptfertigkeiten werden abhängig von der aktuellen Sternstufe des Offiziers freigeschaltet: 0★ = Fertigkeit 1, 1★ = Fertigkeiten 1–2, 2★ = Fertigkeiten 1–3 und 3★+ = alle vier. Jede beginnt auf Stufe 1.','Le quattro abilità principali si sbloccano in base al livello Stelle attuale dell’Ufficiale: 0★ = Abilità 1, 1★ = Abilità 1–2, 2★ = Abilità 1–3 e 3★+ = tutte e quattro. Ognuna inizia al Livello 1.'],
