@@ -3301,10 +3301,10 @@ window.KOW_PLANNER_BRIDGE = {
       source: `Confirmed ${latest.season} ${latest.role || latest.notes || 'Officer'} database cost`
     };
   },
-  releaseForecast: () => {
+  releaseForecast: (releaseStepOverride) => {
     const growth = Number(document.getElementById('forecastGrowth')?.value || 20);
     const base = window.KOW_PLANNER_BRIDGE.latestKnownRelease();
-    const releaseStep = Math.max(1, Number(document.getElementById('forecastRelease')?.value || 1));
+    const releaseStep = Math.max(1, Number(releaseStepOverride ?? document.getElementById('forecastRelease')?.value ?? 1));
     const factor = Math.pow(1 + growth / 100, releaseStep);
     return {
       growth,
