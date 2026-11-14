@@ -2589,49 +2589,66 @@ function calculateMultiPlanner(){
  const rows=[...document.querySelectorAll('#multiPlannerRows tr')];
  if(!rows.length){$('multiPlannerSummary').innerHTML='Add Officers to build an upgrade plan.';return}
  const inv=(typeof kowInvGet==='function'?kowInvGet():{}), heldMap=inv.officerBadges||{};
- let orv=Math.max(0,+$('multiOrv').value||0), universal=Math.max(0,+$('multiUniversal').value||0), chests=Math.max(0,+$('multiChests').value||0);
- let selectionChests=Math.max(0,+($('multiSelectionChests')?.value||0));
+ const baseOrv=Math.max(0,+$('multiOrv').value||0);
+ const baseUniversal=Math.max(0,+$('multiUniversal').value||0);
+ const chests=Math.max(0,+$('multiChests').value||0);
+ const baseSelection=Math.max(0,+($('multiSelectionChests')?.value||0));
  const mode=$('multiChestMode').value;
- if(mode==='badge') universal+=chests; else if(mode==='orv') orv+=chests*latestLegendaryOrvChestRate(); else universal+=chests;
- let fully=0, maxedCount=0, partial=0, unfunded=0, totalNeed=0, totalHeld=0, totalShared=0;
- multiPlanOfficers.forEach((row,pos)=>{
-   const o=officers[row.officerIndex]||officers[0];
-   // The Progress dashboard is the authoritative interpretation of each saved
-   // Officer profile. Use its badgeShort/maxed result in Planner as well.
-   const savedProgress=(typeof savedOfficerProgressData==='function'
-     ? savedOfficerProgressData().find(r=>String(r.name||'').trim()===String(o?.name||'').trim() &&
-       String(r.season||'').trim()===String(o?.season||'').trim())
-     : null);
-   const requestedNeeded=Math.max(0,+row.badgesNeeded||0);
-   const needed=savedProgress ? Math.min(requestedNeeded,Math.max(0,+savedProgress.officerBadgeShort||0)) : requestedNeeded;
-   // Show the player's full matching held quantity even when the Officer is MAXED;
-   // it remains Inventory and is not consumed by this preview.
-   const heldInventory=Math.max(0,+heldMap[String(o?.name||'').trim()]||0);
-   const held=Math.min(needed,heldInventory);
-   const remaining=Math.max(0,needed-held);
-   totalNeed+=needed; totalHeld+=held;
-   let allocated=0;
-   const isOriginal=String(o?.season||'').toLowerCase()==='original';
-   const eligible=o&&o.readinessEligible!==false&&!isOriginal&&+o.orv>0;
-   if(eligible){const fromOrv=Math.min(remaining,Math.floor(orv/o.orv));allocated+=fromOrv;orv-=fromOrv*o.orv;}
-   const fromSelection=selectionChestEligibleOfficer(o)?Math.min(remaining-allocated,selectionChests):0;
-   allocated+=fromSelection;selectionChests-=fromSelection;
-   const fromUniversal=Math.min(remaining-allocated,universal);allocated+=fromUniversal;universal-=fromUniversal;
-   totalShared+=allocated;
-   const covered=held+allocated;
-   const remainingAfterAll=Math.max(0,needed-covered);
-   // Held Officer Badges reduce the requirement, but do not by themselves mean
-   // that shared resources have partially funded the Officer.
-   const status=savedProgress?.maxed?'MAXED':remainingAfterAll===0?'Fully Funded':allocated>0?'Partially Funded':'Shortfall';
-   if(status==='MAXED')maxedCount++;else if(status==='Fully Funded')fully++;else if(status==='Partially Funded')partial++;else unfunded++;
-   const tr=rows[pos];if(tr){
-     tr.querySelector('[data-multi-held]').textContent=fmt(heldInventory);
-     tr.querySelector('[data-multi-allocated]').textContent=fmt(allocated)+' / '+fmt(remaining);
-     tr.querySelector('[data-multi-status]').textContent=status;
-   }
+ const chestRate=latestLegendaryOrvChestRate();
+ const progressRows=typeof savedOfficerProgressData==='function'?savedOfficerProgressData():[];
+ function simulate(chestsAsOrv){
+   let orv=baseOrv+(chestsAsOrv?chests*chestRate:0);
+   let universal=baseUniversal+(chestsAsOrv?0:chests);
+   let selectionChests=baseSelection;
+   let fully=0,maxedCount=0,partial=0,unfunded=0,totalNeed=0,totalHeld=0,totalShared=0;
+   const allocations=[];
+   multiPlanOfficers.forEach((row,pos)=>{
+     const o=officers[row.officerIndex]||officers[0];
+     const savedProgress=progressRows.find(r=>String(r.name||'').trim()===String(o?.name||'').trim()&&String(r.season||'').trim()===String(o?.season||'').trim())||null;
+     const requestedNeeded=Math.max(0,+row.badgesNeeded||0);
+     const needed=savedProgress?Math.min(requestedNeeded,Math.max(0,+savedProgress.officerBadgeShort||0)):requestedNeeded;
+     const heldInventory=Math.max(0,+heldMap[String(o?.name||'').trim()]||0);
+     const held=Math.min(needed,heldInventory);
+     const remaining=Math.max(0,needed-held);
+     totalNeed+=needed;totalHeld+=held;
+     let allocated=0;
+     const isOriginal=String(o?.season||'').toLowerCase()==='original';
+     const eligible=o&&o.readinessEligible!==false&&!isOriginal&&+o.orv>0;
+     // Selection Chests are Officer-specific and always take priority.
+     const fromSelection=selectionChestEligibleOfficer(o)?Math.min(remaining,selectionChests):0;
+     allocated+=fromSelection;selectionChests-=fromSelection;
+     // ORV funds eligible Officers; Universal Badges are preserved for Officers
+     // who cannot use ORV. Remaining Universal Badges cover any eligible shortfall.
+     const fromOrv=eligible?Math.min(remaining-allocated,Math.floor(orv/o.orv)):0;
+     allocated+=fromOrv;if(eligible)orv-=fromOrv*o.orv;
+     const fromUniversal=Math.min(remaining-allocated,universal);
+     allocated+=fromUniversal;universal-=fromUniversal;
+     totalShared+=allocated;
+     const remainingAfterAll=Math.max(0,needed-held-allocated);
+     const status=savedProgress?.maxed?'MAXED':remainingAfterAll===0?'Fully Funded':allocated>0?'Partially Funded':'Shortfall';
+     if(status==='MAXED')maxedCount++;else if(status==='Fully Funded')fully++;else if(status==='Partially Funded')partial++;else unfunded++;
+     allocations.push({heldInventory,allocated,remaining,status});
+   });
+   return {orv,universal,selectionChests,fully,maxedCount,partial,unfunded,totalNeed,totalHeld,totalShared,allocations};
+ }
+ let chosen,strategy;
+ if(mode==='badge'){chosen=simulate(false);strategy='Legendary Officer Badge Chests used as Universal Badges';}
+ else if(mode==='orv'){chosen=simulate(true);strategy='Legendary Officer Badge Chests converted to ORV';}
+ else{
+   const asBadges=simulate(false),asOrv=simulate(true);
+   // Compare actual whole-badge coverage. On a tie, retain the chests as badges
+   // and preserve the player's existing ORV.
+   if(asOrv.totalShared>asBadges.totalShared){chosen=asOrv;strategy='Optimised: convert Badge Chests to ORV';}
+   else{chosen=asBadges;strategy='Optimised: use Badge Chests as Universal Badges';}
+ }
+ chosen.allocations.forEach((a,pos)=>{
+   const tr=rows[pos];if(!tr)return;
+   tr.querySelector('[data-multi-held]').textContent=fmt(a.heldInventory);
+   tr.querySelector('[data-multi-allocated]').textContent=fmt(a.allocated)+' / '+fmt(a.remaining);
+   tr.querySelector('[data-multi-status]').textContent=a.status;
  });
- const totalCovered=totalHeld+totalShared;
- $('multiPlannerSummary').innerHTML=`<b>Plan result:</b> ${maxedCount} MAXED · ${fully} fully funded · ${partial} partially funded · ${unfunded} shortfall<br><span class="muted">${fmt(totalCovered)} of ${fmt(totalNeed)} required badges covered: ${fmt(totalHeld)} Individual Officer Badges held + ${fmt(totalShared)} shared badges allocated. ${fmt(Math.max(0,totalNeed-totalCovered))} badges remain unfunded. Remaining shared resources: ${fmt(orv)} ORV · ${fmt(universal)} Universal Badges · ${fmt(selectionChests)} Selection Chests.</span>`;
+ const totalCovered=chosen.totalHeld+chosen.totalShared;
+ $('multiPlannerSummary').innerHTML=`<b>Plan result:</b> ${chosen.maxedCount} MAXED · ${chosen.fully} fully funded · ${chosen.partial} partially funded · ${chosen.unfunded} shortfall<br><b>${strategy}</b><br><span class="muted">${fmt(totalCovered)} of ${fmt(chosen.totalNeed)} required badge equivalents covered: ${fmt(chosen.totalHeld)} Individual Officer Badges held + ${fmt(chosen.totalShared)} shared badges allocated. ${fmt(Math.max(0,chosen.totalNeed-totalCovered))} badge equivalents remain unfunded. Remaining shared resources: ${fmt(chosen.orv)} ORV · ${fmt(chosen.universal)} Universal Badges · ${fmt(chosen.selectionChests)} Selection Chests.</span>`;
 }
 function getMultiPlans(){try{return JSON.parse(localStorage.getItem('kow_multi_plans_v430')||'{}')}catch{return {}}}
 function refreshMultiSavedPlans(selectName=''){
@@ -2763,38 +2780,21 @@ function updateSmartDashboard(){
 
 function updateFutureOfficerForecast(){
  if(!$('forecastRelease'))return;
- const steps=Math.max(1,+$('forecastRelease').value||1);
- const growth=Math.max(0,+$('forecastGrowth').value||20)/100;
+ // Use the same latest-release baseline and compounded calculation as every planner.
+ const bridge=window.KOW_PLANNER_BRIDGE;
+ if(!bridge||typeof bridge.releaseForecast!=='function')return;
+ const f=bridge.releaseForecast();
  const badges=Math.max(0,+$('forecastBadges').value||0);
  const starValue=Math.max(0,+$('forecastStarValue').value||0);
-
- // Confirmed S8 Rally / Garrison baseline: 720 ORV/badge and 360 SRV/Exclusive Star.
- // Forecast steps begin with the next release after this confirmed baseline.
- const baseOrv=720, baseSrv=360;
- const orvExact=baseOrv*Math.pow(1+growth,steps);
- const srvExact=baseSrv*Math.pow(1+growth,steps);
-
- // Round to whole vouchers for a practical planning figure.
- const orv=Math.round(orvExact);
- const srv=Math.round(srvExact);
-
- // One Exclusive Star contributes 110 Officer Star value.
  const exclusiveStars=Math.ceil(starValue/110);
- const totalOrv=badges*orv;
- const totalSrv=exclusiveStars*srv;
-
- $('forecastOrvPerBadge').textContent=fmt(orv);
- $('forecastSrvPerStar').textContent=fmt(srv);
+ const totalOrv=badges*f.orvPerBadge;
+ const totalSrv=exclusiveStars*f.srvPerStar;
+ $('forecastOrvPerBadge').textContent=fmt(f.orvPerBadge);
+ $('forecastSrvPerStar').textContent=fmt(f.srvPerStar);
  $('forecastTotalOrv').textContent=fmt(totalOrv);
  $('forecastTotalSrv').textContent=fmt(totalSrv);
-
- const labels={
-   1:'January — S8 Infantry',
-   2:'April — S8 Tanks',
-   3:'July — S8 Tank Destroyers',
-   4:'October — S9 Rally / Garrison'
- };
- $('forecastNote').innerHTML=`<b>${labels[steps]}</b><br>Test planning estimate using ${($('forecastGrowth').value||20)}% growth per future Officer release from the 720 ORV / 360 SRV forecast starting cost. For ${fmt(badges)} Officer Badges (including 690 Officer Badges for Skills within the 1,600 total) and ${fmt(starValue)} Star value (${fmt(exclusiveStars)} Exclusive Stars), plan for approximately <b>${fmt(totalOrv)} ORV</b> and <b>${fmt(totalSrv)} SRV</b>. Forecast only — replace with confirmed costs when released.`;
+ const label=$('forecastRelease').options[$('forecastRelease').selectedIndex]?.textContent||'Future Officer';
+ $('forecastNote').innerHTML=`<b>${label}</b><br>Test planning estimate using ${f.growth}% growth per future Officer release from <b>${f.source}</b>. For ${fmt(badges)} Officer Badges (including 690 Officer Badges for Skills within the 1,600 total) and ${fmt(starValue)} Star value (${fmt(exclusiveStars)} Exclusive Stars), plan for approximately <b>${fmt(totalOrv)} ORV</b> and <b>${fmt(totalSrv)} SRV</b>. Forecast only — replace with confirmed costs when released.`;
 }
 async function init(){
  await loadOfficers();updateLegendaryChestRateLabels();renderOfficerFilters();restoreOfficerFilterState();renderOfficerOptions(getUiState().officerName||undefined);
