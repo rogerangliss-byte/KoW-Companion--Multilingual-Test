@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-6',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-7',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -87,7 +87,7 @@ function compileTemplate(source){
  const parts=source.split(/(\{[a-z]+\})/g);
  let count=0;
  const pattern=parts.map(part=>{
-  if(/^\{[a-z]+\}$/.test(part)){count++;return'([\s\S]*?)'}
+  if(/^\{[a-z]+\}$/.test(part)){count++;return'([\\s\\S]*?)'}
   return escRx(part);
  }).join('');
  return{count,rx:new RegExp('^'+pattern+'$')};
