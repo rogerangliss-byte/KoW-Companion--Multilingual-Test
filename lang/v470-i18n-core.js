@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-4',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-5',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -106,7 +106,65 @@ function templateTranslate(source,lang){
 function interpolate(value,params){return String(value).replace(/\{([A-Za-z0-9_]+)\}/g,(m,k)=>Object.prototype.hasOwnProperty.call(params||{},k)?String(params[k]):m)}
 function t(key,params,lang){const l=norm(lang||active),entry=byId[key]||bySource[key];return entry?interpolate(entry[l]||entry.en,params||{}):interpolate(String(key),params||{})}
 function glossaryTranslate(source,lang){let out=source;const d=glossary[lang]||{};for(const phrase of glossaryKeys[lang]||[]){if(!out.includes(phrase))continue;try{out=out.replace(new RegExp('(^|[^A-Za-zÀ-ÿ0-9])'+escRx(phrase)+'(?=$|[^A-Za-zÀ-ÿ0-9])','gu'),(m,p)=>p+d[phrase])}catch(_){}}return out}
-function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);return v!==raw?v:glossaryTranslate(raw,l)}
+function targetedTranslate(raw,lang){
+ const exact={
+ 'Officer Badges available:':['Insignes d’officier disponibles :','Verfügbare Offiziersabzeichen:','Badge Ufficiale disponibili:'],
+ 'Shared Officer Badges held:':['Insignes d’officier partagés détenus :','Gemeinsame Offiziersabzeichen vorhanden:','Badge Ufficiale condivisi posseduti:'],
+ '· ORV badge equivalents:':['· Équivalents d’insignes ORV :','· ORV-Abzeichenäquivalente:','· Equivalenti Badge da ORV:'],
+ '· Selection Chests held:':['· Coffres de sélection détenus :','· Auswahltruhen vorhanden:','· Casse selezione possedute:'],
+ '· ORV remainder:':['· Solde ORV :','· ORV-Rest:','· ORV residui:'],
+ '· Stars held:':['· Étoiles détenues :','· Sterne vorhanden:','· Stelle possedute:'],
+ 'Projected Officers':['Officiers prévus','Geplante Offiziere','Ufficiali previsti'],
+ 'Target year':['Année cible','Zieljahr','Anno obiettivo'],
+ '📊 Calculate Target':['📊 Calculer l’objectif','📊 Ziel berechnen','📊 Calcola obiettivo'],
+ 'Scenario saved:':['Scénario enregistré :','Szenario gespeichert:','Scenario salvato:'],
+ 'Priority target':['Objectif prioritaire','Prioritätsziel','Obiettivo prioritario'],
+ 'Optimised: convert Badge Chests to ORV':['Optimisé : convertir les coffres d’insignes en ORV','Optimiert: Abzeichenkisten in ORV umwandeln','Ottimizzato: converti le casse Badge in ORV'],
+ 'Delete Saved Plan':['Supprimer le plan enregistré','Gespeicherten Plan löschen','Elimina il piano salvato'],
+ 'e.g. Next Season':['p. ex. prochaine saison','z. B. nächste Saison','es. prossima stagione'],
+ '🧠 Open Advanced Planner':['🧠 Ouvrir le planificateur avancé','🧠 Erweiterten Planer öffnen','🧠 Apri Pianificatore avanzato'],
+ '📘 Level 70 XP':['📘 XP niveau 70','📘 XP für Stufe 70','📘 XP livello 70'],
+ '🏆 MAX Officer':['🏆 Officier MAX','🏆 MAX-Offizier','🏆 Ufficiale MAX'],
+ 'Fully funded':['Entièrement financé','Vollständig finanziert','Completamente finanziato'],
+ 'S6 · Infantry':['S6 · Infanterie','S6 · Infanterie','S6 · Fanteria'],
+ 'Officer Stars':['Étoiles d’officier','Offizierssterne','Stelle Ufficiale'],
+ 'Legendary Skill Badge progression:':['Progression des badges de compétence légendaires :','Fortschritt bei legendären Fertigkeitsabzeichen:','Progressione Badge abilità Leggendaria:'],
+ 'Badge Elite Universal Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Badge Elite universali posseduti'],
+ 'Four primary skills unlock with the Officer’s Current Star Level: 0★ = Skill 1, 1★ = Skills 1–2, 2★ = Skills 1–3, and 3★+ = all four. Each starts at Level 1.':['Les quatre compétences principales se débloquent selon le niveau d’étoiles actuel de l’officier : 0★ = compétence 1, 1★ = compétences 1–2, 2★ = compétences 1–3 et 3★+ = les quatre. Chacune commence au niveau 1.','Die vier Hauptfertigkeiten werden abhängig von der aktuellen Sternstufe des Offiziers freigeschaltet: 0★ = Fertigkeit 1, 1★ = Fertigkeiten 1–2, 2★ = Fertigkeiten 1–3 und 3★+ = alle vier. Jede beginnt auf Stufe 1.','Le quattro abilità principali si sbloccano in base al livello Stelle attuale dell’Ufficiale: 0★ = Abilità 1, 1★ = Abilità 1–2, 2★ = Abilità 1–3 e 3★+ = tutte e quattro. Ognuna inizia al Livello 1.'],
+ '690 Officer Badges total. The fifth skill unlocks when all four primary skills reach Level 10.':['690 insignes d’officier au total. La cinquième compétence se débloque lorsque les quatre compétences principales atteignent le niveau 10.','Insgesamt 690 Offiziersabzeichen. Die fünfte Fertigkeit wird freigeschaltet, sobald alle vier Hauptfertigkeiten Stufe 10 erreicht haben.','690 Badge Ufficiale in totale. La quinta abilità si sblocca quando tutte e quattro le abilità principali raggiungono il livello 10.'],
+ 'Legendary: 5 Officer Badges per Training level · 900 Officer Badges for Training to MAX. Skill progression uses 690 Officer Badges, included in the total badge requirement.':['Légendaire : 5 insignes d’officier par niveau d’entraînement · 900 insignes pour entraîner jusqu’au MAX. La progression des compétences utilise 690 insignes, inclus dans le besoin total.','Legendär: 5 Offiziersabzeichen pro Trainingsstufe · 900 Offiziersabzeichen für Training bis MAX. Für Fertigkeiten werden 690 Abzeichen benötigt, die im Gesamtbedarf enthalten sind.','Leggendario: 5 Badge Ufficiale per livello di addestramento · 900 Badge per l’addestramento fino a MAX. La progressione delle abilità usa 690 Badge, inclusi nel totale richiesto.'],
+ 'uses Legendary Star I / II / III. Preparation Vouchers (SRV) are available only for eligible Legendary seasonal Officers from S2 onward. Original Legendary Officers cannot use SRV.':['utilise les étoiles légendaires I / II / III. Les bons de préparation (SRV) sont réservés aux officiers saisonniers légendaires admissibles à partir de S2. Les officiers légendaires d’origine ne peuvent pas utiliser les SRV.','verwendet Legendär-Stern I / II / III. Vorbereitungs-Gutscheine (SRV) sind nur für berechtigte saisonale legendäre Offiziere ab S2 verfügbar. Ursprüngliche legendäre Offiziere können keine SRV verwenden.','utilizza Stelle Leggendarie I / II / III. I Voucher di preparazione (SRV) sono disponibili solo per gli Ufficiali Leggendari stagionali idonei da S2 in poi. Gli Ufficiali Leggendari originali non possono usare SRV.'],
+ '. The saved inventory is then used throughout the app. Items are displayed in the game list order defined by the Inventory master list.':['. L’inventaire enregistré est ensuite utilisé dans toute l’application. Les éléments suivent l’ordre de la liste de référence du jeu.','. Das gespeicherte Inventar wird anschließend in der gesamten App verwendet. Die Einträge folgen der Reihenfolge der Inventar-Stammliste im Spiel.','. L’inventario salvato viene quindi utilizzato in tutta l’app. Gli elementi seguono l’ordine dell’elenco principale del gioco.'],
+ '. Every Officer is listed even when the player currently holds 0 Badges. Each value is stored separately for that Officer and is used throughout the app.':['. Tous les officiers sont listés, même si le joueur ne possède actuellement aucun insigne. Chaque quantité est enregistrée séparément pour l’officier concerné et utilisée dans toute l’application.','. Jeder Offizier wird aufgeführt, auch wenn der Spieler derzeit 0 Abzeichen besitzt. Jeder Wert wird separat für den jeweiligen Offizier gespeichert und in der gesamten App verwendet.','. Ogni Ufficiale è elencato anche se il giocatore possiede 0 Badge. Ogni valore viene memorizzato separatamente per quell’Ufficiale e utilizzato in tutta l’app.']
+ };
+ const idx=lang==='fr'?0:lang==='de'?1:2;
+ if(exact[raw])return exact[raw][idx];
+ const rules=[
+ [/^Need ([\d,. ]+) more Officer Badges$/,['Il manque encore $1 insignes d’officier','Es fehlen noch $1 Offiziersabzeichen','Servono ancora $1 Badge Ufficiale']],
+ [/^Need ([\d,. ]+) more Officer Star value$/,['Il manque encore $1 de valeur d’étoiles d’officier','Es fehlen noch $1 Offiziers-Sternwert','Mancano ancora $1 punti valore Stelle Ufficiale']],
+ [/^([\d,. ]+) XP still required$/,['Il manque encore $1 XP','Es fehlen noch $1 XP','Mancano ancora $1 XP']],
+ [/^🟠 PARTIALLY READY — (.+)$/,['🟠 PARTIELLEMENT PRÊT — $1','🟠 TEILWEISE BEREIT — $1','🟠 PARZIALMENTE PRONTO — $1']],
+ [/^S6 Veronica — ([\d, ]+) Badges \+ 1 more$/,['S6 Veronica — $1 insignes + 1 autre','S6 Veronica — $1 Abzeichen + 1 weiteres','S6 Veronica — $1 Badge + 1 altro']],
+ [/^Officer Badges: SHORT ([\d,]+)$/,['Insignes d’officier : MANQUE $1','Offiziersabzeichen: FEHLEN $1','Badge Ufficiale: MANCANO $1']],
+ [/^Stars: SHORT ([\d,]+)$/,['Étoiles : MANQUE $1','Sterne: FEHLEN $1','Stelle: MANCANO $1']],
+ [/^XP: SHORT ([\d,]+)$/,['XP : MANQUE $1','XP: FEHLEN $1','XP: MANCANO $1']],
+ [/^Overall readiness \(average\): ([\d,.]+)%$/,['Préparation globale (moyenne) : $1%','Gesamtbereitschaft (Durchschnitt): $1%','Preparazione complessiva (media): $1%']],
+ [/^Officer Badges — ([\d,.]+)%$/,['Insignes d’officier — $1%','Offiziersabzeichen — $1%','Badge Ufficiale — $1%']],
+ [/^Limiting resource: (Officer Badges|Badges|Stars|XP) — ([\d,.]+)%$/,['Ressource limitante : $1 — $2%','Limitierende Ressource: $1 — $2%','Risorsa limitante: $1 — $2%']],
+ [/^Last updated (.+)$/,['Dernière mise à jour : $1','Zuletzt aktualisiert: $1','Ultimo aggiornamento: $1']],
+ [/^([\d,]+) universal \+ ([\d,]+) chests$/,['$1 universels + $2 coffres','$1 universelle + $2 Truhen','$1 universali + $2 casse']],
+ [/^([\d,]+) Officer badge entries saved\.$/,['$1 entrées de badges d’officier enregistrées.','$1 Offiziersabzeichen-Einträge gespeichert.','$1 voci Badge Ufficiale salvate.']],
+ [/^Set Skill (\d+) to Level (\d+)$/,['Définir la compétence $1 au niveau $2','Fertigkeit $1 auf Stufe $2 setzen','Imposta abilità $1 al livello $2']],
+ [/^Test planning estimate using ([\d.]+)% growth per future Officer release from$/,['Estimation de planification Test avec une hausse de $1% par future sortie d’officier à partir de','Test-Planungsschätzung mit $1% Steigerung pro zukünftiger Offiziersveröffentlichung ausgehend von','Stima di pianificazione Test con un aumento del $1% per ogni futura uscita di Ufficiali a partire da']],
+ [/^Forecast only — replace with confirmed costs when released\.$/,['Prévision uniquement — remplacez cette estimation par les coûts confirmés lors de leur publication.','Nur eine Prognose — nach Veröffentlichung durch bestätigte Kosten ersetzen.','Solo previsione — sostituisci con i costi confermati al rilascio.']],
+ [/^Forecast baseline follows the latest confirmed release in the Officer database\. The selected growth rate is compounded for each future Officer release; all future values remain estimates until actual costs are published\.$/,['La base de prévision suit la dernière sortie confirmée dans la base de données des officiers. Le taux de croissance choisi est composé à chaque future sortie ; toutes les valeurs restent estimatives jusqu’à la publication des coûts réels.','Die Prognosebasis folgt der letzten bestätigten Veröffentlichung in der Offiziersdatenbank. Die gewählte Wachstumsrate wird für jede zukünftige Veröffentlichung aufgezinst; alle Werte bleiben Schätzungen, bis die tatsächlichen Kosten veröffentlicht werden.','La base della previsione segue l’ultima uscita confermata nel database degli Ufficiali. Il tasso di crescita selezionato viene composto per ogni futura uscita; tutti i valori restano stime fino alla pubblicazione dei costi effettivi.']],
+ [/^(\d+) officers shown · Database validation passed\.$/,['$1 officiers affichés · Validation de la base de données réussie.','$1 Offiziere angezeigt · Datenbankprüfung bestanden.','$1 Ufficiali visualizzati · Convalida del database superata.']]
+ ];
+ for(const [rx,values] of rules){const m=rx.exec(raw);if(m)return raw.replace(rx,values[idx]);}
+ return raw;
+}
+
+function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);if(v!==raw)return v;const targeted=targetedTranslate(raw,l);return targeted!==raw?targeted:glossaryTranslate(raw,l)}
 function excluded(node){const p=node&&node.parentElement;if(!p||/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|CODE|PRE)$/i.test(p.tagName))return true;return!!p.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage')}
 function translateTextNode(node){if(!node||node.nodeType!==3||excluded(node))return;const current=node.nodeValue||'';if(!textBase.has(node)||(textLast.has(node)&&current!==textLast.get(node)))textBase.set(node,current);const source=textBase.get(node),lead=(source.match(/^\s*/)||[''])[0],trail=(source.match(/\s*$/)||[''])[0],next=active==='en'?source.trim():translateString(source.trim(),active),value=lead+next+trail;textLast.set(node,value);if(current!==value)node.nodeValue=value}
 function translateAttributes(root){const els=[];if(root.nodeType===1)els.push(root);if(root.querySelectorAll)els.push(...root.querySelectorAll('[placeholder],[title],[aria-label],[alt]'));for(const el of els){if(el.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage'))continue;let base=attrBase.get(el),last=attrLast.get(el);if(!base){base={};attrBase.set(el,base)}if(!last){last={};attrLast.set(el,last)}for(const a of ['placeholder','title','aria-label','alt'])if(el.hasAttribute(a)){const now=el.getAttribute(a);if(!(a in base)||(a in last&&now!==last[a]))base[a]=now;const next=active==='en'?base[a]:translateString(base[a],active);last[a]=next;if(now!==next)el.setAttribute(a,next)}}}
