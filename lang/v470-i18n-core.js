@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-7',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-8',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -128,6 +128,16 @@ function targetedTranslate(raw,lang){
  'Fully funded':['Entièrement financé','Vollständig finanziert','Completamente finanziato'],
  'S6 · Infantry':['S6 · Infanterie','S6 · Infanterie','S6 · Fanteria'],
  'Officer Stars':['Étoiles d’officier','Offizierssterne','Stelle Ufficiale'],
+ 'Application language':['Langue de l’application','App-Sprache','Lingua dell’app'],
+ '❓ Help & Instructions':['❓ Aide et instructions','❓ Hilfe und Anleitungen','❓ Aiuto e istruzioni'],
+ '🧠 Advanced Multi-Officer Planning':['🧠 Planification avancée de plusieurs officiers','🧠 Erweiterte Mehr-Offiziersplanung','🧠 Pianificazione avanzata multi-Ufficiale'],
+ 'October — S9 Rally / Garrison':['Octobre — S9 Ralliement / Garnison','Oktober — S9 Rallye / Garnison','Ottobre — S9 Raduno / Guarnigione'],
+ 'November — New Ships':['Novembre — Nouveaux navires','November — Neue Schiffe','Novembre — Nuove navi'],
+ 'December — Guns: Rally / Garrison · Jets: Bomber':['Décembre — Canons : Ralliement / Garnison · Jets : Bombardier','Dezember — Geschütze: Rallye / Garnison · Jets: Bomber','Dicembre — Cannoni: Raduno / Guarnigione · Jet: Bombardiere'],
+ 'November • CURRENT':['Novembre • ACTUEL','November • AKTUELL','Novembre • ATTUALE'],
+ 'December • NEXT':['Décembre • SUIVANT','Dezember • ALS NÄCHSTES','Dicembre • PROSSIMO'],
+ 'Confirmed S8 Rally / Garrison cost':['Coût confirmé S8 Ralliement / Garnison','Bestätigte S8-Kosten Rallye / Garnison','Costo confermato S8 Raduno / Guarnigione'],
+ '{value}: {value} Next: {value} — {value}':['{value} : {value} Suivant : {value} — {value}','{value}: {value} Nächster Schritt: {value} — {value}','{value}: {value} Prossimo: {value} — {value}']
  'Highest actual progress:':['Progression réelle la plus élevée :','Höchster tatsächlicher Fortschritt:','Progressi effettivi più alti:'],
  'Convert to ORV (':['Convertir en ORV (','In ORV umwandeln (','Converti in ORV ('],
  '🟢 READY TO MAX — {value}':['🟢 PRÊT À MAX — {value}','🟢 BEREIT FÜR MAX — {value}','🟢 PRONTO PER MAX — {value}'],
