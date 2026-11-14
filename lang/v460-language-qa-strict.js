@@ -145,7 +145,7 @@ function build(){
  setLang(original);
  return{
    generated_at:new Date().toISOString(),
-   app_version:'4.7.0 STABLE English Truth',
+   app_version:'4.7.0 Multilingual Test',
    qa_version:'Language QA21 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
    read_only_guarantee:{invokes_application_functions:false,executes_dynamic_workflows:false,inspects_dynamic_text_sources:true,changes_form_values:false,clicks_buttons:false,dispatches_events:false,mutation_observer:'presentation-text-only'},
@@ -154,7 +154,7 @@ function build(){
    results
  };
 }
-function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA21-v4.7.0-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function download(rep){const b=new Blob([JSON.stringify(rep,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`KoW-Language-QA21-Multilingual-Test-v4.7.0-${new Date()}.toISOString().replace(/[:.]/g,'-')}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function render(rep){
  let p=document.getElementById('languageQaPanel');
  if(!p)return;
