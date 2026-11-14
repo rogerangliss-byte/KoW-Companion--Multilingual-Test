@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-13',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-14',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -158,60 +158,11 @@ function targetedTranslate(raw,lang){
  if(exact[raw])return exact[raw][idx];
  // Translate fragments as well as whole sentences. The live UI often splits dynamic
  // explanations across several text nodes (for example, <strong>resource values</strong>).
- const fragments={
-  'Delete Saved Plan':['Supprimer le plan enregistré','Gespeicherten Plan löschen','Elimina il piano salvato'],
-  'Delete ':['Supprimer ','Löschen ','Elimina '],
-  'Saved Plan':['Plan enregistré','Gespeicherter Plan','Piano salvato'],
-  'Officer Badges':['insignes d’officier','Offiziersabzeichen','distintivi ufficiali'],
-  'Universal Badges':['insignes universels','universelle Abzeichen','distintivi universali'],
-  'Selection Chests':['coffres de sélection','Auswahltruhen','casse selezione'],
-  'Exclusive Stars':['étoiles exclusives','Exklusivsterne','Stelle esclusive'],
-  'projected Officers':['officiers prévus','geplante Offiziere','Ufficiali previsti'],
-  'projected Officer':['officier prévu','geplanter Offizier','Ufficiale previsto'],
-  'Convert to ORV (720 each)':['Convertir en ORV (720 chacun)','In ORV umwandeln (je 720)','Converti in ORV (720 ciascuno)'],
-  'Application language':['Langue de l’application','App-Sprache','Lingua dell’app'],
-  'Forecast only — replace with confirmed costs when released.':['Prévision uniquement — remplacez-la par les coûts confirmés lors de leur publication.','Nur eine Prognose — nach Veröffentlichung durch bestätigte Kosten ersetzen.','Solo previsione — sostituisci con i costi confermati al rilascio.'],
-  'MAX-Fertigkeiten: 690 Officer Badges':['Compétences MAX : 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Abilità MAX: 690 distintivi ufficiali'],
-  'Abilità MAX: 690 Officer Badges':['Competenze MAX: 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Abilità MAX: 690 distintivi ufficiali'],
-  'Compétences MAX: 690 Officer Badges':['Compétences MAX : 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Competenze MAX: 690 distintivi ufficiali'],
-  'S6 Veronica — 1,600 Badges + 1 more':['S6 Veronica — 1 600 insignes + 1 supplémentaire','S6 Veronica — 1.600 Abzeichen + 1 weiteres','S6 Veronica — 1.600 distintivi + 1 altro'],
-  'Every Officer is listed even when the player currently holds 0 Badges. Each value is stored separately for that Officer and is used throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
-  'Every Officer is listed even when the player currently holds 0 Abzeichen. Each value is stored separately for that Officer and is verwendet throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
-  'Every Officer is listed even when the player currently holds 0 Badge. Each value is stored separately for that Officer and is utilizzati throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
-  'Individual Officer Badges held':['insignes individuels détenus','vorhandene individuelle Offiziersabzeichen','distintivi ufficiali individuali posseduti'],
-  'shared Badges allocated':['insignes partagés affectés','zugewiesene gemeinsame Abzeichen','distintivi condivisi assegnati'],
-  'required badge equivalents covered':['équivalents d’insignes requis couverts','benötigte Abzeichenäquivalente abgedeckt','equivalenti distintivi richiesti coperti'],
-  'badge equivalents remain unfunded':['équivalents d’insignes restent à financer','Abzeichenäquivalente sind noch ungedeckt','equivalenti distintivi restano da finanziare'],
-  'Remaining shared resources:':['Ressources partagées restantes :','Verbleibende gemeinsame Ressourcen:','Risorse condivise rimanenti:'],
-  'uses Leggendario Star I / II / III. Buoni preparazione stella (SRV) are available only for eligible Leggendario seasonal Officers from S2 onward. Original Leggendario Officers cannot use SRV.':['utilise les étoiles légendaires I / II / III. Les bons de préparation (SRV) sont réservés aux officiers saisonniers légendaires admissibles à partir de S2. Les officiers légendaires d’origine ne peuvent pas utiliser les SRV.','verwendet Legendär-Stern I / II / III. Vorbereitungs-Gutscheine (SRV) sind nur für berechtigte saisonale legendäre Offiziere ab S2 verfügbar. Ursprüngliche legendäre Offiziere können keine SRV verwenden.','utilizza Stelle Leggendarie I / II / III. I Voucher di preparazione (SRV) sono disponibili solo per gli Ufficiali Leggendari stagionali idonei da S2 in poi. Gli Ufficiali Leggendari originali non possono usare SRV.'],
-  'Badge Elite Universal Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi Elite universali posseduti'],
-  '⬇ Esporta backup app':['⬇ Esporta backup dell’app','⬇ App-Backup exportieren','⬇ Esporta backup dell’app'],
-  '⬆ Ripristina backup app':['⬆ Ripristina backup dell’app','⬆ App-Backup wiederherstellen','⬆ Ripristina backup dell’app'],
-  'Badges':['insignes','Abzeichen','distintivi'],
-  'Badge':['insigne','Abzeichen','distintivo'],
-  ' + 1 more':[' + 1 supplémentaire',' + 1 weiteres',' + 1 altro'],
-  'MAX Skills':['Compétences MAX','MAX-Fertigkeiten','Abilità MAX'],
-  'Planning Scenarios':['Scénarios de planification','Planungsszenarien','Scenari di pianificazione'],
-  'Saved Planning Scenarios':['Scénarios de planification enregistrés','Gespeicherte Planungsszenarien','Scenari di pianificazione salvati'],
-  'Every Officer is listed even when the player currently holds 0 Badges.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne.','Jeder Offizier wird aufgeführt, auch wenn der Spieler keine Abzeichen besitzt.','Ogni Ufficiale è elencato anche se il giocatore non possiede distintivi.'],
-  'Each value is stored separately for that Officer and is used throughout the app.':['Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni valore viene memorizzato separatamente per quell’Ufficiale e utilizzato in tutta l’app.'],
-  'Universal Elite Badges Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi universali élite posseduti'],
-  'uses Legendary Star I / II / III.':['utilise les étoiles légendaires I / II / III.','verwendet Legendär-Stern I / II / III.','utilizza le Stelle Leggendarie I / II / III.'],
-  'Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers from S2 onward.':['Les bons de préparation (SRV) sont réservés aux officiers saisonniers légendaires admissibles à partir de S2.','Vorbereitungs-Gutscheine (SRV) sind nur für berechtigte saisonale legendäre Offiziere ab S2 verfügbar.','I Voucher di preparazione (SRV) sono disponibili solo per gli Ufficiali Leggendari stagionali idonei da S2 in poi.'],
-  'Original Legendary Officers cannot use SRV.':['Les officiers légendaires d’origine ne peuvent pas utiliser les SRV.','Ursprüngliche legendäre Offiziere können keine SRV verwenden.','Gli Ufficiali Leggendari originali non possono usare SRV.'],
-  '⬇ Export app backup':['⬇ Exporter la sauvegarde de l’application','⬇ App-Backup exportieren','⬇ Esporta il backup dell’app'],
-  '⬆ Restore app backup':['⬆ Restaurer la sauvegarde de l’application','⬆ App-Backup wiederherstellen','⬆ Ripristina il backup dell’app']
- };
- let fragmentResult=raw;
- for(const [source,values] of Object.entries(fragments)){
-  if(fragmentResult.includes(source))fragmentResult=fragmentResult.split(source).join(values[idx]);
- }
- if(fragmentResult!==raw)return fragmentResult;
  const rules=[
  [/^\([\d,]+ ORV \/ [\d,]+ SRV\)\. For ([\d,]+) Officer Badges \(including the ([\d,]+) Officer Badges for Skills within the ([\d,]+) total\) and ([\d,]+) Star value \(([\d,]+) Exclusive Stars\), plan for approximately$/,[
-  '($1 ORV / $2 SRV). Pour $3 insignes d’officier (dont $4 pour les compétences dans le total de $5) et une valeur de $6 étoiles ($7 étoiles exclusives), prévoyez environ',
-  '($1 ORV / $2 SRV). Für $3 Offiziersabzeichen (davon $4 für Fertigkeiten innerhalb der Gesamtzahl von $5) und einen Sternwert von $6 ($7 Exklusivsterne) werden ungefähr benötigt',
-  '($1 ORV / $2 SRV). Per $3 distintivi ufficiali (di cui $4 per le abilità nel totale di $5) e un valore Stelle di $6 ($7 Stelle esclusive), pianifica circa'
+  '($1 ORV / $2 SRV). Pour $1 insignes d’officier (dont $2 pour les compétences dans le total de $3) et une valeur de $4 étoiles ($5 étoiles exclusives), prévoyez environ',
+  '($1 ORV / $2 SRV). Für $1 Offiziersabzeichen (davon $2 für Fertigkeiten innerhalb der Gesamtzahl von $3) und einen Sternwert von $4 ($5 Exklusivsterne) werden ungefähr benötigt',
+  '($1 ORV / $2 SRV). Per $1 distintivi ufficiali (di cui $2 per le abilità nel totale di $3) e un valore Stelle di $4 ($5 Stelle esclusive), pianifica circa'
  ]],
  [/^Need ([\d,. ]+) more Officer Badges$/,['Il manque encore $1 insignes d’officier','Es fehlen noch $1 Offiziersabzeichen','Servono ancora $1 Badge Ufficiale']],
  [/^Need ([\d,. ]+) more Officer Star value$/,['Il manque encore $1 de valeur d’étoiles d’officier','Es fehlen noch $1 Offiziers-Sternwert','Mancano ancora $1 punti valore Stelle Ufficiale']],
@@ -241,6 +192,63 @@ function targetedTranslate(raw,lang){
  [/^Forecast only — actual release costs should replace the estimate when published\.$/,['Prévision uniquement — les coûts réels de sortie remplaceront cette estimation lors de leur publication.','Nur eine Prognose — sobald die tatsächlichen Veröffentlichungskosten bekannt sind, ersetzen sie diese Schätzung.','Solo previsione — i costi effettivi sostituiranno questa stima quando saranno pubblicati.']]
  ];
  for(const [rx,values] of rules){const m=rx.exec(raw);if(m)return raw.replace(rx,values[idx]);}
+ const fragments={
+  'Universal Epic Badges Held':['Insignes universels Épiques détenus','Vorhandene universelle epische Abzeichen','Distintivi universali epici posseduti'],
+  'Universal Elite Badges Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi universali Elite posseduti'],
+  '1 Universal Legendary Badge':['1 insigne légendaire universel','1 universelles legendäres Abzeichen','1 distintivo leggendario universale'],
+  'Universal Legendary Badges (1 each)':['Insignes légendaires universels (1 chacun)','Universelle legendäre Abzeichen (je 1)','Distintivi leggendari universali (1 ciascuno)'],
+  'Legendary Officer Badge':['Insigne d’officier légendaire','Legendäres Offiziersabzeichen','Badge Ufficiale Leggendario'],
+  'Epic Officer Badge':['Insigne d’officier épique','Episches Offiziersabzeichen','Badge Ufficiale Epico'],
+  'Elite Officer Badge':['Insigne d’officier Élite','Elite-Offiziersabzeichen','Badge Ufficiale Elite'],
+  'Saved Planning Scenarios':['Scénarios de planification enregistrés','Gespeicherte Planungsszenarien','Scenari di pianificazione salvati'],
+  '⬇ Export App Backup':['⬇ Exporter la sauvegarde de l’application','⬇ App-Backup exportieren','⬇ Esporta il backup dell’app'],
+  '⬆ Restore App Backup':['⬆ Restaurer la sauvegarde de l’application','⬆ App-Backup wiederherstellen','⬆ Ripristina il backup dell’app'],
+
+  'Delete Saved Plan':['Supprimer le plan enregistré','Gespeicherten Plan löschen','Elimina il piano salvato'],
+  'Delete ':['Supprimer ','Löschen ','Elimina '],
+  'Universal Badges':['insignes universels','universelle Abzeichen','distintivi universali'],
+  'Selection Chests':['coffres de sélection','Auswahltruhen','casse selezione'],
+  'Exclusive Stars':['étoiles exclusives','Exklusivsterne','Stelle esclusive'],
+  'projected Officers':['officiers prévus','geplante Offiziere','Ufficiali previsti'],
+  'projected Officer':['officier prévu','geplanter Offizier','Ufficiale previsto'],
+  'Convert to ORV (720 each)':['Convertir en ORV (720 chacun)','In ORV umwandeln (je 720)','Converti in ORV (720 ciascuno)'],
+  'Application language':['Langue de l’application','App-Sprache','Lingua dell’app'],
+  'Forecast only — replace with confirmed costs when released.':['Prévision uniquement — remplacez-la par les coûts confirmés lors de leur publication.','Nur eine Prognose — nach Veröffentlichung durch bestätigte Kosten ersetzen.','Solo previsione — sostituisci con i costi confermati al rilascio.'],
+  'MAX-Fertigkeiten: 690 Officer Badges':['Compétences MAX : 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Abilità MAX: 690 distintivi ufficiali'],
+  'Abilità MAX: 690 Officer Badges':['Competenze MAX: 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Abilità MAX: 690 distintivi ufficiali'],
+  'Compétences MAX: 690 Officer Badges':['Compétences MAX : 690 insignes d’officier','MAX-Fertigkeiten: 690 Offiziersabzeichen','Competenze MAX: 690 distintivi ufficiali'],
+  'S6 Veronica — 1,600 Badges + 1 more':['S6 Veronica — 1 600 insignes + 1 supplémentaire','S6 Veronica — 1.600 Abzeichen + 1 weiteres','S6 Veronica — 1.600 distintivi + 1 altro'],
+  'Every Officer is listed even when the player currently holds 0 Badges. Each value is stored separately for that Officer and is used throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
+  'Every Officer is listed even when the player currently holds 0 Abzeichen. Each value is stored separately for that Officer and is verwendet throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
+  'Every Officer is listed even when the player currently holds 0 Badge. Each value is stored separately for that Officer and is utilizzati throughout the app.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne. Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Offizier wird aufgeführt, auch wenn der Spieler 0 Abzeichen besitzt. Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni Ufficiale è elencato anche se il giocatore non possiede Badge. Ogni valore è memorizzato separatamente per quell’Ufficiale e viene utilizzato in tutta l’app.'],
+  'Individual Officer Badges held':['insignes individuels détenus','vorhandene individuelle Offiziersabzeichen','distintivi ufficiali individuali posseduti'],
+  'shared Badges allocated':['insignes partagés affectés','zugewiesene gemeinsame Abzeichen','distintivi condivisi assegnati'],
+  'required badge equivalents covered':['équivalents d’insignes requis couverts','benötigte Abzeichenäquivalente abgedeckt','equivalenti distintivi richiesti coperti'],
+  'badge equivalents remain unfunded':['équivalents d’insignes restent à financer','Abzeichenäquivalente sind noch ungedeckt','equivalenti distintivi restano da finanziare'],
+  'Remaining shared resources:':['Ressources partagées restantes :','Verbleibende gemeinsame Ressourcen:','Risorse condivise rimanenti:'],
+  'uses Leggendario Star I / II / III. Buoni preparazione stella (SRV) are available only for eligible Leggendario seasonal Officers from S2 onward. Original Leggendario Officers cannot use SRV.':['utilise les étoiles légendaires I / II / III. Les bons de préparation (SRV) sont réservés aux officiers saisonniers légendaires admissibles à partir de S2. Les officiers légendaires d’origine ne peuvent pas utiliser les SRV.','verwendet Legendär-Stern I / II / III. Vorbereitungs-Gutscheine (SRV) sind nur für berechtigte saisonale legendäre Offiziere ab S2 verfügbar. Ursprüngliche legendäre Offiziere können keine SRV verwenden.','utilizza Stelle Leggendarie I / II / III. I Voucher di preparazione (SRV) sono disponibili solo per gli Ufficiali Leggendari stagionali idonei da S2 in poi. Gli Ufficiali Leggendari originali non possono usare SRV.'],
+  'Badge Elite Universal Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi Elite universali posseduti'],
+  '⬇ Esporta backup app':['⬇ Esporta backup dell’app','⬇ App-Backup exportieren','⬇ Esporta backup dell’app'],
+  '⬆ Ripristina backup app':['⬆ Ripristina backup dell’app','⬆ App-Backup wiederherstellen','⬆ Ripristina backup dell’app'],
+  ' + 1 more':[' + 1 supplémentaire',' + 1 weiteres',' + 1 altro'],
+  'MAX Skills':['Compétences MAX','MAX-Fertigkeiten','Abilità MAX'],
+  'Planning Scenarios':['Scénarios de planification','Planungsszenarien','Scenari di pianificazione'],
+  'Saved Planning Scenarios':['Scénarios de planification enregistrés','Gespeicherte Planungsszenarien','Scenari di pianificazione salvati'],
+  'Every Officer is listed even when the player currently holds 0 Badges.':['Chaque officier est répertorié, même si le joueur ne possède aucun insigne.','Jeder Offizier wird aufgeführt, auch wenn der Spieler keine Abzeichen besitzt.','Ogni Ufficiale è elencato anche se il giocatore non possiede distintivi.'],
+  'Each value is stored separately for that Officer and is used throughout the app.':['Chaque valeur est enregistrée séparément pour cet officier et utilisée dans toute l’application.','Jeder Wert wird separat für diesen Offizier gespeichert und in der gesamten App verwendet.','Ogni valore viene memorizzato separatamente per quell’Ufficiale e utilizzato in tutta l’app.'],
+  'Universal Elite Badges Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi universali élite posseduti'],
+  'uses Legendary Star I / II / III.':['utilise les étoiles légendaires I / II / III.','verwendet Legendär-Stern I / II / III.','utilizza le Stelle Leggendarie I / II / III.'],
+  'Star Readiness Vouchers (SRV) are available only for eligible Legendary seasonal Officers from S2 onward.':['Les bons de préparation (SRV) sont réservés aux officiers saisonniers légendaires admissibles à partir de S2.','Vorbereitungs-Gutscheine (SRV) sind nur für berechtigte saisonale legendäre Offiziere ab S2 verfügbar.','I Voucher di preparazione (SRV) sono disponibili solo per gli Ufficiali Leggendari stagionali idonei da S2 in poi.'],
+  'Original Legendary Officers cannot use SRV.':['Les officiers légendaires d’origine ne peuvent pas utiliser les SRV.','Ursprüngliche legendäre Offiziere können keine SRV verwenden.','Gli Ufficiali Leggendari originali non possono usare SRV.'],
+  '⬇ Export app backup':['⬇ Exporter la sauvegarde de l’application','⬇ App-Backup exportieren','⬇ Esporta il backup dell’app'],
+  '⬆ Restore app backup':['⬆ Restaurer la sauvegarde de l’application','⬆ App-Backup wiederherstellen','⬆ Ripristina il backup dell’app']
+ };
+ let fragmentResult=raw;
+ for(const [source,values] of Object.entries(fragments)){
+  if(fragmentResult.includes(source))fragmentResult=fragmentResult.split(source).join(values[idx]);
+ }
+ if(fragmentResult!==raw)return fragmentResult;
+
  return raw;
 }
 
