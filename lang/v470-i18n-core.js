@@ -201,6 +201,8 @@ function targetedTranslate(raw,lang){
   'Epic Officer Badge':['Insigne d’officier épique','Episches Offiziersabzeichen','Badge Ufficiale Epico'],
   'Elite Officer Badge':['Insigne d’officier Élite','Elite-Offiziersabzeichen','Badge Ufficiale Elite'],
   'Saved Planning Scenarios':['Scénarios de planification enregistrés','Gespeicherte Planungsszenarien','Scenari di pianificazione salvati'],
+  '⬇ Export App Backup':['⬇ Exporter la sauvegarde de l’application','⬇ App-Backup exportieren','⬇ Esporta il backup dell’app'],
+  '⬆ Restore App Backup':['⬆ Restaurer la sauvegarde de l’application','⬆ App-Backup wiederherstellen','⬆ Ripristina il backup dell’app'],
 
   'Delete Saved Plan':['Supprimer le plan enregistré','Gespeicherten Plan löschen','Elimina il piano salvato'],
   'Delete ':['Supprimer ','Löschen ','Elimina '],
