@@ -296,6 +296,35 @@ function targetedTranslate(raw,lang){
  if(maxTraining){const n=maxTraining[1];return lang==='fr'?'Entraînement MAX : '+n+' insignes d’officier':lang==='de'?'MAX-Training: '+n+' Offiziersabzeichen':'Addestramento MAX: '+n+' Badge Ufficiale';}
  const skills=/^Skill 1: Lv(\\d+) · Skill 2: Lv(\\d+) · Skill 3: Lv(\\d+) · Skill 4: Lv(\\d+) · Primary skills complete · ([\\d,]+)\\/([\\d,]+) Officer Badges used · ([\\d,]+) remaining\\.$/.exec(raw);
  if(skills){const [a,b,c,d,used,total,left]=skills.slice(1);return lang==='fr'?'Compétence 1 : Niv. '+a+' · Compétence 2 : Niv. '+b+' · Compétence 3 : Niv. '+c+' · Compétence 4 : Niv. '+d+' · Compétences principales terminées · '+used+'/'+total+' insignes d’officier utilisés · '+left+' restants.':lang==='de'?'Fertigkeit 1: St. '+a+' · Fertigkeit 2: St. '+b+' · Fertigkeit 3: St. '+c+' · Fertigkeit 4: St. '+d+' · Hauptfertigkeiten abgeschlossen · '+used+'/'+total+' Offiziersabzeichen verwendet · '+left+' übrig.':'Abilità 1: Lv'+a+' · Abilità 2: Lv'+b+' · Abilità 3: Lv'+c+' · Abilità 4: Lv'+d+' · Abilità principali completate · '+used+'/'+total+' Badge Ufficiale utilizzati · '+left+' rimanenti.';}
+ const residual=[
+ [/^\\. You can still use any tab at any time\\.$/,['. Vous pouvez toujours utiliser n’importe quel onglet.','. Du kannst jederzeit jeden Tab verwenden.','. Puoi comunque utilizzare qualsiasi scheda in qualsiasi momento.']],
+ [/^— what your current saved Inventory can achieve now\\.$/,['— ce que votre inventaire enregistré actuel permet de faire.','— was dein aktuell gespeichertes Inventar jetzt ermöglicht.','— cosa può ottenere ora il tuo Inventario salvato.']],
+ [/^Upgrade priority \\(lowest first\\)$/,['Priorité d’amélioration (la plus faible en premier)','Upgrade-Priorität (niedrigste zuerst)','Priorità di potenziamento (prima la più bassa)']],
+ [/^Upgrade priority — lowest first$/,['Priorité d’amélioration — la plus faible en premier','Upgrade-Priorität — niedrigste zuerst','Priorità di potenziamento — prima la più bassa']],
+ [/^Star Readiness Voucher \\(SRV\\)$/,['Bon de préparation aux étoiles (SRV)','Sternbereitschaftsgutschein (SRV)','Voucher preparazione stelle (SRV)']],
+ [/^Skill cost information$/,['Informations sur le coût des compétences','Informationen zu Fertigkeitskosten','Informazioni sui costi delle abilità']],
+ [/^Set Skill (\\d+) to Level (\\d+)$/,['Définir la compétence $1 au niveau $2','Fertigkeit $1 auf Stufe $2 setzen','Imposta l’abilità $1 al livello $2']],
+ [/^Elite Star (I|II|III)$/,['Étoile Élite $1','Elite-Stern $1','Stella Élite $1']],
+ [/^· ORV badge equivalents:$/,['· Équivalents d’insignes ORV :','· ORV-Abzeichenäquivalente:','· Equivalenti distintivi ORV:']],
+ [/^Limiting resource: Badges — ([\\d,.]+)%$/,['Ressource limitante : insignes — $1 %','Begrenzende Ressource: Abzeichen — $1 %','Risorsa limitante: distintivi — $1%']],
+ [/^Preview-only recommendations\\. This tool never spends or changes Inventory\\.$/,['Recommandations uniquement prévisionnelles. Cet outil ne dépense ni ne modifie l’inventaire.','Nur Vorschau-Empfehlungen. Dieses Tool gibt kein Inventar aus und ändert es nicht.','Raccomandazioni solo in anteprima. Questo strumento non spende né modifica l’Inventario.']],
+ [/^Created by FireStorm$/,['Créé par FireStorm','Erstellt von FireStorm','Creato da FireStorm']],
+ [/^Complete all four primary Skills to Level 10 before starting Training\\.$/,['Terminez les quatre compétences principales au niveau 10 avant de commencer l’entraînement.','Schließe alle vier Hauptfertigkeiten auf Stufe 10 ab, bevor du mit dem Training beginnst.','Completa tutte e quattro le abilità principali al livello 10 prima di iniziare l’addestramento.']],
+ [/^Enter a plan name\\.$/,['Saisissez un nom de plan.','Gib einen Plannamen ein.','Inserisci un nome per il piano.']],
+ [/^Plan saved\\.$/,['Plan enregistré.','Plan gespeichert.','Piano salvato.']],
+ [/^Saved plan deleted\\.$/,['Plan enregistré supprimé.','Gespeicherter Plan gelöscht.','Piano salvato eliminato.']],
+ [/^Fix validation issues first\\.$/,['Corrigez d’abord les erreurs de validation.','Behebe zuerst die Validierungsfehler.','Correggi prima gli errori di convalida.']],
+ [/^Officer database saved\\.$/,['Base de données des officiers enregistrée.','Offiziersdatenbank gespeichert.','Database Ufficiali salvato.']],
+ [/^CSV validation failed\\.$/,['Échec de la validation CSV.','CSV-Validierung fehlgeschlagen.','Convalida CSV non riuscita.']],
+ [/^CSV imported\\.$/,['CSV importé.','CSV importiert.','CSV importato.']],
+ [/^Appearance and backgrounds restored to defaults\\.$/,['Apparence et arrière-plans réinitialisés.','Darstellung und Hintergründe auf Standard zurückgesetzt.','Aspetto e sfondi ripristinati ai valori predefiniti.']],
+ [/^Progress could not be saved\\. Please refresh and try again\\.$/,['Impossible d’enregistrer la progression. Actualisez et réessayez.','Fortschritt konnte nicht gespeichert werden. Bitte aktualisiere die Seite und versuche es erneut.','Impossibile salvare i progressi. Aggiorna e riprova.']],
+ [/^\\{value\\} progress saved\\.$/,['Progression de {value} enregistrée.','Fortschritt für {value} gespeichert.','Progressi di {value} salvati.']],
+ [/^\\{value\\} is now saved as MAXED\\.$/,['{value} est maintenant enregistré au niveau MAX.','{value} ist jetzt als MAX gespeichert.','{value} è ora salvato come MAX.']],
+ [/^Reset Central Inventory\\?$/,['Réinitialiser l’inventaire central ?','Zentralinventar zurücksetzen?','Reimpostare l’Inventario centrale?']],
+ [/^Restore default officer database\\?$/,['Restaurer la base de données des officiers par défaut ?','Standard-Offiziersdatenbank wiederherstellen?','Ripristinare il database Ufficiali predefinito?']]
+ ];
+ for(const [rx,values] of residual){const m=rx.exec(raw);if(m)return values[idx].replace(/\\$(\\d+)/g,(_,n)=>m[Number(n)]||'');}
  return raw;
 }
 
