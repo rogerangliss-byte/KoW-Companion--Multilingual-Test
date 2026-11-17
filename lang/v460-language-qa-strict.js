@@ -93,6 +93,7 @@ function unchangedFromEnglish(code,baseline){
    const a=baseline[id]||[],b=now[id]||[];
    const n=Math.min(a.length,b.length);
    for(let i=0;i<n;i++){
+     if(!['text','option'].includes(a[i].kind)||!['text','option'].includes(b[i].kind))continue;
      const x=String(a[i].text||'').trim(),y=String(b[i].text||'').trim();
      if(!x||x!==y)continue;
      if(x==='Janvier — S8 Infanterie')continue; // French source label; already localized in the English baseline.
