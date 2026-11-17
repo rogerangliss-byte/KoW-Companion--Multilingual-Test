@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-22',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-23',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -568,7 +568,7 @@ function legacyPatternTranslate(raw,lang){
  for(const group of groups){for(const [rx,replacement] of (group[lang]||[])){const match=rx.exec(raw);if(match)return raw.replace(rx,replacement);}}
  return null;
 }
-function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;const legacy=legacyPatternTranslate(raw,l);if(legacy!==null)return legacy;const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);if(v!==raw)return v;const targeted=targetedTranslate(raw,l);return targeted!==raw?targeted:glossaryTranslate(raw,l)}
+function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);if(v!==raw)return v;const targeted=targetedTranslate(raw,l);if(targeted!==raw)return targeted;const legacy=legacyPatternTranslate(raw,l);if(legacy!==null&&legacy!==raw)return legacy;return glossaryTranslate(raw,l)}
 function excluded(node){const p=node&&node.parentElement;if(!p||/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|CODE|PRE)$/i.test(p.tagName))return true;return!!p.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage')}
 function translateTextNode(node){if(!node||node.nodeType!==3||excluded(node))return;const current=node.nodeValue||'';if(!textBase.has(node)||(textLast.has(node)&&current!==textLast.get(node)))textBase.set(node,current);const source=textBase.get(node),lead=(source.match(/^\s*/)||[''])[0],trail=(source.match(/\s*$/)||[''])[0],next=active==='en'?source.trim():translateString(source.trim(),active),value=lead+next+trail;textLast.set(node,value);if(current!==value)node.nodeValue=value}
 function translateAttributes(root){const els=[];if(root.nodeType===1)els.push(root);if(root.querySelectorAll)els.push(...root.querySelectorAll('[placeholder],[title],[aria-label],[alt]'));for(const el of els){if(el.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage'))continue;let base=attrBase.get(el),last=attrLast.get(el);if(!base){base={};attrBase.set(el,base)}if(!last){last={};attrLast.set(el,last)}for(const a of ['placeholder','title','aria-label','alt'])if(el.hasAttribute(a)){const now=el.getAttribute(a);if(!(a in base)||(a in last&&now!==last[a]))base[a]=now;const next=active==='en'?base[a]:translateString(base[a],active);last[a]=next;if(now!==next)el.setAttribute(a,next)}}}
