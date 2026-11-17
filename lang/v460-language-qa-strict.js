@@ -7,8 +7,9 @@ const EN=new Set(('the and or to from with without for of in on at by is are was
 const TECH=new Set('xp orv srv csv max firestorm kow s2 s3 s4 s5 s6 s7 s8'.split(/\s+/));
 function runtime(){const api=window.KOW_I18N||{};return{runtime_version:api.version||null,active_language:api.getLanguage?.()||window.KOW_PRESENTATION_I18N?.getLanguage?.()||'en',catalogue:api.catalogueStats?.()||null,language_attribute:document.documentElement.lang||null,selector_value:document.getElementById('appLanguage')?.value||null,bootstrap_status:window.KOW_MULTILINGUAL_BOOTSTRAP?.status||null}}
 function settle(){return new Promise(resolve=>{if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>requestAnimationFrame(resolve));else setTimeout(resolve,50)})}
-function lang(){try{return window.KOW_PRESENTATION_I18N?.getLanguage?.()||'en'}catch(_){return'en'}}
-function setLang(c){try{window.KOW_PRESENTATION_I18N?.apply?.(c)}catch(_){}}
+function lang(){try{return window.KOW_I18N?.getLanguage?.()||window.KOW_PRESENTATION_I18N?.getLanguage?.()||'en'}catch(_){return'en'}}
+function setLang(c){const api=window.KOW_I18N;if(typeof api?.setLanguage==='function'){api.setLanguage(c);return}if(typeof window.KOW_PRESENTATION_I18N?.apply==='function'){window.KOW_PRESENTATION_I18N.apply(c);return}throw new Error('Multilingual runtime is not available; language switching was not attempted.')}
+async function waitForRuntime(){const until=Date.now()+5000;while(Date.now()<until){const v=runtime();if(v.runtime_version==='v470-i18n-core-23'&&v.catalogue&&v.bootstrap_status==='ready')return v;await new Promise(resolve=>setTimeout(resolve,50))}throw new Error('Multilingual setup failure: expected runtime v470-i18n-core-23 was not confirmed. Diagnostics: '+JSON.stringify(runtime()))}
 function strings(root){const out=[];if(!root)return out;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||['SCRIPT','STYLE','NOSCRIPT','TEMPLATE'].includes(p.tagName))return NodeFilter.FILTER_REJECT;return (n.nodeValue||'').trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});let n;while((n=w.nextNode())){const t=(n.nodeValue||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:'text',text:t})}root.querySelectorAll('[placeholder],[title],[aria-label],[alt]').forEach(el=>{for(const a of ['placeholder','title','aria-label','alt']){const t=(el.getAttribute(a)||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:a,text:t})}});root.querySelectorAll('select option').forEach(o=>{const t=(o.textContent||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:'option',text:t})});return out}
 function score(t){const words=(String(t).toLowerCase().match(/[a-z][a-z'-]*/g)||[]);if(words.length<2)return 0;let hit=0,tech=0;for(const w of words){if(TECH.has(w)){tech++;continue}if(EN.has(w))hit++}return hit/Math.max(1,words.length-tech)}
 function looksEnglish(t,l){
@@ -106,6 +107,8 @@ function unchangedFromEnglish(code,baseline){
  return [...new Set(out)];
 }
 async function build(){
+ const ready=await waitForRuntime();
+ if(ready.active_language!=='en')throw new Error('Multilingual setup failure: expected English baseline before QA. Diagnostics: '+JSON.stringify(ready));
  const original=lang(),results={};
  setLang('en');
   await settle();
@@ -114,6 +117,7 @@ async function build(){
    setLang(L.code);
    await settle();
    const runtimeState=runtime();
+   if(runtimeState.runtime_version!=='v470-i18n-core-23'||runtimeState.active_language!==L.code||runtimeState.language_attribute!==L.code||runtimeState.selector_value!==L.code){setLang(original);throw new Error('Language activation failed for '+L.label+'. No QA results were accepted. Diagnostics: '+JSON.stringify(runtimeState));}
    const roots=ROOTS.map(id=>scanRoot(L.code,id));
    const cov=coverage(L.code);
    const bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`));
