@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-18',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-19',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -11,7 +11,7 @@ const textBase=new WeakMap(),textLast=new WeakMap(),attrBase=new WeakMap(),attrL
 function hashKey(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return'msg.'+(h>>>0).toString(36)}
 function escRx(s){return s.replace(/[.*+?^$()|[\]\\]/g,'\\$&')}
 let byId=Object.create(null),bySource=Object.create(null),glossary={fr:{},de:{},it:{}},glossaryKeys={fr:[],de:[],it:[]};
-function buildCatalogue(){const d=dicts();byId=Object.create(null);bySource=Object.create(null);for(const source of Object.keys(d.en).sort()){const id=hashKey(source),entry={id,en:source,fr:d.fr[source]||'',de:d.de[source]||'',it:d.it[source]||''};byId[id]=entry;bySource[source]=entry}for(const lang of ['fr','de','it']){glossary[lang]={};for(const [source,value] of Object.entries(d[lang])){if(!source||!value||source===value||bySource[source]||source.length<4||!/[A-Za-zÀ-ÿ]/.test(source))continue;glossary[lang][source]=value}glossaryKeys[lang]=Object.keys(glossary[lang]).sort((a,b)=>b.length-a.length)}}
+function buildCatalogue(){const d=dicts();byId=Object.create(null);bySource=Object.create(null);for(const source of Object.keys(d.en).sort()){const id=hashKey(source),entry={id,en:source,fr:d.fr[source]||'',de:d.de[source]||'',it:d.it[source]||''};byId[id]=entry;bySource[source]=entry}for(const lang of ['fr','de','it']){glossary[lang]={};for(const [source,value] of Object.entries(d[lang])){if(!source||!value||source===value||source.length<4||!/[A-Za-zÀ-ÿ]/.test(source))continue;glossary[lang][source]=value}glossaryKeys[lang]=Object.keys(glossary[lang]).sort((a,b)=>b.length-a.length)}}
 const templates=[
 {source:'Showing {count} of {total} Officers · Highest progress in this filtered view: {name} ({pct}%).',fr:'Affichage de {count} sur {total} officiers · Progression la plus élevée dans cette vue filtrée : {name} ({pct} %).',de:'{count} von {total} Offizieren angezeigt · Höchster Fortschritt in dieser gefilterten Ansicht: {name} ({pct} %).',it:'Visualizzati {count} di {total} Ufficiali · Progressi più alti in questa vista filtrata: {name} ({pct}%).'},
 {source:'Level {level} / 10 · Free starting level',fr:'Niveau {level} / 10 · Niveau initial gratuit',de:'Stufe {level} / 10 · Kostenlose Anfangsstufe',it:'Livello {level} / 10 · Livello iniziale gratuito'},
