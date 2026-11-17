@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-17',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-18',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -288,6 +288,14 @@ function targetedTranslate(raw,lang){
  }
  if(fragmentResult!==raw)return fragmentResult;
 
+ // Explicit dynamic fallbacks for the dashboard/development strings covered by QA21.
+ // These handle the complete rendered sentence as well as the normal template path.
+ const badgeStill=/^(\\d[\\d,]*) Officer Badges still required$/.exec(raw);
+ if(badgeStill){const n=badgeStill[1];return lang==='fr'?n+' insignes d’officier encore nécessaires':lang==='de'?'Noch '+n+' Offiziersabzeichen erforderlich':'Sono ancora necessari '+n+' Badge Ufficiale';}
+ const maxTraining=/^(?:MAX Training|Training MAX):? (\\d[\\d,]*) Officer Badges$/.exec(raw);
+ if(maxTraining){const n=maxTraining[1];return lang==='fr'?'Entraînement MAX : '+n+' insignes d’officier':lang==='de'?'MAX-Training: '+n+' Offiziersabzeichen':'Addestramento MAX: '+n+' Badge Ufficiale';}
+ const skills=/^Skill 1: Lv(\\d+) · Skill 2: Lv(\\d+) · Skill 3: Lv(\\d+) · Skill 4: Lv(\\d+) · Primary skills complete · ([\\d,]+)\\/([\\d,]+) Officer Badges used · ([\\d,]+) remaining\\.$/.exec(raw);
+ if(skills){const [a,b,c,d,used,total,left]=skills.slice(1);return lang==='fr'?'Compétence 1 : Niv. '+a+' · Compétence 2 : Niv. '+b+' · Compétence 3 : Niv. '+c+' · Compétence 4 : Niv. '+d+' · Compétences principales terminées · '+used+'/'+total+' insignes d’officier utilisés · '+left+' restants.':lang==='de'?'Fertigkeit 1: St. '+a+' · Fertigkeit 2: St. '+b+' · Fertigkeit 3: St. '+c+' · Fertigkeit 4: St. '+d+' · Hauptfertigkeiten abgeschlossen · '+used+'/'+total+' Offiziersabzeichen verwendet · '+left+' übrig.':'Abilità 1: Lv'+a+' · Abilità 2: Lv'+b+' · Abilità 3: Lv'+c+' · Abilità 4: Lv'+d+' · Abilità principali completate · '+used+'/'+total+' Badge Ufficiale utilizzati · '+left+' rimanenti.';}
  return raw;
 }
 
