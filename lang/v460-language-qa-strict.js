@@ -5,6 +5,8 @@ const LANGS=[{code:'en',label:'English'},{code:'fr',label:'Français'},{code:'de
 const ROOTS=['dashboard','progress','officer','inventory','stars','development','xp','planner','database','releases','settings','help','skillCostInfoModal','quickProgressModal'];
 const EN=new Set(('the and or to from with without for of in on at by is are was were be been being this that these those your you can cannot could should would will current next previous latest saved save load reset restore export import download upload select selected choose enter required remaining held available shortfall still more less total value level levels target targets training skill skills strand strands officer officers badge badges star stars inventory planner planning plan plans database release releases forecast growth month scheduled schedule resource resources development progress readiness ready partially fully funded upgrade upgrades action actions recommendation recommendations backup guide settings help home dashboard compare comparison status showing highest search season rarity role unlock max maxed original universal legendary epic elite chest chests selection book books calculate calculated calculation cost costs used spend spent change changed changing requirement requirements future session scenario scenarios priority priorities open close delete copy create add remove edit live test version application app browser locally data press button field fields row rows popup modal information portrait requires').split(/\s+/));
 const TECH=new Set('xp orv srv csv max firestorm kow s2 s3 s4 s5 s6 s7 s8'.split(/\s+/));
+function runtime(){const api=window.KOW_I18N||{};return{runtime_version:api.version||null,active_language:lang(),catalogue:api.catalogueStats?.()||null,language_attribute:document.documentElement.lang||null,selector_value:document.getElementById('appLanguage')?.value||null}}
+function settle(){return new Promise(resolve=>{if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>requestAnimationFrame(resolve));else setTimeout(resolve,50)})}
 function lang(){try{return window.KOW_PRESENTATION_I18N?.getLanguage?.()||'en'}catch(_){return'en'}}
 function setLang(c){try{window.KOW_PRESENTATION_I18N?.apply?.(c)}catch(_){}}
 function strings(root){const out=[];if(!root)return out;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||['SCRIPT','STYLE','NOSCRIPT','TEMPLATE'].includes(p.tagName))return NodeFilter.FILTER_REJECT;return (n.nodeValue||'').trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});let n;while((n=w.nextNode())){const t=(n.nodeValue||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:'text',text:t})}root.querySelectorAll('[placeholder],[title],[aria-label],[alt]').forEach(el=>{for(const a of ['placeholder','title','aria-label','alt']){const t=(el.getAttribute(a)||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:a,text:t})}});root.querySelectorAll('select option').forEach(o=>{const t=(o.textContent||'').replace(/\s+/g,' ').trim();if(t)out.push({kind:'option',text:t})});return out}
@@ -103,12 +105,15 @@ function unchangedFromEnglish(code,baseline){
  }
  return [...new Set(out)];
 }
-function build(){
+async function build(){
  const original=lang(),results={};
  setLang('en');
+  await settle();
  const baseline=renderedSnapshot();
  for(const L of LANGS){
    setLang(L.code);
+   await settle();
+   const runtimeState=runtime();
    const roots=ROOTS.map(id=>scanRoot(L.code,id));
    const cov=coverage(L.code);
    const bleed=roots.flatMap(r=>r.english_bleed.map(x=>`${r.root}: ${x.text}`));
@@ -127,6 +132,7 @@ function build(){
    const ha=helpAudit(L.code);
    const unchanged=unchangedFromEnglish(L.code,baseline);
    results[L.label]={
+     runtime:runtimeState,
      status:(bleed.length||unchanged.length||broken.length||missing.length||cov.missing_keys.length||popup.length||
              dyn.english_dynamic_literals.length||dq.empty_values.length||dq.identical_to_english.length||
              dq.suspicious_values.length||!ha.present||ha.english_bleed)?'FAIL':'PASS',
@@ -147,6 +153,7 @@ function build(){
  setLang(original);
  return{
    generated_at:new Date().toISOString(),
+   runtime_loaded:runtime(),
    app_version:'4.7.0 Multilingual Test',
    qa_version:'Language QA21 ROBUST BLEED',
    scope_note:'Rendered DOM + English-baseline differential + corrected English detector + dynamic-source/dictionary/Help audits. App workflows are not executed.',
@@ -208,9 +215,9 @@ function run(){
  if(dl)dl.disabled=true;
 
  // Yield one frame so the user sees "Running..." before the synchronous read-only audit starts.
- setTimeout(()=>{
+ setTimeout(async()=>{
    try{
-     const rep=build();
+     const rep=await build();
      window.KOW_LAST_LANGUAGE_QA21=rep;
      render(rep);
    }catch(err){
