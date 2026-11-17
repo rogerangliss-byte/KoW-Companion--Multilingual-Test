@@ -304,11 +304,11 @@ function targetedTranslate(raw,lang){
 
  // Explicit dynamic fallbacks for the dashboard/development strings covered by QA21.
  // These handle the complete rendered sentence as well as the normal template path.
- const badgeStill=/^(\\d[\\d,]*) Officer Badges still required$/.exec(raw);
+ const badgeStill=/^(\d[\d,]*) Officer Badges still required$/.exec(raw);
  if(badgeStill){const n=badgeStill[1];return lang==='fr'?n+' insignes d’officier encore nécessaires':lang==='de'?'Noch '+n+' Offiziersabzeichen erforderlich':'Sono ancora necessari '+n+' Badge Ufficiale';}
- const maxTraining=/^(?:MAX Training|Training MAX):? (\\d[\\d,]*) Officer Badges$/.exec(raw);
+ const maxTraining=/^(?:MAX Training|Training MAX):? (\d[\d,]*) Officer Badges$/.exec(raw);
  if(maxTraining){const n=maxTraining[1];return lang==='fr'?'Entraînement MAX : '+n+' insignes d’officier':lang==='de'?'MAX-Training: '+n+' Offiziersabzeichen':'Addestramento MAX: '+n+' Badge Ufficiale';}
- const skills=/^Skill 1: Lv(\\d+) · Skill 2: Lv(\\d+) · Skill 3: Lv(\\d+) · Skill 4: Lv(\\d+) · Primary skills complete · ([\\d,]+)\\/([\\d,]+) Officer Badges used · ([\\d,]+) remaining\\.$/.exec(raw);
+ const skills=/^Skill 1: Lv(\d+) · Skill 2: Lv(\d+) · Skill 3: Lv(\d+) · Skill 4: Lv(\d+) · Primary skills complete · ([\d,]+)\/([\d,]+) Officer Badges used · ([\d,]+) remaining\.$/.exec(raw);
  if(skills){const [a,b,c,d,used,total,left]=skills.slice(1);return lang==='fr'?'Compétence 1 : Niv. '+a+' · Compétence 2 : Niv. '+b+' · Compétence 3 : Niv. '+c+' · Compétence 4 : Niv. '+d+' · Compétences principales terminées · '+used+'/'+total+' insignes d’officier utilisés · '+left+' restants.':lang==='de'?'Fertigkeit 1: St. '+a+' · Fertigkeit 2: St. '+b+' · Fertigkeit 3: St. '+c+' · Fertigkeit 4: St. '+d+' · Hauptfertigkeiten abgeschlossen · '+used+'/'+total+' Offiziersabzeichen verwendet · '+left+' übrig.':'Abilità 1: Lv'+a+' · Abilità 2: Lv'+b+' · Abilità 3: Lv'+c+' · Abilità 4: Lv'+d+' · Abilità principali completate · '+used+'/'+total+' Badge Ufficiale utilizzati · '+left+' rimanenti.';}
  const residual=[
  [/^\\. You can still use any tab at any time\\.$/,['. Vous pouvez toujours utiliser n’importe quel onglet.','. Du kannst jederzeit jeden Tab verwenden.','. Puoi comunque utilizzare qualsiasi scheda in qualsiasi momento.']],
