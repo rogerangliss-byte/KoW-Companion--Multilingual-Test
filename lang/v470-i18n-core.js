@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-16',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-17',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -98,6 +98,11 @@ function compileTemplate(source){
  }).join('');
  return{count,rx:new RegExp('^'+pattern+'$')};
 }
+{source:'{value} Officer Badges still required',fr:'{value} insignes d’officier encore nécessaires',de:'Noch {value} Offiziersabzeichen erforderlich',it:'Sono ancora necessari {value} Badge Ufficiale'},
+{source:'Priority: Development — {value} more Officer Badges are required.',fr:'Priorité : Développement — {value} insignes d’officier supplémentaires sont nécessaires.',de:'Priorität: Entwicklung — weitere {value} Offiziersabzeichen werden benötigt.',it:'Priorità: Sviluppo — servono altri {value} Badge Ufficiale.'},
+{source:'Priority: Stars — {value} more Officer Star value is required.',fr:'Priorité : étoiles — {value} de valeur d’étoiles d’officier supplémentaire sont nécessaire.',de:'Priorität: Sterne — weitere {value} Offiziers-Sternwert werden benötigt.',it:'Priorità: Stelle — sono necessari altri {value} punti valore Stelle Ufficiale.'},
+{source:'Priority: XP — {value} more XP is required.',fr:'Priorité : XP — {value} XP supplémentaires sont nécessaires.',de:'Priorität: XP — weitere {value} XP werden benötigt.',it:'Priorità: XP — sono necessari altri {value} XP.'},
+{source:'Skill 1: Lv{a} · Skill 2: Lv{b} · Skill 3: Lv{c} · Skill 4: Lv{d} · Primary skills complete · {used}/{total} Officer Badges used · 0 remaining.',fr:'Compétence 1 : Niv. {a} · Compétence 2 : Niv. {b} · Compétence 3 : Niv. {c} · Compétence 4 : Niv. {d} · Compétences principales terminées · {used}/{total} insignes d’officier utilisés · 0 restant.',de:'Fertigkeit 1: St. {a} · Fertigkeit 2: St. {b} · Fertigkeit 3: St. {c} · Fertigkeit 4: St. {d} · Hauptfertigkeiten abgeschlossen · {used}/{total} Offiziersabzeichen verwendet · 0 übrig.',it:'Abilità 1: Lv{a} · Abilità 2: Lv{b} · Abilità 3: Lv{c} · Abilità 4: Lv{d} · Abilità principali completate · {used}/{total} Badge Ufficiale utilizzati · 0 rimanenti.'},
 const compiled=templates.map(t=>Object.assign({},t,compileTemplate(t.source)));
 function templateTranslate(source,lang){
  const original=String(source);source=original.replace(/\s+/g,' ').trim();
@@ -114,6 +119,24 @@ function t(key,params,lang){const l=norm(lang||active),entry=byId[key]||bySource
 function glossaryTranslate(source,lang){let out=source;const d=glossary[lang]||{};for(const phrase of glossaryKeys[lang]||[]){if(!out.includes(phrase))continue;try{out=out.replace(new RegExp('(^|[^A-Za-zÀ-ÿ0-9])'+escRx(phrase)+'(?=$|[^A-Za-zÀ-ÿ0-9])','gu'),(m,p)=>p+d[phrase])}catch(_){}}return out}
 function targetedTranslate(raw,lang){
  const exact={
+ 'Upgrade priority (lowest first)':['Priorité d’amélioration (plus faible en premier)','Upgrade-Priorität (niedrigste zuerst)','Priorità di potenziamento (prima la più bassa)'],
+ 'Upgrade priority — lowest first':['Priorité d’amélioration — la plus faible en premier','Upgrade-Priorität — niedrigste zuerst','Priorità di potenziamento — prima la più bassa'],
+ 'Sort Compare Officer list':['Trier la liste de comparaison des officiers','Vergleichsliste der Offiziere sortieren','Ordina l’elenco di confronto degli Ufficiali'],
+ 'No individual Officer Badges entered.':['Aucun insigne d’officier individuel saisi.','Keine individuellen Offiziersabzeichen eingegeben.','Nessun Badge Ufficiale individuale inserito.'],
+ 'Recommended order':['Ordre recommandé','Empfohlene Reihenfolge','Ordine consigliato'],
+ 'Season (newest first)':['Saison (de la plus récente à la plus ancienne)','Saison (neueste zuerst)','Stagione (dalla più recente)'],
+ 'Season — newest first':['Saison — de la plus récente à la plus ancienne','Saison — neueste zuerst','Stagione — dalla più recente'],
+ 'Progress (highest first)':['Progression (de la plus élevée à la plus faible)','Fortschritt (höchster zuerst)','Progressi (dal più alto)'],
+ 'Progress — highest first':['Progression — de la plus élevée à la plus faible','Fortschritt — höchster zuerst','Progressi — dal più alto'],
+ 'Compare filters':['Filtres de comparaison','Vergleichsfilter','Filtri di confronto'],
+ 'Sort Officers:':['Trier les officiers :','Offiziere sortieren:','Ordina Ufficiali:'],
+ 'Role':['Rôle','Rolle','Ruolo'],
+ 'Rarity':['Rareté','Seltenheit','Rarità'],
+ 'Fifth Skill: UNLOCKED':['Cinquième compétence : DÉBLOQUÉE','Fünfte Fertigkeit: FREIGESCHALTET','Quinta abilità: SBLOCCATA'],
+ 'MAX Training':['Entraînement MAX','MAX-Training','Addestramento MAX'],
+ 'S6 · Tank':['S6 · Chars','S6 · Panzer','S6 · Carri armati'],
+ 'Infantry, Gatherer':['Infanterie, Collecteur','Infanterie, Sammler','Fanteria, Raccoglitore'],
+ 'Tank, Gatherer':['Chars, Collecteur','Panzer, Sammler','Carri armati, Raccoglitore'],
  'Officer Badges available:':['Insignes d’officier disponibles :','Verfügbare Offiziersabzeichen:','Badge Ufficiale disponibili:'],
  'Shared Officer Badges held:':['Insignes d’officier partagés détenus :','Gemeinsame Offiziersabzeichen vorhanden:','Badge Ufficiale condivisi posseduti:'],
  '· ORV badge equivalents:':['· Équivalents d’insignes ORV :','· ORV-Abzeichenäquivalente:','· Equivalenti Badge da ORV:'],
@@ -200,6 +223,9 @@ function targetedTranslate(raw,lang){
  ];
  for(const [rx,values] of rules){const m=rx.exec(raw);if(m)return raw.replace(rx,values[idx]);}
  const fragments={
+  'Officer Badges':['insignes d’officier','Offiziersabzeichen','Badge Ufficiale'],
+  'Officer Badge':['insigne d’officier','Offiziersabzeichen','Badge Ufficiale'],
+  'MAX Training':['Entraînement MAX','MAX-Training','Addestramento MAX'],
   'Universal Epic Badges Held':['Insignes universels Épiques détenus','Vorhandene universelle epische Abzeichen','Distintivi universali epici posseduti'],
   'Universal Elite Badges Held':['Insignes universels Élite détenus','Vorhandene universelle Elite-Abzeichen','Distintivi universali Elite posseduti'],
   '1 Universal Legendary Badge':['1 insigne légendaire universel','1 universelles legendäres Abzeichen','1 distintivo leggendario universale'],
