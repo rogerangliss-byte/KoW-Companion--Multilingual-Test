@@ -1,7 +1,7 @@
 /* Officer Command Centre v4.7.0 — central multilingual runtime. No MutationObserver. */
 (function(){
 'use strict';
-const VERSION='v470-i18n-core-21',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
+const VERSION='v470-i18n-core-22',LANGS=['en','fr','de','it'],STORE='kow-language-v470';
 const LEGACY=['kow-language-v460-strict','kow-language-v460','kow_language','appLanguage','kowLanguage','kowLang','language'];
 const dicts=()=>({en:window.KOW_I18N_EN||{},fr:window.KOW_I18N_FR||{},de:window.KOW_I18N_DE||{},it:window.KOW_I18N_IT||{}});
 const get=k=>{try{return localStorage.getItem(k)}catch(_){return null}},put=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
@@ -118,7 +118,21 @@ function templateTranslate(source,lang){
 }
 function interpolate(value,params){return String(value).replace(/\{([A-Za-z0-9_]+)\}/g,(m,k)=>Object.prototype.hasOwnProperty.call(params||{},k)?String(params[k]):m)}
 function t(key,params,lang){const l=norm(lang||active),entry=byId[key]||bySource[key];return entry?interpolate(entry[l]||entry.en,params||{}):interpolate(String(key),params||{})}
-function glossaryTranslate(source,lang){let out=source;const d=glossary[lang]||{};for(const phrase of glossaryKeys[lang]||[]){if(!out.includes(phrase))continue;try{out=out.replace(new RegExp('(^|[^A-Za-zÀ-ÿ0-9])'+escRx(phrase)+'(?=$|[^A-Za-zÀ-ÿ0-9])','gu'),(m,p)=>p+d[phrase])}catch(_){}}return out}
+function glossaryTranslate(source,lang){
+ let out=String(source);const d=glossary[lang]||{},word=c=>!!c&&/[A-Za-zÀ-ÿ0-9]/.test(c);
+ for(const phrase of glossaryKeys[lang]||[]){
+  const replacement=d[phrase];if(!replacement)continue;
+  let at=out.indexOf(phrase);
+  while(at!==-1){
+   const before=at?out[at-1]:'',after=out[at+phrase.length]||'';
+   if(!word(before)&&!word(after)){
+    out=out.slice(0,at)+replacement+out.slice(at+phrase.length);
+    at=out.indexOf(phrase,at+replacement.length);
+   }else at=out.indexOf(phrase,at+1);
+  }
+ }
+ return out;
+}
 function targetedTranslate(raw,lang){
  const exact={
  'Upgrade priority (lowest first)':['Priorité d’amélioration (plus faible en premier)','Upgrade-Priorität (niedrigste zuerst)','Priorità di potenziamento (prima la più bassa)'],
