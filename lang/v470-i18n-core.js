@@ -578,7 +578,22 @@ it:[
 ]};
 
 
+const QA21_RESIDUAL={
+fr:[
+[/^Next Star: ([\d,]+) Officer Star value · Reach 5★: ([\d,]+) Officer Star value · .+?: ([\d,]+) .+? · .+?: ([\d,]+) .+? · Level 70 XP: ([\d,]+) XP$/,'Prochaine étoile : $1 valeur en étoiles d’officier · Atteindre 5★ : $2 valeur en étoiles d’officier · Compétences MAX : $3 insignes d’officier · Entraînement MAX : $4 insignes d’officier · XP niveau 70 : $5 XP'],
+[/^Legendary .+? Chests converted to ORV$/,'Coffres de badges d’officier légendaire convertis en ORV']
+],
+de:[
+[/^Next Star: ([\d,]+) Officer Star value · Reach 5★: ([\d,]+) Officer Star value · .+?: ([\d,]+) .+? · .+?: ([\d,]+) .+? · Level 70 XP: ([\d,]+) XP$/,'Nächster Stern: $1 Offiziers-Sternwert · 5★ erreichen: $2 Offiziers-Sternwert · Fertigkeiten MAX: $3 Offiziersabzeichen · Training MAX: $4 Offiziersabzeichen · Stufe 70 XP: $5 XP'],
+[/^Legendary .+? Chests converted to ORV$/,'Legendäre Offiziersabzeichen-Truhen in ORV umgewandelt']
+],
+it:[
+[/^Next Star: ([\d,]+) Officer Star value · Reach 5★: ([\d,]+) Officer Star value · .+?: ([\d,]+) .+? · .+?: ([\d,]+) .+? · Level 70 XP: ([\d,]+) XP$/,'Prossima Stella: $1 punti valore Stelle Ufficiale · Raggiungi 5★: $2 punti valore Stelle Ufficiale · Abilità MAX: $3 Badge Ufficiale · Addestramento MAX: $4 Badge Ufficiale · XP al livello 70: $5 XP'],
+[/^Legendary .+? Chests converted to ORV$/,'Casse Badge Ufficiale Leggendario convertite in ORV']
+]
+};
 function legacyPatternTranslate(raw,lang){
+ for(const [rx,replacement] of (QA21_RESIDUAL[lang]||[])){const match=rx.exec(raw);if(match)return raw.replace(rx,replacement);}
  const groups=[Q22,Q21,QA20_DYNAMIC,Q18,Q17,Q12,R];
  for(const group of groups){for(const [rx,replacement] of (group[lang]||[])){const match=rx.exec(raw);if(match)return raw.replace(rx,replacement);}}
  return null;

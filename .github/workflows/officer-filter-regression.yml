@@ -16,6 +16,9 @@ on:
   pull_request:
     paths:
       - 'index.html'
+      - 'lang/v470-i18n-core.js'
+      - 'lang/v460-multilingual-bootstrap-strict.js'
+      - 'tests/multilingual-dynamic-translations.test.mjs'
       - 'tests/officer-filter-selection.test.mjs'
       - 'tests/officer-progress-overview.test.mjs'
       - 'tests/upgrade-targets-orv-remainder.test.mjs'
