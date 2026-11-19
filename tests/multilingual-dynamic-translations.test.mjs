@@ -31,5 +31,5 @@ test('French, German and Italian runtime rules cover all QA21 bleed strings', ()
 });
 
 test('multilingual bootstrap loads the refreshed runtime cache key', () => {
-  assert.match(bootstrap, /CORE_CACHE='v470-i18n-core-23-fix4'/);
+  assert.match(bootstrap, /CORE_CACHE='v470-i18n-core-23-fix5'/);
 });
