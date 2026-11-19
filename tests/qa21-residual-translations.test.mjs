@@ -18,7 +18,7 @@ test('QA21 mixed dashboard line is covered in all supported languages', () => {
 });
 
 test('partially translated Badge Chest label is replaced with a full translation', () => {
-  assert.match(/^Legendary .+? Chests converted to ORV$/, chest);
+  assert.match(chest, /^Legendary .+? Chests converted to ORV$/);
   assert.match(core, /Coffres de badges d’officier légendaire convertis en ORV/);
   assert.match(core, /Legendäre Offiziersabzeichen-Truhen in ORV umgewandelt/);
   assert.match(core, /Casse Badge Ufficiale Leggendario convertite in ORV/);
