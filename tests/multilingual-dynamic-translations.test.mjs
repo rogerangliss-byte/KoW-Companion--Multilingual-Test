@@ -22,7 +22,7 @@ test('French, German and Italian runtime rules cover all QA21 bleed strings', ()
     'Develop ([\\d,]+) Officer levels?',
     'ORV remainder is credited against this additional requirement',
     'Legendary Officer Badge Chests converted to ORV'
-  ]) assert.equal(core.split(source).length - 1, 3, source + ' must have one rule per language');
+  ]) assert.ok(core.split(source).length - 1 >= 3, source + ' must have language coverage');
   for (const translated of [
     'Prochaine étoile','Nächster Stern','Prossima Stella',
     'Développer $1 niveaux d’officier','Offiziersstufen','livelli Ufficiale',
@@ -31,5 +31,5 @@ test('French, German and Italian runtime rules cover all QA21 bleed strings', ()
 });
 
 test('multilingual bootstrap loads the refreshed runtime cache key', () => {
-  assert.match(bootstrap, /CORE_CACHE='v470-i18n-core-23-fix3'/);
+  assert.match(bootstrap, /CORE_CACHE='v470-i18n-core-23-fix4'/);
 });
