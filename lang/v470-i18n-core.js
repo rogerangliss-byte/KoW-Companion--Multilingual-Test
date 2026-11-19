@@ -592,13 +592,17 @@ it:[
 [/^Legendary .+? Chests converted to ORV$/,'Casse Badge Ufficiale Leggendario convertite in ORV']
 ]
 };
+function qa21ResidualTranslate(raw,lang){
+ for(const [rx,replacement] of (QA21_RESIDUAL[lang]||[])){if(rx.test(raw))return raw.replace(rx,replacement);}
+ return null;
+}
 function legacyPatternTranslate(raw,lang){
  for(const [rx,replacement] of (QA21_RESIDUAL[lang]||[])){const match=rx.exec(raw);if(match)return raw.replace(rx,replacement);}
  const groups=[Q22,Q21,QA20_DYNAMIC,Q18,Q17,Q12,R];
  for(const group of groups){for(const [rx,replacement] of (group[lang]||[])){const match=rx.exec(raw);if(match)return raw.replace(rx,replacement);}}
  return null;
 }
-function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;if(l==='it'){const badgeFix={'Legendary Officer Badge':'Badge Ufficiale Leggendario','Epic Officer Badge':'Badge Ufficiale Epico','Elite Officer Badge':'Badge Ufficiale Elite','Legendary Badge Officer':'Badge Ufficiale Leggendario','Epic Badge Officer':'Badge Ufficiale Epico','Elite Badge Officer':'Badge Ufficiale Elite'};if(badgeFix[raw])return badgeFix[raw];}const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);if(v!==raw)return v;const targeted=targetedTranslate(raw,l);if(targeted!==raw)return targeted;const legacy=legacyPatternTranslate(raw,l);if(legacy!==null&&legacy!==raw)return legacy;return glossaryTranslate(raw,l)}
+function translateString(source,lang){const raw=String(source==null?'':source),l=norm(lang||active);if(l==='en'||!raw)return raw;const qa21=qa21ResidualTranslate(raw,l);if(qa21!==null)return qa21;if(l==='it'){const badgeFix={'Legendary Officer Badge':'Badge Ufficiale Leggendario','Epic Officer Badge':'Badge Ufficiale Epico','Elite Officer Badge':'Badge Ufficiale Elite','Legendary Badge Officer':'Badge Ufficiale Leggendario','Epic Badge Officer':'Badge Ufficiale Epico','Elite Badge Officer':'Badge Ufficiale Elite'};if(badgeFix[raw])return badgeFix[raw];}const e=bySource[raw];if(e&&e[l])return e[l];const v=templateTranslate(raw,l);if(v!==raw)return v;const targeted=targetedTranslate(raw,l);if(targeted!==raw)return targeted;const legacy=legacyPatternTranslate(raw,l);if(legacy!==null&&legacy!==raw)return legacy;return glossaryTranslate(raw,l)}
 function excluded(node){const p=node&&node.parentElement;if(!p||/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|CODE|PRE)$/i.test(p.tagName))return true;return!!p.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage')}
 function translateTextNode(node){if(!node||node.nodeType!==3||excluded(node))return;const current=node.nodeValue||'';if(!textBase.has(node)||(textLast.has(node)&&current!==textLast.get(node)))textBase.set(node,current);const source=textBase.get(node),lead=(source.match(/^\s*/)||[''])[0],trail=(source.match(/\s*$/)||[''])[0],next=active==='en'?source.trim():translateString(source.trim(),active),value=lead+next+trail;textLast.set(node,value);if(current!==value)node.nodeValue=value}
 function translateAttributes(root){const els=[];if(root.nodeType===1)els.push(root);if(root.querySelectorAll)els.push(...root.querySelectorAll('[placeholder],[title],[aria-label],[alt]'));for(const el of els){if(el.closest('[data-kow-i18n-ignore],#languageQaPanel,#languageQaResults,#appLanguage'))continue;let base=attrBase.get(el),last=attrLast.get(el);if(!base){base={};attrBase.set(el,base)}if(!last){last={};attrLast.set(el,last)}for(const a of ['placeholder','title','aria-label','alt'])if(el.hasAttribute(a)){const now=el.getAttribute(a);if(!(a in base)||(a in last&&now!==last[a]))base[a]=now;const next=active==='en'?base[a]:translateString(base[a],active);last[a]=next;if(now!==next)el.setAttribute(a,next)}}}
