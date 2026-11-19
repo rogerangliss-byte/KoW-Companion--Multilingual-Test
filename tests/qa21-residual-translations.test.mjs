@@ -6,7 +6,7 @@ const core = readFileSync(new URL('../lang/v470-i18n-core.js', import.meta.url),
 const boot = readFileSync(new URL('../lang/v460-multilingual-bootstrap-strict.js', import.meta.url), 'utf8');
 
 const dashboard = 'Next Star: 500 Officer Star value · Reach 5★: 98,000 Officer Star value · Compétences MAX: 690 insignes d’officier · Entraînement MAX: 1,544 insignes d’officier · Level 70 XP: 199,646,700 XP';
-const chest = 'Legendary insigne d’officier Chests converted to ORV';
+const chest = 'Legendary Officer Badge Chests converted to ORV';
 
 test('QA21 mixed dashboard line is covered in all supported languages', () => {
   const pattern = /^Next Star: ([\d,]+) Officer Star value · Reach 5★: ([\d,]+) Officer Star value · .+?: ([\d,]+) .+? · .+?: ([\d,]+) .+? · Level 70 XP: ([\d,]+) XP$/;
@@ -18,12 +18,18 @@ test('QA21 mixed dashboard line is covered in all supported languages', () => {
 });
 
 test('partially translated Badge Chest label is replaced with a full translation', () => {
-  assert.match(/^Legendary .+? Chests converted to ORV$/.exec(chest)?.[0] || '', /^Legendary .+? Chests converted to ORV$/);
+  assert.match(/^Legendary .+? Chests converted to ORV$/, chest);
   assert.match(core, /Coffres de badges d’officier légendaire convertis en ORV/);
   assert.match(core, /Legendäre Offiziersabzeichen-Truhen in ORV umgewandelt/);
   assert.match(core, /Casse Badge Ufficiale Leggendario convertite in ORV/);
 });
 
+test('residual translations run before generic and glossary translation can fragment the source', () => {
+  const fn = core.slice(core.indexOf('function translateString'), core.indexOf('function excluded'));
+  assert.ok(fn.indexOf('qa21ResidualTranslate(raw,l)') < fn.indexOf('const e=bySource[raw]'));
+  assert.ok(core.includes('function qa21ResidualTranslate(raw,lang)'));
+});
+
 test('runtime cache key is advanced for the residual translation fix', () => {
-  assert.match(boot, /CORE_CACHE='v470-i18n-core-23-fix4'/);
+  assert.match(boot, /CORE_CACHE='v470-i18n-core-23-fix5'/);
 });
