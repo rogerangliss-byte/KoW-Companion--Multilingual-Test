@@ -9,7 +9,6 @@ on:
       - 'lang/v460-multilingual-bootstrap-strict.js'
       - 'tests/multilingual-dynamic-translations.test.mjs'
       - 'tests/qa21-residual-translations.test.mjs'
-      - 'tests/qa21-residual-translations.test.mjs'
       - 'tests/officer-filter-selection.test.mjs'
       - 'tests/officer-progress-overview.test.mjs'
       - 'tests/upgrade-targets-orv-remainder.test.mjs'
