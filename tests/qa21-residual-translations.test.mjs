@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
 
 const core = readFileSync(new URL('../lang/v470-i18n-core.js', import.meta.url), 'utf8');
 const boot = readFileSync(new URL('../lang/v460-multilingual-bootstrap-strict.js', import.meta.url), 'utf8');
+const qaRunner = readFileSync(new URL('../lang/v460-language-qa-strict.js', import.meta.url), 'utf8');
 
 const dashboard = 'Next Star: 500 Officer Star value · Reach 5★: 98,000 Officer Star value · Compétences MAX: 690 insignes d’officier · Entraînement MAX: 1,544 insignes d’officier · Level 70 XP: 199,646,700 XP';
 const chest = 'Legendary Officer Badge Chests converted to ORV';
@@ -32,4 +34,19 @@ test('residual translations run before generic and glossary translation can frag
 
 test('runtime cache key is advanced for the residual translation fix', () => {
   assert.match(boot, /CORE_CACHE='v470-i18n-core-23-fix5'/);
+});
+
+test('QA21 report download filename uses a valid ISO UTC timestamp', () => {
+  const match = qaRunner.match(/function reportFilename\(date=new Date\(\)\)\{[\s\S]*?\n\}/);
+  assert.ok(match, 'reportFilename helper must exist');
+  const filename = runInNewContext(
+    `${match[0]}; reportFilename(new Date('2026-11-19T23:23:21.788Z'))`,
+    { Date }
+  );
+  assert.equal(
+    filename,
+    'KoW-Language-QA21-Multilingual-Test-v4.7.0-2026-11-19T23-23-21-788Z.json'
+  );
+  assert.match(qaRunner, /a\.download=reportFilename\(\)/);
+  assert.doesNotMatch(qaRunner, /\$\{new Date\(\)\}\.toISOString/);
 });
